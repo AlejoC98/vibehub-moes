@@ -1,0 +1,31 @@
+import { OrderContent } from "../interfaces";
+
+export const calculateRevenue = (data: OrderContent[]) => {
+    let totalReturn = 0;
+
+    if (data !== undefined) {
+        data.forEach(order => {
+            totalReturn += order.total;
+        });
+    }
+
+    return totalReturn;
+}
+
+export function generateRandomNumberString(length: number) {
+    const array = new Uint8Array(length);
+    crypto.getRandomValues(array);
+    return Array.from(array, (byte) => byte % 10).join('');
+}
+
+export function generateBarcodesWithSeparator(name: string, rows: number, columns: number): string[] {
+    const barcodes: string[] = [];
+  
+    for (let row = 1; row <= rows; row++) {
+      for (let col = 1; col <= columns; col++) {
+        barcodes.push(`${name}-${row}-${col}`);
+      }
+    }
+  
+    return barcodes;
+  }

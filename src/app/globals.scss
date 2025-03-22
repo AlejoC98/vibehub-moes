@@ -75,6 +75,8 @@ main {
 }
 
 .bg-dash {
+  display: flex;
+  overflow-y: hidden;
   height: 100vh;
   background-size: cover;
   background-position: center;
