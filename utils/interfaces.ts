@@ -1,6 +1,7 @@
 import { ReactNode } from "react";
 
 export interface Role {
+    id: number,
     name: string;
 }
 
@@ -13,13 +14,12 @@ export interface MenuItem {
 }
 
 export interface AccountContent {
-    firstname?: string;
-    lastname?: string;
+    first_name?: string;
+    last_name?: string;
     email?: string;
-    phone?: string;
     username?: string;
     role?: Role;
-    user?: UserContent;
+    // user?: UserContent;
 }
 
 export interface TabContentProps {  
@@ -68,6 +68,7 @@ export interface GlobalContent {
     positions?: PositionContent[];
     notifications?: NotificationContent[];
     orders?: OrderContent[];
+    userAccount?: AccountContent;
 }
 
 export interface LocationContent {

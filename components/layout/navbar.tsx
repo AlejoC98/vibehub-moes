@@ -1,3 +1,4 @@
+'use client'
 import { Badge, Box, Divider, IconButton, InputAdornment, ListItemText, Menu, MenuItem, Toolbar, Typography } from '@mui/material'
 import React, { MouseEvent, useRef, useState } from 'react'
 import { Search, SearchIconWrapper, StyledInputBase, VibeNavbar } from '../../style/global'
@@ -11,12 +12,18 @@ import AddIcon from '@mui/icons-material/Add';
 import AutorenewIcon from '@mui/icons-material/Autorenew';
 import DeleteIcon from '@mui/icons-material/Delete';
 import PriorityHighIcon from '@mui/icons-material/PriorityHigh';
+import { signout } from '@/app/(public)/auth/login/actions'
+// import { createClient } from '../../utils/supabase/client';
 
 const Navbar = ({ open, setOpen }: { open: boolean, setOpen: (status: boolean) => void }) => {
+
+    // const supabase = createClient();
+
     const searchRef = useRef<HTMLInputElement>(null);
     const menuId = 'primary-search-account-menu';
     const [closedNotifcation, setClosedNotification] = useState<number>(0);
     const [anchorNoti, setAnchorNoti] = useState<null | HTMLElement>(null);
+    const [anchorSett, setAnchorSett] = React.useState<null | HTMLElement>(null);
     const isMenuOpen = Boolean(anchorNoti);
 
     const handleSearch = () => {
@@ -28,12 +35,41 @@ const Navbar = ({ open, setOpen }: { open: boolean, setOpen: (status: boolean) =
     }
 
     const handleMenuOpen = (event: MouseEvent<HTMLElement>) => {
-        console.log('socio');
+        setAnchorNoti(event.currentTarget);
     }
+
+    const handleSettMenu = (event: React.MouseEvent<HTMLElement>) => {
+        setAnchorSett(event.currentTarget);
+      };
 
     const handleMenuClose = () => {
         setAnchorNoti(null);
     }
+
+    const handleSettingsClose = () => {
+        setAnchorSett(null);
+      };
+
+    const renderSettingMenu = (
+        <Menu
+                id="menu-appbar"
+                anchorEl={anchorSett}
+                anchorOrigin={{
+                    vertical: 'bottom',
+                    horizontal: 'right'
+                }}
+                keepMounted
+                transformOrigin={{
+                  vertical: 'top',
+                  horizontal: 'right',
+                }}
+                open={Boolean(anchorSett)}
+                onClose={handleSettingsClose}
+              >
+                <MenuItem onClick={handleSettingsClose}>Profile</MenuItem>
+                <MenuItem onClick={() => signout()}>Log Out</MenuItem>
+              </Menu>
+    );
 
     const renderNotiMenu = (
         <Menu
@@ -168,9 +204,10 @@ const Navbar = ({ open, setOpen }: { open: boolean, setOpen: (status: boolean) =
                         <IconButton>
                             <EmailIcon />
                         </IconButton>
-                        <IconButton>
+                        <IconButton onClick={handleSettMenu}>
                             <SettingsIcon />
                         </IconButton>
+                        {renderSettingMenu}
                     </Box>
                 </Toolbar>
             </VibeNavbar>

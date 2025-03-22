@@ -1,3 +1,4 @@
+import { toast } from "react-toastify";
 import { OrderContent } from "../interfaces";
 
 export const calculateRevenue = (data: OrderContent[]) => {
@@ -28,4 +29,17 @@ export function generateBarcodesWithSeparator(name: string, rows: number, column
     }
   
     return barcodes;
+  }
+
+  export const searchSku = (data: Array<any>, value: string) => {
+
+    if (value.length === 15) {
+      const search = data?.find(i => i.sku === value);
+  
+      if (search) {
+        return search;
+      } else {
+        toast.warning("Sku didn't find!");
+      }
+    }
   }

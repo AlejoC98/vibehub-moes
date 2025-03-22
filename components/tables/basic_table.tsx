@@ -1,6 +1,6 @@
 'use client'
 import { Box, Button, Dialog, DialogTitle, IconButton, InputAdornment, Menu, MenuItem, TextField, Typography } from '@mui/material';
-import { DataGrid, GridColDef, GridRowId } from '@mui/x-data-grid'
+import { DataGrid, GridCallbackDetails, GridColDef, GridRowId, GridRowSelectionModel } from '@mui/x-data-grid'
 import { usePathname, useRouter } from 'next/navigation';
 import React, { cloneElement, MouseEvent, ReactElement, useRef, useState } from 'react';
 import Grid from '@mui/material/Grid2';
@@ -21,7 +21,7 @@ const BasicTable = ({ title, data, columns, createForm, createFormTitle }: { tit
   const [openModal, setOpenModal] = useState<boolean>(false);
   const [searchData, setSearchData] = useState<GridColDef[]>([]);
   const serachRef = useRef<HTMLInputElement | null>(null);
-  const [selectedRow, setSelectedRow] = useState<GridRowId[]>([]);
+  const [selectedRow, setSelectedRow] = useState<GridRowId | null>(null);
   const [formData, setFormData] = useState<any>({});
   const tableContent = useRef(null);
 
@@ -32,18 +32,18 @@ const BasicTable = ({ title, data, columns, createForm, createFormTitle }: { tit
       sortable: false,
       width: 100,
       renderCell: (params) => (
-        <div className="flex justify-around w-auto">
-          {selectedRow.length === 1 && selectedRow[0] === params.row.id && (
-            <Box className="flex w-[5rem] justify-around">
-              <button className="bg-blue-500 p-1 rounded-md text-white" onClick={() => handleEdit(params.row.id)}>
-                <EditIcon />
-              </button>
-              <button className="bg-blue-500 p-1 rounded-md text-white">
-                <VisibilityIcon />
-              </button>
+        <Box>
+          {selectedRow === params.row.id && (
+            <Box >
+              <IconButton onClick={() => handleEdit(params.row.id)}>
+                <EditIcon fontSize='small' />
+              </IconButton>
+              <IconButton onClick={() => handleViewDetails(params.row)}>
+                <VisibilityIcon fontSize='small' />
+              </IconButton>
             </Box>
           )}
-        </div>
+        </Box>
       ),
     },
   ];
@@ -151,50 +151,53 @@ const BasicTable = ({ title, data, columns, createForm, createFormTitle }: { tit
     // })
   }
 
-  const hanldeSelectRow = (selectedRows: GridRowId[]) => {
-    setSelectedRow(selectedRows);
+  const hanldeSelectRow = (rowSelectionModel: GridRowSelectionModel, details: GridCallbackDetails) => {
+    console.log(rowSelectionModel);
+    setSelectedRow(rowSelectionModel[0]);
   }
 
   return (
 <Box sx={{ minHeight: 400, width: '100%' }}>
       <Grid container spacing={5}>
         <Grid size={4}>
-          <Box className="w-full h-full flex items-center">
+          <Box sx={{display: 'flex', width: '100%', height: '100%', alignItems: 'center'}} >
             <Typography variant='h4'>{title}</Typography>
           </Box>
         </Grid>
         <Grid size={4}>
-          <Box className="w-full">
+          <Box sx={{ width: '100%'}}>
             <TextField
               fullWidth
               onChange={(e) => handleSearch(e.target.value)}
               placeholder='Search'
               disabled={data.length <= 0}
               ref={serachRef}
-              InputProps={{
-                startAdornment: (
-                  <InputAdornment position="start">
-                    <SearchIcon />
-                  </InputAdornment>
-                ),
-                endAdornment: (
-                  <InputAdornment position="end">
-                    {searchData.length > 0 && (
-                      <IconButton onClick={handleCleanSearch}>
-                        <CloseIcon />
-                      </IconButton>
-                    )}
-                  </InputAdornment>
-                )
+              slotProps={{
+                input: {
+                  startAdornment: (
+                    <InputAdornment position="start">
+                      <SearchIcon />
+                    </InputAdornment>
+                  ),
+                  endAdornment: (
+                    <InputAdornment position="end">
+                      {searchData.length > 0 && (
+                        <IconButton onClick={handleCleanSearch}>
+                          <CloseIcon />
+                        </IconButton>
+                      )}
+                    </InputAdornment>
+                  )
+                }
               }}
             />
           </Box>
         </Grid>
         <Grid size={4}>
-          <Box className="w-full flex">
+          <Box sx={{display: 'flex', width: '100%'}}>
             <Box sx={{ flexGrow: 1 }} />
-            <Box>
-              {selectedRow.length >= 1 && (
+            <Box sx={{display: 'flex', justifyContent: 'space-between', minWidth: 170}}>
+              {selectedRow != null && (
                 <Button variant='contained' className='bg-red-700 hover:bg-red-800 ml-5' onClick={handleDelete}>
                   <DeleteIcon />
                 </Button>
@@ -215,6 +218,7 @@ const BasicTable = ({ title, data, columns, createForm, createFormTitle }: { tit
           {data.length > 0 ? (
             <DataGrid
               ref={tableContent}
+              disableMultipleRowSelection
               rows={searchData.length >= 1 ? searchData : data}
               columns={mergedColumns}
               initialState={{
@@ -223,7 +227,7 @@ const BasicTable = ({ title, data, columns, createForm, createFormTitle }: { tit
                 },
               }}
               pageSizeOptions={[5, 10]}
-            //   onRowSelectionModelChange={hanldeSelectRow}
+              onRowSelectionModelChange={hanldeSelectRow}
               checkboxSelection
             />
           ) : (

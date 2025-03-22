@@ -1,16 +1,31 @@
 'use client'
-import React, { useState } from 'react'
-import { Avatar, Box, Collapse, IconButton, List, ListItemButton, ListItemIcon, ListItemText } from '@mui/material';
-import { MenuItem } from '../../utils/interfaces';
+import React, { useContext, useEffect, useState } from 'react'
+import { Avatar, Box, Collapse, IconButton, List, ListItem, ListItemButton, ListItemIcon, ListItemText } from '@mui/material';
+import { AccountContent, MenuItem } from '../../utils/interfaces';
 import DashboardIcon from '@mui/icons-material/Dashboard';
+import GroupIcon from '@mui/icons-material/Group';
 import InventoryIcon from '@mui/icons-material/Inventory';
-import WidgetsIcon from '@mui/icons-material/Widgets';
+import AssessmentIcon from '@mui/icons-material/Assessment';
+import KeyboardReturnIcon from '@mui/icons-material/KeyboardReturn';
+import CloseIcon from '@mui/icons-material/Close';
+import LogoutIcon from '@mui/icons-material/Logout';
 import ExpandLess from '@mui/icons-material/ExpandLess';
 import ExpandMore from '@mui/icons-material/ExpandMore';
-import MenuIcon from '@mui/icons-material/Menu';
+import LocalShippingIcon from '@mui/icons-material/LocalShipping';
+import ReceiptLongIcon from '@mui/icons-material/ReceiptLong';
+import OpenWithIcon from '@mui/icons-material/OpenWith';
+import WidgetsIcon from '@mui/icons-material/Widgets';
+import UndoIcon from '@mui/icons-material/Undo';
+import DvrIcon from '@mui/icons-material/Dvr';
+import Groups2Icon from '@mui/icons-material/Groups2';
 import Link from 'next/link';
+import { createClient } from '../../utils/supabase/client';
+import { GlobalContext } from '../../utils/context/global_provider';
 
 const SideBar = ({ open, setOpen }: { open: boolean, setOpen: (status: boolean) => void }) => {
+
+    const supabase = createClient();
+    const { userAccount } = useContext(GlobalContext);
 
     const MenuList: MenuItem[] = [
         {
@@ -25,68 +40,68 @@ const SideBar = ({ open, setOpen }: { open: boolean, setOpen: (status: boolean) 
             to: "/inventory",
             icon: <InventoryIcon />
         },
-        // {
-        //   id: 3,
-        //   title: "Movements",
-        //   to: "",
-        //   icon: <WidgetsIcon />,
-        //   submenu: [
-        //     ...(session?.user?.roleId === 1 || session?.user?.roleId === 2 || session?.user?.roleId === 7 ? [
-        //       {
-        //         id: 1,
-        //         title: "Shipping",
-        //         to: "/shipping",
-        //         icon: <LocalShippingIcon />
-        //       }
-        //     ] : []),
-        //     ...(session?.user?.roleId === 1 || session?.user?.roleId === 2 || session?.user?.roleId === 7 ? [
-        //       {
-        //         id: 2,
-        //         title: "Receiving",
-        //         to: "/receiving",
-        //         icon: <ReceiptLongIcon />
-        //       }
-        //     ] : []),
-        //     {
-        //       id: 3,
-        //       title: "Organize",
-        //       to: "/organize",
-        //       icon: <OpenWithIcon />
-        //     }
-        //   ]
-        // },
-        // ...(session?.user?.roleId === 1 || session?.user?.roleId === 2 || session?.user?.roleId === 8 ? [
-        //   {
-        //     id: 4,
-        //     title: "Orders",
-        //     to: "/orders",
-        //     icon: <DvrIcon />
-        //   }
-        // ] : []),
-        // ...(session?.user?.roleId === 1 || session?.user?.roleId === 2 || session?.user?.roleId === 8 ? [
-        //   {
-        //     id: 5,
-        //     title: "Return",
-        //     to: "/returns",
-        //     icon: <UndoIcon />
-        //   }
-        // ] : []),
-        // ...(session?.user?.roleId === 1 || session?.user?.roleId === 2 || session?.user?.roleId === 8 ? [
-        //   {
-        //     id: 6,
-        //     title: "Customers",
-        //     to: "/customers",
-        //     icon: <Groups2Icon />
-        //   }
-        // ] : []),
-        // ...(session?.user?.roleId === 1 || session?.user?.roleId === 2 ? [
-        //   {
-        //     id: 7,
-        //     title: "Users",
-        //     to: "/users",
-        //     icon: <GroupIcon />
-        //   }
-        // ] : [])
+        {
+            id: 3,
+            title: "Movements",
+            to: "#",
+            icon: <WidgetsIcon />,
+            submenu: [
+                ...(userAccount?.role?.id === 1 || userAccount?.role?.id === 2 || userAccount?.role?.id === 7 ? [
+                    {
+                        id: 1,
+                        title: "Shipping",
+                        to: "/shipping",
+                        icon: <LocalShippingIcon />
+                    }
+                ] : []),
+                ...(userAccount?.role?.id === 1 || userAccount?.role?.id === 2 || userAccount?.role?.id === 7 ? [
+                    {
+                        id: 2,
+                        title: "Receiving",
+                        to: "/receiving",
+                        icon: <ReceiptLongIcon />
+                    }
+                ] : []),
+                {
+                    id: 3,
+                    title: "Organize",
+                    to: "/organize",
+                    icon: <OpenWithIcon />
+                }
+            ]
+        },
+        ...(userAccount?.role?.id === 1 || userAccount?.role?.id === 2 || userAccount?.role?.id === 8 ? [
+            {
+                id: 4,
+                title: "Orders",
+                to: "/orders",
+                icon: <DvrIcon />
+            }
+        ] : []),
+        ...(userAccount?.role?.id === 1 || userAccount?.role?.id === 2 || userAccount?.role?.id === 8 ? [
+            {
+                id: 5,
+                title: "Return",
+                to: "/returns",
+                icon: <UndoIcon />
+            }
+        ] : []),
+        ...(userAccount?.role?.id === 1 || userAccount?.role?.id === 2 || userAccount?.role?.id === 8 ? [
+            {
+                id: 6,
+                title: "Customers",
+                to: "/customers",
+                icon: <Groups2Icon />
+            }
+        ] : []),
+        ...(userAccount?.role?.id === 1 || userAccount?.role?.id === 2 ? [
+            {
+                id: 7,
+                title: "Users",
+                to: "/users",
+                icon: <GroupIcon />
+            }
+        ] : [])
     ];
 
     const [menuOpen, setMenuOpen] = useState<number | null>(1);
@@ -96,46 +111,67 @@ const SideBar = ({ open, setOpen }: { open: boolean, setOpen: (status: boolean) 
     }
 
     return (
-        <Box sx={{width: open ? "10%" : "3%", height: '100vh', transition: "all .2s ease-in-out", display: 'flex', flexDirection: 'column', alignItems: 'center', padding: '10px 0'}} className="transparent-blur-container">
+        <Box sx={{ width: open ? 250 : 50, justifyItems: 'center' }} className="transparent-blur-container">
             <IconButton LinkComponent={Link} href='/dashboard' onClick={() => setOpen(false)}>
-            <Avatar
-              sx={{transition: 'all .2s ease-in-out', width: open ? 80 : 50, height: open ? 80 : 50, '& > img': { objectPosition: 'bottom' } }}
-              alt='profile'
-              src='/static/img/logos/vibehub-logo-black.png'
-            />
-          </IconButton>
-            <List disablePadding>
+                <Avatar
+                    sx={{ transition: 'all .2s ease-in-out', width: open ? 80 : 50, height: open ? 80 : 50, '& > img': { objectPosition: 'bottom' } }}
+                    alt='profile'
+                    src='/static/img/logos/vibehub-logo-black.png'
+                />
+            </IconButton>
+            <List sx={{ width: '100%' }}>
                 {MenuList.map(item => (
-                    <Box key={item.id} sx={{margin: '10px 0'}}>
-                        <ListItemButton
-                            key={item.id}
+                    <Box key={item.id}>
+                        { open ? item.submenu ? <ListItem
+                            sx={{ padding: '10px 0' }}
+                            secondaryAction={
+                                    <IconButton
+                                        edge="end"
+                                        aria-label="expand"
+                                        onClick={() => handleOpenMenu(item.id)}
+                                    >
+                                {item.submenu ? menuOpen === item.id ? <ExpandLess /> : <ExpandMore /> : <></> }
+                            </IconButton>
+                        }>
+                            <ListItemIcon sx={{ justifyContent: 'center' }}>{item.icon}</ListItemIcon>
+                            <ListItemText primary={item.title} />
+                        </ListItem> : <ListItemButton
+                            sx={{ padding: '10px 0', justifyContent: 'center', alignItems: 'center'}}
                             href={item.to}
                             LinkComponent={Link}
                             selected={menuOpen === item.id}
                             onClick={() => {
                                 handleOpenMenu(item.id);
-                                setOpen(item.submenu ? true : false);
-                            }}
-                        >
-                            <ListItemIcon sx={{justifyContent: 'center'}}>
-                                {item.icon}
-                            </ListItemIcon>
-                            <ListItemText primary={item.title} sx={{ display: open ? 'block' : 'none', transition: 'all 1s ease-in-out'}} />
-                            {item.submenu ? menuOpen === item.id ? <ExpandLess /> : <ExpandMore /> : <></>}
-                        </ListItemButton>
-                        <Collapse in={item.id === menuOpen} timeout="auto" unmountOnExit>
-                            <List component="div" disablePadding>
+                            }}>
+                                <ListItemIcon sx={{justifyContent: 'center'}}>
+                                    {item.icon}
+                                </ListItemIcon>
+                                <ListItemText primary={item.title} />
+                            </ListItemButton> : <ListItemButton
+                            sx={{ padding: '10px 0', justifyContent: 'center', alignItems: 'center'}}
+                            href={item.to}
+                            LinkComponent={Link}
+                            selected={menuOpen === item.id}
+                            onClick={() => {
+                                handleOpenMenu(item.id);
+                            }}>
+                                <ListItemIcon sx={{justifyContent: 'center'}}>
+                                    {item.icon}
+                                </ListItemIcon>
+                            </ListItemButton>}
+                        <Collapse in={item.id === menuOpen} timeout="auto" unmountOnExit sx={{ padding: 0, margin: 0 }}>
+                            <List component="div" disablePadding sx={{ justifyContent: 'center', alignItems: 'center', background: '#DEDEDE'}}>
                                 {item.submenu?.map(subItem => (
                                     <ListItemButton
                                         key={subItem.id}
-                                        sx={{ pl: 4 }}
+                                        sx={{ padding: '10px 12px', justifyItems: 'center', alignContent: 'center'}}
                                         href={subItem.to}
                                         LinkComponent={Link}
                                     >
                                         <ListItemIcon>
                                             {subItem.icon}
                                         </ListItemIcon>
-                                        <ListItemText primary={subItem.title} />
+                                        {open && <ListItemText primary={subItem.title} />}
                                     </ListItemButton>
                                 ))}
                             </List>
