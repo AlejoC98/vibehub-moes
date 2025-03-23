@@ -130,10 +130,7 @@ const GlobalProvider = ({ children }: { children: ReactNode }) => {
         getVendors();
 
         const getReceivings = async () => {
-            const { data: receivingQuery, error: receivingError } = await supabase.from('receiving').select('*, vendors(id, name), receiving_products(*)');
-
-            console.log(receivingError);
-
+            const { data: receivingQuery, error: receivingError } = await supabase.from('receiving').select('*, vendors(id, name), receiving_products(*, products(*))');
             setReceivings(receivingQuery || []);
         }
 

@@ -151,12 +151,23 @@ export interface ReceivingContent {
     // items: Array<{product_id: string, quantity: number}>;
 }
 
+export interface ReceiveProductsInput extends ProductContent {
+    product_id?: number;
+    id?: number;
+    sku: string;
+    name?: string;
+    expected_quantity: number;
+    received_quantity: number;
+    damaged_quantity: number;
+}
+
 export interface ReceivingProductsContent {
     receiving_id: number;
     product_id: number;
     expected_quantity: number;
     received_quantity: number;
     damage_quantity: number;
+    products: ProductContent;
 }
 
 export interface PositionContent {
