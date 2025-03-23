@@ -12,7 +12,19 @@ import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 
-const BasicTable = ({ title, data, columns, createForm, createFormTitle }: { title: string, data: Array<any>, columns: GridColDef[], createForm?: ReactElement<any>, createFormTitle?: string }) => {
+const BasicTable = ({
+  title,
+  data,
+  columns,
+  createForm,
+  createFormTitle,
+} : { 
+  title: string,
+  data: Array<any>,
+  columns: GridColDef[],
+  createForm?: ReactElement<any>,
+  createFormTitle?: string,
+}) => {
     const router = useRouter();
   const pathname = usePathname();
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
@@ -122,6 +134,8 @@ const BasicTable = ({ title, data, columns, createForm, createFormTitle }: { tit
       router.push(`/customers/${data.id}`);
     } else if (Object.keys(data).includes('order_number')) {
       router.push(`/orders/${data.order_number}`);
+    } else if (Object.keys(data).includes('po_number')) {
+      router.push(`${pathname}/${data.po_number}`);
     }
   }
 
@@ -152,13 +166,12 @@ const BasicTable = ({ title, data, columns, createForm, createFormTitle }: { tit
   }
 
   const hanldeSelectRow = (rowSelectionModel: GridRowSelectionModel, details: GridCallbackDetails) => {
-    console.log(rowSelectionModel);
     setSelectedRow(rowSelectionModel[0]);
   }
 
   return (
 <Box sx={{ minHeight: 400, width: '100%' }}>
-      <Grid container spacing={5}>
+      <Grid container spacing={2}>
         <Grid size={4}>
           <Box sx={{display: 'flex', width: '100%', height: '100%', alignItems: 'center'}} >
             <Typography variant='h4'>{title}</Typography>
@@ -196,7 +209,7 @@ const BasicTable = ({ title, data, columns, createForm, createFormTitle }: { tit
         <Grid size={4}>
           <Box sx={{display: 'flex', width: '100%'}}>
             <Box sx={{ flexGrow: 1 }} />
-            <Box sx={{display: 'flex', justifyContent: 'space-between', minWidth: 170}}>
+            <Box sx={{display: 'flex', gap: 1}}>
               {selectedRow != null && (
                 <Button variant='contained' className='bg-red-700 hover:bg-red-800 ml-5' onClick={handleDelete}>
                   <DeleteIcon />
@@ -207,7 +220,7 @@ const BasicTable = ({ title, data, columns, createForm, createFormTitle }: { tit
                   New
                 </Button>
               )}
-              <Button onClick={handleProfileMenuOpen} variant='contained' className='ml-5 bg-gray-400 hover:bg-gray-500'>
+              <Button onClick={handleProfileMenuOpen} variant='contained'>
                 <MoreVertIcon />
               </Button>
               {renderOptions}
@@ -231,8 +244,8 @@ const BasicTable = ({ title, data, columns, createForm, createFormTitle }: { tit
               checkboxSelection
             />
           ) : (
-            <Box className="w-full text-center">
-              <Typography variant='h3'>No Records yet!</Typography>
+            <Box sx={{ display: 'grid', placeItems: 'center', minHeight: 200}}>
+              <Typography variant='h4'>No Records yet!</Typography>
             </Box>
           )}
         </Grid>

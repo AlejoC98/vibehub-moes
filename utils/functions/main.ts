@@ -24,7 +24,7 @@ export function generateBarcodesWithSeparator(name: string, rows: number, column
   
     for (let row = 1; row <= rows; row++) {
       for (let col = 1; col <= columns; col++) {
-        barcodes.push(`${name}-${row}-${col}`);
+        barcodes.push(`${name.replaceAll(' ', '-').toLocaleUpperCase()}-${row}-${col}`);
       }
     }
   

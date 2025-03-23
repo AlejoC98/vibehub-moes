@@ -8,24 +8,26 @@ import { RackContent } from '../../utils/interfaces';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { toast } from 'react-toastify';
 import { createClient } from '../../utils/supabase/client';
+import SubmitButton from '../submit_button';
 
 const RacksForm = ({ defaultData, setOpenModal }: { defaultData?: RackContent, setOpenModal?: (status: boolean) => void }) => {
 
   const supabase = createClient();
+  const [isLoading, setIsLoading] = useState<boolean>(false);
 
   const {
     register,
     setValue,
     handleSubmit
-  } = useForm<RackContent>();
-
-    const handleCreateSku = () => {
-      const sku = generateRandomNumberString(15);
-      setValue('sku',sku);
+  } = useForm<RackContent>({
+    defaultValues: {
+      ...defaultData
     }
+  });
   
     const handleAddRack: SubmitHandler<RackContent> = async(formData) => {
      try {
+      setIsLoading(true);
       const { data: uniqueRack, error } = await supabase.from('racks').select('*').eq('name', formData['name']?.toLocaleUpperCase);
       if (uniqueRack!.length <= 0) {
         const { data: newRack, error } = await supabase.from('racks').insert({
@@ -45,29 +47,30 @@ const RacksForm = ({ defaultData, setOpenModal }: { defaultData?: RackContent, s
             });
 
           }
-          toast.success('Section created!');
+          toast.success('Rack Location created!');
         }
       }
 
       if (error) {
         throw new Error(error.message);
       }
-     } catch (error: any) {
-      toast.error(error.message);
-     }
+      } catch (error: any) {
+        toast.error(error.message);
+      }
+      setIsLoading(false);
+      setOpenModal!(false);
     }
 
   return (
 <Box sx={{ flexGrow: 1, padding: 5 }}>
       <form onSubmit={handleSubmit(handleAddRack)}>
-        <Grid container spacing={5}>
+        <Grid container spacing={2}>
           {/* <Grid size={12}>
             <TextField
               fullWidth
               required
               disabled
               label="Sku"
-              variant="filled"
               {...register('sku')}
               InputProps={{
                 endAdornment: <IconButton disabled={defaultData!.sku !== undefined} className="bg-emerald-600 hover:bg-emerald-800 text-white" onClick={handleCreateSku}><QrCodeIcon /></IconButton>
@@ -80,7 +83,6 @@ const RacksForm = ({ defaultData, setOpenModal }: { defaultData?: RackContent, s
               required
               label="Name"
               type="text"
-              variant="filled"
               {...register('name')}
             />
           </Grid>
@@ -89,7 +91,6 @@ const RacksForm = ({ defaultData, setOpenModal }: { defaultData?: RackContent, s
               fullWidth
               label="Columns"
               type="number"
-              variant="filled"
               {...register('columns')}
             />
           </Grid>
@@ -98,12 +99,11 @@ const RacksForm = ({ defaultData, setOpenModal }: { defaultData?: RackContent, s
               fullWidth
               label="Rows"
               type="number"
-              variant="filled"
               {...register('rows')}
             />
           </Grid>
           <Grid size={12}>
-            <Button fullWidth variant="contained" type="submit" className="bg-orange-700 hover:bg-orange-900">Create</Button>
+            <SubmitButton fullWidth={true} variant='contained' isLoading={isLoading} btnText='Create' />
           </Grid>
         </Grid>
       </form>

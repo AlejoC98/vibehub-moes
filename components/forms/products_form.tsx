@@ -57,7 +57,7 @@ const ProductsForm = ({ defaultData, setOpenModal }: { defaultData?: ProductCont
   return (
     <Box sx={{ flexGrow: 1, padding: 5 }}>
       <form onSubmit={handleSubmit(hanldeNewProduct)}>
-        <Grid container spacing={5}>
+        <Grid container spacing={2}>
           <Grid size={6}>
             <Box>
               <TextField
@@ -66,9 +66,11 @@ const ProductsForm = ({ defaultData, setOpenModal }: { defaultData?: ProductCont
                 disabled
                 label="Sku"
                 variant="filled"
-                {...register('sku')}
-                InputProps={{
-                  endAdornment: <IconButton disabled={defaultData!.sku !== undefined} className="bg-emerald-600 hover:bg-emerald-800 text-white" onClick={handleCreateSku}><QrCodeIcon /></IconButton>
+                {...register('sku', { required: 'Sku is required' })}
+                slotProps={{
+                  input: {
+                    endAdornment: <IconButton disabled={defaultData!.sku !== undefined} className="bg-emerald-600 hover:bg-emerald-800 text-white" onClick={handleCreateSku}><QrCodeIcon /></IconButton>
+                  }
                 }}
               />
             </Box>
@@ -79,7 +81,7 @@ const ProductsForm = ({ defaultData, setOpenModal }: { defaultData?: ProductCont
               required
               label="Name"
               variant="filled"
-              {...register('name')}
+              {...register('name', { required: 'Name is required' })}
             />
           </Grid>
           <Grid size={6}>

@@ -23,7 +23,7 @@ const LoginForm = () => {
   return (
     <Box sx={{ maxWidth: 500}}>
       <form onSubmit={handleLogin}>
-        <Grid container spacing={5}>
+        <Grid container spacing={2}>
               <Grid size={12}>
                 <Typography 
                   variant='h1'

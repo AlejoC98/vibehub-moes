@@ -5,10 +5,7 @@ import { AccountContent, MenuItem } from '../../utils/interfaces';
 import DashboardIcon from '@mui/icons-material/Dashboard';
 import GroupIcon from '@mui/icons-material/Group';
 import InventoryIcon from '@mui/icons-material/Inventory';
-import AssessmentIcon from '@mui/icons-material/Assessment';
-import KeyboardReturnIcon from '@mui/icons-material/KeyboardReturn';
-import CloseIcon from '@mui/icons-material/Close';
-import LogoutIcon from '@mui/icons-material/Logout';
+import StorefrontIcon from '@mui/icons-material/Storefront';
 import ExpandLess from '@mui/icons-material/ExpandLess';
 import ExpandMore from '@mui/icons-material/ExpandMore';
 import LocalShippingIcon from '@mui/icons-material/LocalShipping';
@@ -17,7 +14,6 @@ import OpenWithIcon from '@mui/icons-material/OpenWith';
 import WidgetsIcon from '@mui/icons-material/Widgets';
 import UndoIcon from '@mui/icons-material/Undo';
 import DvrIcon from '@mui/icons-material/Dvr';
-import Groups2Icon from '@mui/icons-material/Groups2';
 import Link from 'next/link';
 import { createClient } from '../../utils/supabase/client';
 import { GlobalContext } from '../../utils/context/global_provider';
@@ -89,9 +85,9 @@ const SideBar = ({ open, setOpen }: { open: boolean, setOpen: (status: boolean) 
         ...(userAccount?.role?.id === 1 || userAccount?.role?.id === 2 || userAccount?.role?.id === 8 ? [
             {
                 id: 6,
-                title: "Customers",
-                to: "/customers",
-                icon: <Groups2Icon />
+                title: "Vendors",
+                to: "/vendors",
+                icon: <StorefrontIcon />
             }
         ] : []),
         ...(userAccount?.role?.id === 1 || userAccount?.role?.id === 2 ? [

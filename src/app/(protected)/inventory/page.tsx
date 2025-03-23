@@ -32,7 +32,7 @@ const Inventory = () => {
       
       const racksColumns: GridColDef[] = [
         { field: 'id', headerName: 'ID'},
-        { field: 'sku', headerName: 'Sku'},
+        // { field: 'sku', headerName: 'Sku'},
         { field: 'name', headerName: 'Name'},
         { field: 'columns', headerName: 'Columns'},
         { field: 'rows', headerName: 'Rows'},
@@ -42,7 +42,7 @@ const Inventory = () => {
       ];
   return (
     <Box>
-    <Grid container spacing={5}>
+    <Grid container spacing={2}>
       <Grid size={{ xs:12, sm:12, md:12, lg:6, xl:6, }}>
         <Block>
           <BasicTable title='Inventory' data={products || []} columns={productsColumns} createForm={<ProductsForm />} createFormTitle="New Item" />

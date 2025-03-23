@@ -63,7 +63,7 @@ const InventoryDetails = () => {
       <Block>
         <Typography variant='h4'>About</Typography>
         <Divider />
-        <Grid container spacing={5}>
+        <Grid container spacing={2}>
           <Grid size={6}>
             <Box>
               <Box>
@@ -99,7 +99,7 @@ const InventoryDetails = () => {
           Info
         </Typography>
         <Divider />
-        <Grid container spacing={5}>
+        <Grid container spacing={2}>
           <Grid size={4}>
             <Box>
               <Typography variant='h4'>Quantity</Typography>

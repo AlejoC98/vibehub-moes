@@ -9,7 +9,7 @@ const Metrics = ({ color = '#333', title, icon, content, footer } : { color?: st
 
     return (
         <Block sx={{ backgroundColor: color, color: '#ffffff'}}>
-            <Grid container spacing={5} className="h-full">
+            <Grid container spacing={2} className="h-full">
                 <Grid size={12}>
                     <Box className="flex h-full w-full justify-center items-center">
                         <Typography variant='h6'>{ title }</Typography>

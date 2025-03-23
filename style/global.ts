@@ -78,6 +78,15 @@ export const StyledInputBase = styled(InputBase)(({ theme }) => ({
     },
 }));
 
+export const NumberField = styled(TextField)({
+    '& input::-webkit-outer-spin-button, & input::-webkit-inner-spin-button': {
+      display: 'none',
+    },
+    '& input[type=number]': {
+      MozAppearance: 'textfield',
+    },
+  });
+
 export const Block = styled(Box)(({ theme }) => ({
     background: '#F4F4F4',
     padding: theme.spacing(2),

@@ -133,7 +133,7 @@ const { products, users, orders } = useContext(GlobalContext);
 
   return (
     <Box>
-      <Grid container spacing={5}>
+      <Grid container spacing={2}>
         <Grid size={{ xl:3 ,lg: 3, md:6, sm:1, xs: 1}}>
         <Metrics
             color='#60992D'

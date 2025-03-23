@@ -16,7 +16,7 @@ const Details = ({ content, editForm, data }: { content: ReactNode, editForm: Re
   return (
     <Box>
     {content && (
-        <Grid container spacing={5}>
+        <Grid container spacing={2}>
             <Grid size={1}>
                 <Box className="w-10">
                     <IconButton onClick={() => router.back()}>

@@ -1,6 +1,6 @@
 'use client'
 import { createContext, ReactNode, useEffect, useState } from "react";
-import { AccountContent, CustomerContent, GlobalContent, LocationContent, NotificationContent, OrderContent, ProductContent, RackContent, RoleContent, UserContent } from "../interfaces";
+import { AccountContent, CustomerContent, GlobalContent, LocationContent, NotificationContent, OrderContent, ProductContent, RackContent, ReceivingContent, RoleContent, UserContent, VendorContent } from "../interfaces";
 import { createClient } from "../supabase/client";
 
 export const GlobalContext = createContext<GlobalContent>({});
@@ -12,23 +12,45 @@ const GlobalProvider = ({ children }: { children: ReactNode }) => {
     const [users, setUsers] = useState<UserContent[]>([]);
     const [racks, setRacks] = useState<RackContent[]>([]);
     const [orders, setOrders] = useState<OrderContent[]>([]);
+    const [receivings, setReceivings] = useState<ReceivingContent[]>([]);
     const [products, setProducts] = useState<ProductContent[]>([]);
     const [userAccount, setUserAccount] = useState<AccountContent>();
     const [locations, setLocations] = useState<LocationContent[]>([]);
-    const [customers, setCustomers] = useState<CustomerContent[]>([]);
+    const [vendors, setVendors] = useState<VendorContent[]>([]);
     const [notifications, setNotifications] = useState<NotificationContent[]>([]);
 
     useEffect(() => {
-        // RealTime DEtecting 
-        const channel = supabase.channel('realtime products').on('postgres_changes', {
-            event: 'INSERT', schema: 'public', table: 'products'
+        // Realtime changes 
+        const channel = supabase.channel('realtime changes').on('postgres_changes', {
+            event: '*', schema: 'public', table: 'products'
         }, (payload) => {
             getProducts();
         }).on('postgres_changes', {
-            event: 'INSERT', schema: 'public', table: 'racks'
-        }, (payload) => {
-            getRacks();
-        }).subscribe();
+                event: '*', schema: 'public', table: 'racks'
+            }, (payload) => {
+                getRacks();
+            }).on('postgres_changes', {
+                event: '*', schema: 'public', table: 'racks_locations'
+            }, (payload) => {
+                getRacks();
+            }).on('postgres_changes', {
+                event: '*', schema: 'public', table: 'racks_locations_products'
+            }, (payload) => {
+                getRacks();
+            }).on('postgres_changes', {
+                event: '*', schema: 'public', table: 'accounts'
+            }, (payload) => {
+                getUser();
+            }).on('postgres_changes', {
+                event: '*', schema: 'public', table: 'vendors'
+            }, (payload) => {
+                getVendors();
+            })
+            .on('postgres_changes', {
+                event: '*', schema: 'public', table: 'receiving'
+            }, (payload) => {
+                getReceivings();
+            }).subscribe();
 
         const getProducts = async () => {
             var returnProducts = [];
@@ -39,7 +61,7 @@ const GlobalProvider = ({ children }: { children: ReactNode }) => {
                 for (var product of productsQuery!) {
                     var locationsQuery = await supabase.from('racks_locations').select().eq('product_id', product.id).maybeSingle();
                     if (locationsQuery != null) {
-                        returnProducts.push({...product, 'locations': locationsQuery});
+                        returnProducts.push({ ...product, 'locations': locationsQuery });
                     } else {
                         returnProducts.push(product);
                     }
@@ -52,19 +74,21 @@ const GlobalProvider = ({ children }: { children: ReactNode }) => {
         getProducts();
 
         const getRacks = async () => {
-            const { data } = await supabase.from('racks').select();
-            setRacks(data ?? []);
+            const { data: racksQuery, error: racksError } = await supabase
+                .from('racks')
+                .select('*,racks_locations (*, racks_locations_products(*))');
+            setRacks(racksQuery ?? []);
         }
 
         getRacks();
 
         const getAccountInformation = async () => {
-            const { data: userData} = await supabase.auth.getUser();
+            const { data: userData } = await supabase.auth.getUser();
 
             const { data: account, error: accountError } = await supabase
                 .from('accounts')
                 .select('*, roles (id, name)')
-                .eq('user_id',userData.user!.id)
+                .eq('user_id', userData.user!.id)
                 .single();
 
             setUserAccount({
@@ -81,6 +105,51 @@ const GlobalProvider = ({ children }: { children: ReactNode }) => {
 
         getAccountInformation();
 
+        const getRoles = async () => {
+            const { data: rolesQuery, error: roleErrors } = await supabase.from('roles').select().not('id', 'eq', 1);
+
+            setRoles(rolesQuery || []);
+        }
+
+        getRoles();
+
+        const getUser = async () => {
+            const { data: usersQuery, error: userError } = await supabase.from('accounts').select('*, roles(id, name)').not('role_id', 'eq', 1);
+
+            setUsers(usersQuery || []);
+        }
+
+        getUser();
+
+        const getVendors = async () => {
+            const { data: vendorsQuery, error } = await supabase.from('vendors').select();
+
+            setVendors(vendorsQuery || []);
+        }
+
+        getVendors();
+
+        const getReceivings = async () => {
+            const { data: receivingQuery, error: receivingError } = await supabase.from('receiving').select('*, vendors(id, name), receiving_products(*)');
+
+            console.log(receivingError);
+
+            setReceivings(receivingQuery || []);
+        }
+
+        getReceivings();
+
+        // const getLocations = async () => {
+        //     const { data: locationsQuery, error: locationsError } = await supabase
+        //         .from('racks')
+        //         .select('*,racks_locations (*, racks_locations_products(*))');
+
+
+        //     setLocations(locationsQuery || []);
+        // }
+
+        // getLocations();
+
         return () => {
             supabase.removeChannel(channel);
         }
@@ -88,7 +157,7 @@ const GlobalProvider = ({ children }: { children: ReactNode }) => {
 
 
     return (
-        <GlobalContext.Provider value={{ locations, roles, users, customers, products, racks, notifications, orders, userAccount }}>{children}</GlobalContext.Provider>
+        <GlobalContext.Provider value={{ locations, roles, users, vendors, products, racks, notifications, orders, userAccount, receivings }}>{children}</GlobalContext.Provider>
     )
 };
 

@@ -85,10 +85,22 @@ main {
 
 .transparent-blur-container {
   position: relative;
-  background-color: rgba(255, 255, 255, 0.1); /* Slight white transparency */
-  backdrop-filter: blur(10px); /* Apply blur effect */
-  border-radius: 10px; /* Optional: Add rounded corners */
+  background-color: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+  border-radius: 10px;
   padding: 10px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Optional: Subtle shadow for depth */
-  overflow: hidden; /* Ensures no content spills out */
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+}
+
+.no-spinner {
+  appearance: textfield !important;
+  -moz-appearance: textfield !important;
+  -webkit-appearance: none !important;
+}
+
+.no-spinner::-webkit-outer-spin-button,
+.no-spinner::-webkit-inner-spin-button {
+  -webkit-appearance: none !important;
+  margin: 0 !important;
 }

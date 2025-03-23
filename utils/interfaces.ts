@@ -36,16 +36,18 @@ export interface TabListProps {
 
 export interface UserContent {
     id?: number;
+    firstName: string;
+    lastName: string;
     email?: string;
     roleId?: number;
     username?: string;
-    location?: LocationContent;
-    password?: string;
-    deleted?: boolean;
-    account?: AccountContent;
-    role?: RoleContent;
-    createdBy: number;
-    createdAt: Date;
+    // location?: LocationContent;
+    // password?: string;
+    // deleted?: boolean;
+    // account?: AccountContent;
+    // role?: RoleContent;
+    // createdBy: number;
+    // createdAt: Date;
 }
 
 export interface RoleOpt {
@@ -62,13 +64,14 @@ export interface GlobalContent {
     locations?: LocationContent[];
     roles?: RoleContent[];
     users?: UserContent[];
-    customers?: CustomerContent[];
+    vendors?: VendorContent[];
     products?: ProductContent[];
     racks?: RackContent[];
     positions?: PositionContent[];
     notifications?: NotificationContent[];
     orders?: OrderContent[];
     userAccount?: AccountContent;
+    receivings?: ReceivingContent[];
 }
 
 export interface LocationContent {
@@ -98,9 +101,9 @@ export interface ProductContent {
     img?: string;
     sku?: string;
     name?: string;
-    unit_price: number;
-    total_price: number;
-    // quantity?: number;
+    unit_price?: number;
+    total_price?: number;
+    quantity?: number;
     // rackId: number;
     // positions: PositionProductContent[];
     // createdBy: number | UserContent;
@@ -114,20 +117,46 @@ export interface RackInput {
 
 export interface RackContent {
     id?: number;
-    sku?: string;
+    name: string;
     columns: string;
     rows: string;
-    product?: ProductContent[];
-    name?: string;
-    position?: PositionContent[];
+    racks_locations: RackLocationContent[];
+}
+
+export interface RackLocationContent {
+    id?: number;
+    sku: string;
+    name: string;
+    rack_id: number;
+    racks_locations_products: RackLocationProductContent[];
+}
+
+export interface RackLocationProductContent {
+    id?: number;
+    quantity: number;
+    product_id: number;
+    rack_location_id: number;
 }
 
 export interface ReceivingContent {
-    sku: string;
-    name?: string;
-    quantity: number;
-    condition: string;
-    locationId: number;
+    id: number;
+    po_number: string;
+    vendor_id: number;
+    arrived_at: Date;
+    trailer_number: string;
+    assign_to: number,
+    receiving_products?: ReceivingProductsContent[];
+    vendors?: VendorContent[];
+    status: string;
+    // items: Array<{product_id: string, quantity: number}>;
+}
+
+export interface ReceivingProductsContent {
+    receiving_id: number;
+    product_id: number;
+    expected_quantity: number;
+    received_quantity: number;
+    damage_quantity: number;
 }
 
 export interface PositionContent {
@@ -217,6 +246,11 @@ export interface CustomerContent {
     updatedBy?: number;
     createdAt?: Date;
     updatedAt?: Date;
+}
+
+export interface VendorContent {
+    id: number;
+    name: string;
 }
 
 export interface AddressContent {
