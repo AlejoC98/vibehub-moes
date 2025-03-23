@@ -124,12 +124,12 @@ const BasicTable = ({
   }
 
   const handleViewDetails = (data: any) => {
-    if (Object.keys(data).includes('sku') && !Object.keys(data).includes('rackId')) {
+    if (Object.keys(data).includes('sku')) {
       router.push(`${pathname}/${data.sku}`);
     } else if (Object.keys(data).includes('username')) {
       router.push(`${pathname}/${data.username}`);
-    } else if (Object.keys(data).includes('rackId')) {
-      router.push(`/inventory/${data.sku}`);
+    } else if (Object.keys(data).includes('racks_locations')) {
+      router.push(`/inventory/${data.id}`);
     } else if (Object.keys(data).includes('addresses')) {
       router.push(`/customers/${data.id}`);
     } else if (Object.keys(data).includes('order_number')) {

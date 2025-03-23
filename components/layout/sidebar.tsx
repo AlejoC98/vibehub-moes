@@ -15,12 +15,10 @@ import WidgetsIcon from '@mui/icons-material/Widgets';
 import UndoIcon from '@mui/icons-material/Undo';
 import DvrIcon from '@mui/icons-material/Dvr';
 import Link from 'next/link';
-import { createClient } from '../../utils/supabase/client';
 import { GlobalContext } from '../../utils/context/global_provider';
 
 const SideBar = ({ open, setOpen }: { open: boolean, setOpen: (status: boolean) => void }) => {
 
-    const supabase = createClient();
     const { userAccount } = useContext(GlobalContext);
 
     const MenuList: MenuItem[] = [
@@ -107,7 +105,7 @@ const SideBar = ({ open, setOpen }: { open: boolean, setOpen: (status: boolean) 
     }
 
     return (
-        <Box sx={{ width: open ? 250 : 50, justifyItems: 'center' }} className="transparent-blur-container">
+        <Box sx={{ width: open ? 250 : 50, justifyItems: 'center', transition: 'all .2s ease-in-out'}} className="transparent-blur-container">
             <IconButton LinkComponent={Link} href='/dashboard' onClick={() => setOpen(false)}>
                 <Avatar
                     sx={{ transition: 'all .2s ease-in-out', width: open ? 80 : 50, height: open ? 80 : 50, '& > img': { objectPosition: 'bottom' } }}

@@ -51,8 +51,9 @@ const InventoryDetails = () => {
   useEffect(() => {
     if (products !== undefined) {
       const productsData = 
-        products.find(x => x.sku === params?.sku![0]) || 
-        racks?.find(x => x.sku === params?.sku![0])
+        products.find(x => x.sku === params?.sku![0])
+        || racks?.find(x => x.racks_locations.find(rl => rl.sku == params?.sku![0]))
+        // || racks?.find(x => x.sku === params?.sku![0])
         // || racks?.flatMap(rack => rack.position).find(p => p?.sku === params?.sku![0]);
       setData(productsData);
     }
