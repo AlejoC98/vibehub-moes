@@ -108,10 +108,10 @@ const ReceivingForm = ({ defaultData, setOpenModal }: { defaultData?: ReceivingC
             }
 
             for (var pro of checked) {
-                await supabase.from('receiving_products').insert({
+                const { data, error} = await supabase.from('receiving_products').insert({
                     'receiving_id': newReceiving.id,
                     'product_id': pro.product_id,
-                    'quantity': pro.quantity
+                    'expected_quantity': pro.quantity
                 });
             }
 
