@@ -40,11 +40,15 @@ const RacksForm = ({ defaultData, setOpenModal }: { defaultData?: RackContent, s
           var rackLocations = generateBarcodesWithSeparator(newRack['name'], newRack['columns'], newRack['rows']);
 
           for (var location of rackLocations) {
-            await supabase.from('racks_locations').insert({
+            const { error } = await supabase.from('racks_locations').insert({
               'rack_id': newRack['id'],
               'name': location,
               'sku': generateRandomNumberString(15),
             });
+
+            if (error) {
+              console.log(error);
+            }
 
           }
           toast.success('Rack Location created!');

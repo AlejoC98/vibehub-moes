@@ -43,3 +43,29 @@ export function generateBarcodesWithSeparator(name: string, rows: number, column
       }
     }
   }
+
+export const deepSearch = (data: any[], key: string): any[] => {
+  const lowerKey = key.toLowerCase();
+
+  const hasMatch = (obj: any): boolean => {
+    if (obj === null || obj === undefined) return false;
+
+    if (typeof obj === 'string' || typeof obj === 'number' || typeof obj === 'boolean') {
+      return obj.toString().toLowerCase().includes(lowerKey);
+    }
+
+    if (Array.isArray(obj)) {
+      return obj.some(item => hasMatch(item));
+    }
+
+    if (typeof obj === 'object') {
+      return Object.values(obj).some(value => hasMatch(value));
+    }
+
+    return false;
+  };
+
+  const result = data.filter(parentObj => hasMatch(parentObj));
+
+  return result.length > 0 ? result : [];
+};

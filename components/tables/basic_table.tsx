@@ -11,6 +11,7 @@ import CloseIcon from '@mui/icons-material/Close';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import VisibilityIcon from '@mui/icons-material/Visibility';
+import { deepSearch } from '../../utils/functions/main';
 
 const BasicTable = ({
   title,
@@ -103,8 +104,8 @@ const BasicTable = ({
   const handleSearch = (key: string) => {
     if (key !== "") {
       key = key.toLowerCase();
-      const search = data.filter(row => Object.values(row).find(record => record?.toString().toLowerCase().includes(key)));
-      setSearchData(search);
+      var content = deepSearch(data, key);
+      setSearchData(content);
     } else {
       setSearchData([]);
     }

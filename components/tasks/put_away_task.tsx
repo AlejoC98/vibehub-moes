@@ -100,15 +100,18 @@ const PutAwayTask = ({ data, updateData } : { data: ReceivingContent, updateData
     }
 
     const validatePendingProducts = async () => {
+        var products = [];
         for (var pro of data?.receiving_products!) {
-            const { data, error } = await supabase.from('racks_locations_products').select().eq('rack_location_id', 1).eq('product_id', pro.product_id).maybeSingle();
+            const { data: rlpQuery, error } = await supabase.from('racks_locations_products').select().eq('rack_location_id', 1).eq('product_id', pro.product_id).maybeSingle();
 
-            if (data != null) {
-                setPendingProducts(data?.receiving_products);
+            if (rlpQuery != null) {
+                products.push(data?.receiving_products);
             }
         }
 
-        if (pendingProducts?.length == 0) {
+        setPendingProducts(data?.receiving_products!);
+
+        if (products?.length == 0) {
             if (completeProducts.length == 0) {
                 try {
                     const { error } = await supabase.from('receiving').update({

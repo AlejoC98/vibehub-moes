@@ -76,7 +76,7 @@ const GlobalProvider = ({ children }: { children: ReactNode }) => {
         const getRacks = async () => {
             const { data: racksQuery, error: racksError } = await supabase
                 .from('racks')
-                .select('*,racks_locations (*, racks_locations_products(*))');
+                .select('*,racks_locations (*, racks_locations_products(*, products(*)))');
             setRacks(racksQuery ?? []);
         }
 

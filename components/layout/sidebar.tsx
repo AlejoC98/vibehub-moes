@@ -11,7 +11,7 @@ import ExpandMore from '@mui/icons-material/ExpandMore';
 import LocalShippingIcon from '@mui/icons-material/LocalShipping';
 import ReceiptLongIcon from '@mui/icons-material/ReceiptLong';
 import OpenWithIcon from '@mui/icons-material/OpenWith';
-import WidgetsIcon from '@mui/icons-material/Widgets';
+import AssignmentIcon from '@mui/icons-material/Assignment';
 import UndoIcon from '@mui/icons-material/Undo';
 import DvrIcon from '@mui/icons-material/Dvr';
 import Link from 'next/link';
@@ -36,9 +36,9 @@ const SideBar = ({ open, setOpen }: { open: boolean, setOpen: (status: boolean) 
         },
         {
             id: 3,
-            title: "Movements",
+            title: "Logistics",
             to: "#",
-            icon: <WidgetsIcon />,
+            icon: <AssignmentIcon />,
             submenu: [
                 ...(userAccount?.role?.id === 1 || userAccount?.role?.id === 2 || userAccount?.role?.id === 7 ? [
                     {
@@ -58,8 +58,8 @@ const SideBar = ({ open, setOpen }: { open: boolean, setOpen: (status: boolean) 
                 ] : []),
                 {
                     id: 3,
-                    title: "Organize",
-                    to: "/organize",
+                    title: "Replenishment",
+                    to: "/replenishment",
                     icon: <OpenWithIcon />
                 }
             ]
@@ -99,13 +99,18 @@ const SideBar = ({ open, setOpen }: { open: boolean, setOpen: (status: boolean) 
     ];
 
     const [menuOpen, setMenuOpen] = useState<number | null>(1);
+    const [sideWidth, setSideWidth] = useState<number>(250);
 
     const handleOpenMenu = (key: number) => {
         setMenuOpen(key !== menuOpen ? key : null);
     }
 
+    useEffect(() => {
+        setSideWidth(open ? 250 : 50);
+    }, [open])
+
     return (
-        <Box sx={{ width: open ? 250 : 50, justifyItems: 'center', transition: 'all .2s ease-in-out'}} className="transparent-blur-container">
+        <Box sx={{ width: sideWidth, justifyItems: 'center', transition: 'all .2s ease-in-out'}} className="transparent-blur-container">
             <IconButton LinkComponent={Link} href='/dashboard' onClick={() => setOpen(false)}>
                 <Avatar
                     sx={{ transition: 'all .2s ease-in-out', width: open ? 80 : 50, height: open ? 80 : 50, '& > img': { objectPosition: 'bottom' } }}
