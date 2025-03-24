@@ -93,7 +93,7 @@ export const Block = styled(Box)(({ theme }) => ({
     ...theme.typography.body1,
     borderRadius: 10,
     boxShadow: '5px 10px 10px 0px rgba(0,0,0,0.35)',
-    height: '100%'
+    height: '100%',
 }));
 
 export const Item = styled(Paper)(({ theme }) => ({

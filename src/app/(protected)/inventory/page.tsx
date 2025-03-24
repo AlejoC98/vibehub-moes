@@ -63,7 +63,7 @@ const Inventory = () => {
       { isLoading ? (
         <Skeleton></Skeleton>
       ) : (
-        <Grid container spacing={2}>
+        <Grid container spacing={10}>
         <Grid size={{ xs:12, sm:12, md:12, lg:6, xl:6, }}>
           <Block>
             <BasicTable title='Inventory' data={products || []} columns={productsColumns} createForm={<ProductsForm />} createFormTitle="New Item" />

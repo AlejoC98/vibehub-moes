@@ -136,6 +136,7 @@ export interface RackLocationProductContent {
     quantity: number;
     product_id: number;
     rack_location_id: number;
+    products?: ProductContent;
 }
 
 export interface ReceivingContent {

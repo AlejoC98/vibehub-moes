@@ -46,7 +46,7 @@ const InventoryDetails = () => {
   if (type == 'rack') {
     return (
       <Grid container spacing={2}>
-        <Grid size={3}>
+        <Grid size={{ lg: 3, md: 3, sm: 12, xs: 12}}>
           <Block sx={{ display: 'grid', placeItems: 'center'}}>
             <Typography variant='h4'>Rack { data['name'] }</Typography>
             <IconButton onClick={() => reactToPrintFn()}>
@@ -57,7 +57,7 @@ const InventoryDetails = () => {
             </Box>
           </Block>
         </Grid>
-        <Grid size={9}>
+        <Grid size={{ lg: 9, md: 9, sm: 12, xs: 12}}>
           <Block>
            <Typography variant='h4'>Content</Typography>
            <Grid container spacing={2}>
