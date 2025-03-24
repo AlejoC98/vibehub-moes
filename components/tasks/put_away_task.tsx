@@ -69,6 +69,8 @@ const PutAwayTask = ({ data, updateData } : { data: ReceivingContent, updateData
                 .eq('product_id', putAwayProduct?.product_id).eq('rack_location_id', 1);
 
             if (error) {
+                setPutAwayProduct(undefined);
+                setPutAwayRack(undefined);
                 throw new Error('Error moving product');
             }
             setCompletedProducts((prev) => [...prev, putAwayProduct?.product_id!]);
@@ -79,21 +81,6 @@ const PutAwayTask = ({ data, updateData } : { data: ReceivingContent, updateData
 
             toast.success('Product Moved!');
 
-            if (completeProducts.length == 0) {
-                try {
-                    const { error } = await supabase.from('receiving').update({
-                        'status': 'Completed'
-                    }).eq('id', data?.id);
-        
-                    if (error) {
-                        throw new Error(error.message);
-                    }
-                    updateData({...data, 'status': 'Completed'});
-                } catch (error: any) {
-                    toast.error(error.message);
-                }
-            }
-
         } catch (error: any) {
             toast.warning(error.message);
         }
@@ -102,11 +89,11 @@ const PutAwayTask = ({ data, updateData } : { data: ReceivingContent, updateData
     const validatePendingProducts = async () => {
         var products = [];
         for (var pro of data?.receiving_products!) {
-            const { data: rlpQuery, error } = await supabase.from('racks_locations_products').select().eq('rack_location_id', 1).eq('product_id', pro.product_id).maybeSingle();
+            // const { data: rlpQuery, error } = await supabase.from('racks_locations_products').select().eq('rack_location_id', 1).eq('product_id', pro.product_id).maybeSingle();
 
-            if (rlpQuery != null) {
-                products.push(data?.receiving_products);
-            }
+            // if (rlpQuery != null) {
+            // }
+            products.push(data?.receiving_products);
         }
 
         setPendingProducts(data?.receiving_products!);
@@ -133,6 +120,28 @@ const PutAwayTask = ({ data, updateData } : { data: ReceivingContent, updateData
     useEffect(() => {
         validatePendingProducts();
     }, [])
+    useEffect(() => {
+        const validatStatus = async () => {
+            if (completeProducts.length == pendingProducts.length) {
+                try {
+                    const { error } = await supabase.from('receiving').update({
+                        'status': 'Completed'
+                    }).eq('id', data?.id);
+        
+                    if (error) {
+                        throw new Error(error.message);
+                    }
+                    updateData({...data, 'status': 'Completed'});
+                } catch (error: any) {
+                    toast.error(error.message);
+                }
+            }
+        }
+
+        if (pendingProducts.length != 0) {
+            validatStatus();
+        }
+    }, [completeProducts])
 
     return (
         <Grid container spacing={2}>
@@ -159,6 +168,7 @@ const PutAwayTask = ({ data, updateData } : { data: ReceivingContent, updateData
                                 <TextField
                                     fullWidth
                                     label="Sku"
+                                    value={findSku || ''}
                                     disabled={putAwayProduct != null}
                                     onChange={(event) => setFindSku(event.target.value)}
                                     onKeyDown={(event) => {
@@ -187,6 +197,7 @@ const PutAwayTask = ({ data, updateData } : { data: ReceivingContent, updateData
                                     fullWidth
                                     label="Location"
                                     disabled={putAwayRack != null}
+                                    value={findLocation || ''}
                                     onChange={(event) => setFindLocation(event.target.value)}
                                     onKeyDown={(event) => {
                                         if (event.key === 'Enter') {

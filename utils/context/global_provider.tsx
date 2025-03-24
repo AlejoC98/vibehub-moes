@@ -24,32 +24,46 @@ const GlobalProvider = ({ children }: { children: ReactNode }) => {
         const channel = supabase.channel('realtime changes').on('postgres_changes', {
             event: '*', schema: 'public', table: 'products'
         }, (payload) => {
-            getProducts();
+            setTimeout(() => {
+                getProducts();
+            }, 2000);
         }).on('postgres_changes', {
                 event: '*', schema: 'public', table: 'racks'
             }, (payload) => {
-                getRacks();
+                setTimeout(() => {
+                    getRacks();
+                }, 2000);
             }).on('postgres_changes', {
                 event: '*', schema: 'public', table: 'racks_locations'
             }, (payload) => {
-                getRacks();
+                setTimeout(() => {
+                    getRacks();
+                }, 2000);
             }).on('postgres_changes', {
                 event: '*', schema: 'public', table: 'racks_locations_products'
             }, (payload) => {
-                getRacks();
+                setTimeout(() => {
+                    getRacks();
+                }, 2000);
             }).on('postgres_changes', {
                 event: '*', schema: 'public', table: 'accounts'
             }, (payload) => {
-                getUser();
+                setTimeout(() => {
+                    getUser();
+                }, 2000);
             }).on('postgres_changes', {
                 event: '*', schema: 'public', table: 'vendors'
             }, (payload) => {
-                getVendors();
+                setTimeout(() => {
+                    getVendors();
+                }, 2000);
             })
             .on('postgres_changes', {
                 event: '*', schema: 'public', table: 'receiving'
             }, (payload) => {
-                getReceivings();
+                setTimeout(() => {
+                    getReceivings();
+                }, 2000);
             }).subscribe();
 
         const getProducts = async () => {

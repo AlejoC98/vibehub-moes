@@ -44,7 +44,7 @@ const SideBar = ({ open, setOpen }: { open: boolean, setOpen: (status: boolean) 
                     {
                         id: 1,
                         title: "Shipping",
-                        to: "/shipping",
+                        to: "#",
                         icon: <LocalShippingIcon />
                     }
                 ] : []),
@@ -68,7 +68,7 @@ const SideBar = ({ open, setOpen }: { open: boolean, setOpen: (status: boolean) 
             {
                 id: 4,
                 title: "Orders",
-                to: "/orders",
+                to: "#",
                 icon: <DvrIcon />
             }
         ] : []),
@@ -76,7 +76,7 @@ const SideBar = ({ open, setOpen }: { open: boolean, setOpen: (status: boolean) 
             {
                 id: 5,
                 title: "Return",
-                to: "/returns",
+                to: "#",
                 icon: <UndoIcon />
             }
         ] : []),
