@@ -42,12 +42,14 @@ const LoginForm = () => {
                   fullWidth
                   placeholder='Username'
                   type='text'
-                  InputProps={{
-                    startAdornment: (
-                      <InputAdornment position='start' className="text-white">
-                        <PersonIcon sx={{color: '#fff'}} />
-                      </InputAdornment>
-                    )
+                  slotProps={{
+                    input: {
+                      startAdornment: (
+                        <InputAdornment position='start' className="text-white">
+                          <PersonIcon sx={{color: '#fff'}} />
+                        </InputAdornment>
+                      )
+                    }
                   }}
                 />
               </Grid>
@@ -60,12 +62,14 @@ const LoginForm = () => {
                   }}
                   placeholder='Password'
                   type='password'
-                  InputProps={{
-                    startAdornment: (
-                      <InputAdornment position='start' className="text-white">
-                        <KeyIcon sx={{color: '#fff'}} />
-                      </InputAdornment>
-                    )
+                  slotProps={{
+                    input: {
+                      startAdornment: (
+                        <InputAdornment position='start' className="text-white">
+                          <KeyIcon sx={{color: '#fff'}} />
+                        </InputAdornment>
+                      )
+                    }
                   }}
                 />
               </Grid>

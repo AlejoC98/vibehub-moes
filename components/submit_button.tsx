@@ -1,9 +1,9 @@
-import { LoadingButton } from '@mui/lab'
+import { Button } from '@mui/material'
 import React, { ReactNode } from 'react'
 
 const SubmitButton = ( { fullWidth, variant, styles, icon, btnText, isLoading = false } : { fullWidth: boolean, variant: "text" | "outlined" | "contained", styles?: string, icon?: ReactNode, btnText: string, isLoading: boolean}) => {
   return (
-    <LoadingButton
+    <Button
         className={styles}
         fullWidth={fullWidth}
         loading={isLoading}
@@ -13,7 +13,7 @@ const SubmitButton = ( { fullWidth, variant, styles, icon, btnText, isLoading = 
         type='submit'
     >
         { btnText }
-  </LoadingButton>
+  </Button>
   )
 }
 
