@@ -22,9 +22,9 @@ const layout = ({ children} : {children: ReactNode}) => {
         />
       <Box className='bg-dash'>
         <SideBar open={openMenu} setOpen={setOpenMenu} />
-        <Box sx={{display: 'flex', flexDirection: 'column', width: `calc(100% - ${openMenu? 250 : 50}px)`, height: '100vh', overflowY: 'scroll', pb: 30}}>
+        <Box sx={{display: 'flex', flexDirection: 'column', width: `calc(100% - ${openMenu? 250 : 50}px)`, height: '100vh', overflowY: 'scroll', overflowX: 'hidden'}}>
             <Navbar open={openMenu} setOpen={setOpenMenu} />
-            <Box sx={{height: '100%', padding: '10px 25px'}}>
+            <Box sx={{height: '100%', padding: '10px 25px', mb: 30}}>
             { children }
             </Box>
         </Box>

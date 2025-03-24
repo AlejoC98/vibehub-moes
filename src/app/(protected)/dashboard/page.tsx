@@ -133,8 +133,8 @@ const { products, users, orders } = useContext(GlobalContext);
 
   return (
     <Box>
-      <Grid container spacing={2}>
-        <Grid size={{ xl:3 ,lg: 3, md:6, sm:1, xs: 1}}>
+      <Grid container spacing={7}>
+        <Grid size={{ xl:3 ,lg: 3, md:6, sm:12, xs: 12}}>
         <Metrics
             color='#60992D'
             title='Products Available'
@@ -145,7 +145,7 @@ const { products, users, orders } = useContext(GlobalContext);
             footer="Subio"
           />
         </Grid>
-        <Grid size={{ xl:3 ,lg: 3, md:6, sm:1, xs: 1}}>
+        <Grid size={{ xl:3 ,lg: 3, md:6, sm:12, xs: 12}}>
         <Metrics
             color='#F07167'
             title='Orders Shipped'
@@ -156,7 +156,7 @@ const { products, users, orders } = useContext(GlobalContext);
             footer="Last month"
           />
         </Grid>
-        <Grid size={{ xl:3 ,lg: 3, md:6, sm:1, xs: 1}}>
+        <Grid size={{ xl:3 ,lg: 3, md:6, sm:12, xs: 12}}>
         <Metrics
             color='#0892A5'
             title='Returns'
@@ -167,7 +167,7 @@ const { products, users, orders } = useContext(GlobalContext);
             footer="Last month"
           />
         </Grid>
-        <Grid size={{ xl:3 ,lg: 3, md:6, sm:1, xs: 1}}>
+        <Grid size={{ xl:3 ,lg: 3, md:6, sm:12, xs: 12}}>
         <Metrics
             color='#373F47'
             title='Month Revenue'

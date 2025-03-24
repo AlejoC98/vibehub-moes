@@ -144,8 +144,8 @@ const PutAwayTask = ({ data, updateData } : { data: ReceivingContent, updateData
     }, [completeProducts])
 
     return (
-        <Grid container spacing={2}>
-            <Grid size={4}>
+        <Grid container spacing={10}>
+            <Grid size={{ lg: 4, md: 5, sm: 12, xs: 12}}>
                 <Block>
                     <List>
                         {pendingProducts?.map((item) => {
@@ -160,7 +160,7 @@ const PutAwayTask = ({ data, updateData } : { data: ReceivingContent, updateData
                     </List>
                 </Block>
             </Grid>
-            <Grid size={8}>
+            <Grid size={{ lg: 8, md: 7, sm: 12, xs: 12 }}>
                 <Block>
                     <form action="">
                         <Grid container spacing={2}>

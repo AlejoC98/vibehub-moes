@@ -173,12 +173,12 @@ const BasicTable = ({
   return (
 <Box sx={{ minHeight: 400, width: '100%' }}>
       <Grid container spacing={2}>
-        <Grid size={4}>
+        <Grid size={{ lg: 4, md: 4, sm: 12, xs: 12}}>
           <Box sx={{display: 'flex', width: '100%', height: '100%', alignItems: 'center'}} >
             <Typography variant='h4'>{title}</Typography>
           </Box>
         </Grid>
-        <Grid size={4}>
+        <Grid size={{ lg: 4, md: 4, sm: 12, xs: 12}}>
           <Box sx={{ width: '100%'}}>
             <TextField
               fullWidth
@@ -207,8 +207,8 @@ const BasicTable = ({
             />
           </Box>
         </Grid>
-        <Grid size={4}>
-          <Box sx={{display: 'flex', width: '100%'}}>
+        <Grid size={{ lg:4, md: 4, sm: 12, xs: 12}}>
+          <Box sx={{display: { lg: 'flex', md: 'flex', sm: 'none', xs: 'none'}, width: '100%'}}>
             <Box sx={{ flexGrow: 1 }} />
             <Box sx={{display: 'flex', gap: 1}}>
               {selectedRow != null && (
