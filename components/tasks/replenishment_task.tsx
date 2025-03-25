@@ -24,12 +24,11 @@ const ReplenishmentTask = () => {
     const route = useRouter()
 
     const [activeStep, setActiveStep] = useState<number>(0);
-    const [originRackSku, setOriginRackSku] = useState<string>();
-    const [originRackQuantity, setOriginRackQuantity] = useState<string>();
-    const [originRackId, setOriginRackId] = useState<number>();
-    const [destinyRackSku, setDestinyRackSku] = useState<string>();
-    const [destinyRackId, setDestinyRackId] = useState<number>();
-    // const [destinyRackQuantity, setDestinyRackQuantity] = useState<string>();
+    const [originRackSku, setOriginRackSku] = useState<string>('');
+    const [originRackQuantity, setOriginRackQuantity] = useState<string>('');
+    const [originRackId, setOriginRackId] = useState<number>(0);
+    const [destinyRackSku, setDestinyRackSku] = useState<string>('');
+    const [destinyRackId, setDestinyRackId] = useState<number>(0);
 
 
     const passWelcomePage = () => setActiveStep(activeStep + 1);
@@ -93,48 +92,80 @@ const ReplenishmentTask = () => {
     const handleMovement = async () => {
         try {
             const { data: currentQuery, error } = await supabase
+            .from('racks_locations_products')
+            .select('quantity, product_id')
+            .eq('rack_location_id', originRackId)
+            .maybeSingle();
+        
+        if (error) {
+            throw new Error('Error fetching origin rack data');
+        }
+        
+        if (!currentQuery || currentQuery.quantity === undefined) {
+            throw new Error('Invalid rack location');
+        }
+        
+        if (currentQuery.quantity === 0) {
+            throw new Error('Location is Empty!');
+        }
+        
+        const originQuantity = parseInt(originRackQuantity!);
+        if (originQuantity > currentQuery.quantity) {
+            throw new Error('Not enough quantity in origin location');
+        }
+        
+        const newQuantity = currentQuery.quantity - originQuantity;
+
+        const { error: updateError } = await supabase
+            .from('racks_locations_products')
+            .update({ quantity: newQuantity })
+            .eq('rack_location_id', originRackId);
+        
+        if (updateError) {
+            throw new Error('Error updating origin quantity');
+        }
+
+        const { data: destinyQuery, error: destinyError } = await supabase
+            .from('racks_locations_products')
+            .select('quantity, product_id')
+            .eq('rack_location_id', destinyRackId)
+            .maybeSingle();
+        
+        if (destinyError) {
+            throw new Error('Error fetching destination rack data');
+        }
+        
+        if (destinyQuery) {
+            if (destinyQuery.product_id !== currentQuery.product_id) {
+                throw new Error('Destination location has a different product');
+            }
+        
+            const newDestinyQuantity = destinyQuery.quantity + originQuantity;
+        
+            const { error: updateDestinyError } = await supabase
                 .from('racks_locations_products')
-                .select('quantity')
-                .eq('rack_locations_id', originRackId)
-                .single();
-
-            if (error) {
-                throw new Error('Error fetching data');
+                .update({ quantity: newDestinyQuantity })
+                .eq('rack_location_id', destinyRackId);
+        
+            if (updateDestinyError) {
+                throw new Error('Error updating destination quantity');
             }
-
-            if (currentQuery && currentQuery.quantity !== undefined) {
-                const newQuantity = currentQuery.quantity - parseInt(originRackQuantity!);
-
-                const { error: updateError } = await supabase
-                    .from('racks_locations_products')
-                    .update({
-                        quantity: newQuantity,
-                    })
-                    .eq('rack_locations_id', originRackId);
-
-                if (updateError) {
-                    throw new Error('Error updating quantity');
-                }
-
-                const { data: upsertedData, error: upsertError } = await supabase
-                    .from('racks_locations_products')
-                    .upsert(
-                        [{
-                            rack_locations_id: destinyRackId,
-                            quantity: originRackQuantity
-                        }],
-                        { onConflict: 'rack_locations_id'}
-                    );
-
-                if (upsertError) {
-                    throw new Error('Error during upsert operation');
-                }
-
-                toast.success('Replenishment Complete');
-                route.back();
-            } else {
-                throw new Error('No data found or quantity is undefined');
+        } else {
+            const { error: insertDestinyError } = await supabase
+                .from('racks_locations_products')
+                .insert({
+                    rack_location_id: destinyRackId,
+                    quantity: originQuantity,
+                    product_id: currentQuery.product_id,
+                });
+        
+            if (insertDestinyError) {
+                throw new Error('Error inserting new destination record');
             }
+        }
+        
+        toast.success('Replenishment Complete');
+        route.back();
         } catch (error: any) {
             toast.warning(error.message);
         }
@@ -159,6 +190,7 @@ const ReplenishmentTask = () => {
                 <TextField
                     fullWidth
                     required
+                    value={originRackSku}
                     onChange={(event) => setOriginRackSku(event.target.value)}
                     label='Move From'
                 />
@@ -167,6 +199,7 @@ const ReplenishmentTask = () => {
                 <TextField
                     fullWidth
                     required
+                    value={originRackQuantity}
                     onChange={(event) => setOriginRackQuantity(event.target.value)}
                     label='Quantity'
                 />
@@ -177,7 +210,7 @@ const ReplenishmentTask = () => {
                 <TextField
                     fullWidth
                     required
-                    defaultValue={''}
+                    value={destinyRackSku}
                     onChange={(event) => setDestinyRackSku(event.target.value)}
                     label='Move To'
                 />
