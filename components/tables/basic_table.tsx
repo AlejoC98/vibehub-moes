@@ -171,7 +171,7 @@ const BasicTable = ({
   }
 
   return (
-<Box sx={{ minHeight: 400, width: '100%' }}>
+<Box sx={{ minHeight: 400, width: '100%'}}>
       <Grid container spacing={2}>
         <Grid size={{ lg: 4, md: 4, sm: 12, xs: 12}}>
           <Box sx={{display: 'flex', width: '100%', height: '100%', alignItems: 'center'}} >

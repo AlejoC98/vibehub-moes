@@ -2,7 +2,7 @@ import React, { ReactNode } from 'react'
 
 const layout = ({ children} : {children: ReactNode}) => {
   return (
-    <main>
+    <main style={{ padding: '0 3rem'}}>
         { children }
     </main>
   )

@@ -24,7 +24,7 @@ const layout = ({ children} : {children: ReactNode}) => {
         <SideBar open={openMenu} setOpen={setOpenMenu} />
         <Box sx={{display: 'flex', flexDirection: 'column', width: `calc(100% - ${openMenu? 250 : 50}px)`, height: '100vh', overflowY: 'scroll', overflowX: 'hidden'}}>
             <Navbar open={openMenu} setOpen={setOpenMenu} />
-            <Box sx={{height: '100%', padding: '10px 25px', mb: 30}}>
+            <Box sx={{height: '100%', padding: '10px 25px'}}>
             { children }
             </Box>
         </Box>

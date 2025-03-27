@@ -45,7 +45,7 @@ const InventoryDetails = () => {
 
   if (type == 'rack') {
     return (
-      <Grid container spacing={2}>
+      <Grid container spacing={10}>
         <Grid size={{ lg: 3, md: 3, sm: 12, xs: 12}}>
           <Block sx={{ display: 'grid', placeItems: 'center'}}>
             <Typography variant='h4'>Rack { data['name'] }</Typography>
@@ -82,8 +82,8 @@ const InventoryDetails = () => {
 
   if (type == 'product') {
     return (
-      <Grid container spacing={2}>
-        <Grid size={3}>
+      <Grid container spacing={10}>
+        <Grid size={{ lg: 3, md: 3, sm: 12, xs: 12}}>
           <Block sx={{ display: 'grid', placeItems: 'center'}}>
             <Typography variant='h4'>{ data['name'] }</Typography>
             <IconButton onClick={() => reactToPrintFn()}>
@@ -94,7 +94,7 @@ const InventoryDetails = () => {
             </Box>
           </Block>
         </Grid>
-        <Grid size={9}>
+        <Grid size={{ lg: 9, md: 9, sm: 12, xs: 12}}>
           <Block>
             Products
           </Block>
