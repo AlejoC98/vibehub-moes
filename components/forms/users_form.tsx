@@ -36,7 +36,7 @@ const UsersForms = ({ defaultData, setOpenModal }: { defaultData?: any, setOpenM
         try {
             setIsLoading(true);
             
-            const userData = await signup(data['email']!, process.env.DEFAULT_PASSWORD || 'v1b3h0b2024', false);
+            const userData = await signup(data['email']!, process.env.DEFAULT_PASSWORD || 'v1b3h0b2025', false);
 
             if (userData.user) {
                 const { data: newAccount, error} = await supabase.from('accounts').insert({
