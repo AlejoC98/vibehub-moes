@@ -10,8 +10,10 @@ import ExpandLess from '@mui/icons-material/ExpandLess';
 import ExpandMore from '@mui/icons-material/ExpandMore';
 import LocalShippingIcon from '@mui/icons-material/LocalShipping';
 import ReceiptLongIcon from '@mui/icons-material/ReceiptLong';
+import ChecklistIcon from '@mui/icons-material/Checklist';
 import OpenWithIcon from '@mui/icons-material/OpenWith';
 import AssignmentIcon from '@mui/icons-material/Assignment';
+import HelpOutlineIcon from '@mui/icons-material/HelpOutline';
 import UndoIcon from '@mui/icons-material/Undo';
 import DvrIcon from '@mui/icons-material/Dvr';
 import Link from 'next/link';
@@ -61,6 +63,12 @@ const SideBar = ({ open, setOpen }: { open: boolean, setOpen: (status: boolean) 
                     title: "Replenishment",
                     to: "/replenishment",
                     icon: <OpenWithIcon />
+                },
+                {
+                    id: 4,
+                    title: "Picking",
+                    to: "/picking",
+                    icon: <ChecklistIcon />
                 }
             ]
         },
@@ -95,7 +103,7 @@ const SideBar = ({ open, setOpen }: { open: boolean, setOpen: (status: boolean) 
                 to: "/users",
                 icon: <GroupIcon />
             }
-        ] : [])
+        ] : []),
     ];
 
     const [menuOpen, setMenuOpen] = useState<number | null>(1);
@@ -177,6 +185,13 @@ const SideBar = ({ open, setOpen }: { open: boolean, setOpen: (status: boolean) 
                         </Collapse>
                     </Box>
                 ))}
+                <Box sx={{ height: 50}} />
+                <ListItemButton>
+                    <ListItemIcon>
+                        <HelpOutlineIcon />
+                    </ListItemIcon>
+                    <ListItemText primary={'Help Center'} />
+                </ListItemButton>
             </List>
         </Box>
     )

@@ -152,6 +152,22 @@ export interface ReceivingContent {
     // items: Array<{product_id: string, quantity: number}>;
 }
 
+export interface PickingContent {
+    id?: number;
+    order_number?: number;
+    assign_to?: number;
+    due_at?: Date;
+    priority?: string;
+    notes?: string;
+    created_at?: Date;
+}
+
+export interface PickingProductContent {
+    product_id?: number;
+    name: string;
+    quantity?: number;
+}
+
 export interface ReceiveProductsInput extends ProductContent {
     product_id?: number;
     id?: number;

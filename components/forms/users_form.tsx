@@ -113,7 +113,7 @@ const UsersForms = ({ defaultData, setOpenModal }: { defaultData?: any, setOpenM
                                 labelId="demo-simple-select-label"
                                 id="demo-simple-select"
                                 {...register('roleId')}
-                                value={watch('roleId') || ''} // Make sure the value is defined
+                                value={watch('roleId') || ''}
                                 label="Role"
                             >
                                 {poOptions.map(option => (
