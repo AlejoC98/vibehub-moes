@@ -46,7 +46,7 @@ const SideBar = ({ open, setOpen }: { open: boolean, setOpen: (status: boolean) 
                     {
                         id: 1,
                         title: "Shipping",
-                        to: "#",
+                        to: "/shipping",
                         icon: <LocalShippingIcon />
                     }
                 ] : []),
