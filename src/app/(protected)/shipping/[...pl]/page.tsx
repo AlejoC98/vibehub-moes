@@ -55,7 +55,6 @@ const ShippingDetails = () => {
         </Box>;
     }
   }
-  
 
   useEffect(() => {
     var currentShipping = shippings?.find(s => s.pl_number == parseInt(params?.pl![0]));
@@ -92,53 +91,53 @@ const ShippingDetails = () => {
                 {generateStatusBlock(data?.status || '')}
               </Box>
             </Grid>
-            <Grid size={{ lg: 6, md: 6, sm: 12, xs: 12}} sx={{ mb: 10}}>
+            <Grid size={{ xl: 6, lg: 6, md: 12, sm: 12, xs: 12}} sx={{ mb: 10}}>
               <Block>
                 <Grid container spacing={5}>
                   <Grid size={{ lg: 3, md: 3, sm: 6, xs: 6}}>
-                    <Typography fontWeight={'bold'}>Created At</Typography>
-                    <Typography>{ dayjs(data?.created_at).format('ddd MMM DD YYYY') }</Typography>
+                    <Typography align='center'  fontWeight={'bold'}>Created At</Typography>
+                    <Typography align='center' >{ dayjs(data?.created_at).format('ddd MMM DD YYYY') }</Typography>
                   </Grid>
                   <Grid size={{ lg: 3, md: 3, sm: 6, xs: 6}}>
-                    <Typography fontWeight={'bold'}>PL Number</Typography>
-                    <Typography>{ data?.pl_number }</Typography>
+                    <Typography align='center'  fontWeight={'bold'}>Shipped At</Typography>
+                    <Typography align='center' >{ dayjs(data?.created_at).format('ddd MMM DD YYYY') }</Typography>
+                  </Grid>
+                  <Grid size={{ lg: 3, md: 3, sm: 12, xs: 12}}>
+                    <Typography align='center'  fontWeight={'bold'}>PL Number</Typography>
+                    <Typography align='center' >{ data?.pl_number }</Typography>
                   </Grid>
                   <Grid size={{ lg: 3, md: 3, sm: 6, xs: 6}}>
-                    <Typography fontWeight={'bold'}>BOL Number</Typography>
-                    <Typography>{ data?.bol_number }</Typography>
+                    <Typography align='center'  fontWeight={'bold'}>BOL Number</Typography>
+                    <Typography align='center' >{ data?.bol_number }</Typography>
                   </Grid>
                   <Grid size={{ lg: 3, md: 3, sm: 6, xs: 6}}>
-                    <Typography fontWeight={'bold'}>Carrier</Typography>
-                    <Typography>{ data?.carrier }</Typography>
+                    <Typography align='center'  fontWeight={'bold'}>Carrier</Typography>
+                    <Typography align='center' >{ data?.carrier }</Typography>
                   </Grid>
                   <Grid size={{ lg: 3, md: 3, sm: 6, xs: 6}}>
-                    <Typography fontWeight={'bold'}>Trailer #</Typography>
-                    <Typography>{ data?.trailer_number }</Typography>
+                    <Typography align='center'  fontWeight={'bold'}>Trailer #</Typography>
+                    <Typography align='center' >{ data?.trailer_number }</Typography>
                   </Grid>
                   <Grid size={{ lg: 3, md: 3, sm: 6, xs: 6}}>
-                    <Typography fontWeight={'bold'}>Picker Name</Typography>
-                    <Typography>{ data?.picker_name }</Typography>
+                    <Typography align='center'  fontWeight={'bold'}>Picker Name</Typography>
+                    <Typography align='center' >{ data?.picker_name }</Typography>
                   </Grid>
                   <Grid size={{ lg: 3, md: 3, sm: 6, xs: 6}}>
-                    <Typography fontWeight={'bold'}>Verified By</Typography>
-                    <Typography>{ data?.verified_by }</Typography>
+                    <Typography align='center'  fontWeight={'bold'}>Verified By</Typography>
+                    <Typography align='center' >{ data?.verified_by }</Typography>
                   </Grid>
                   <Grid size={{ lg: 3, md: 3, sm: 6, xs: 6}}>
-                    <Typography fontWeight={'bold'}>Total Products Quantity</Typography>
-                    <Typography>{ data?.shipped_quantity }</Typography>
-                  </Grid>
-                  <Grid size={{ lg: 3, md: 3, sm: 6, xs: 6}}>
-                    <Typography fontWeight={'bold'}>Shipped At</Typography>
-                    <Typography>{ dayjs(data?.created_at).format('ddd MMM DD YYYY') }</Typography>
+                    <Typography align='center'  fontWeight={'bold'}>Total Products Quantity</Typography>
+                    <Typography align='center' >{ data?.shipped_quantity }</Typography>
                   </Grid>
                   <Grid size={12}>
-                    <Typography fontWeight={'bold'}>Notes</Typography>
-                    <Typography>{ data?.notes || '...' }</Typography>
+                    <Typography align='center'  fontWeight={'bold'}>Notes</Typography>
+                    <Typography align='center' >{ data?.notes || '...' }</Typography>
                   </Grid>
                 </Grid>
               </Block>
             </Grid>
-            <Grid size={{ lg: 6, md: 6, sm: 12, xs: 12}} sx={{ mb: 10}}>
+            <Grid size={{ xl: 6, lg: 6, md: 12, sm: 12, xs: 12}} sx={{ mb: 10}}>
               <Block>
                <BasicTable title='Product on order' data={data?.shippings_products || []} columns={shippingProductsColumns} />
               </Block>
