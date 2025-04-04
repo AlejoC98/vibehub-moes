@@ -60,8 +60,12 @@ html, body {
 }
 
 
-body, main {
+body.login-bg, main.login-bg {
   background-color: $gunmetal;
+}
+
+body.dashboard-bg, main.dashboard-bg {
+  background-color: #e3e2e3;
 }
 
 main {
