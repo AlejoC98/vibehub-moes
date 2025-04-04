@@ -1,9 +1,9 @@
 'use client'
 
 import { usePathname } from "next/navigation";
-import { useEffect } from "react";
+import { ReactNode, useEffect } from "react";
 
-export default function LayoutWrapper({ children }: { children: React.ReactNode }) {
+export default function LayoutWrapper({ children }: { children: ReactNode }) {
   const pathname = usePathname()
 
   useEffect(() => {

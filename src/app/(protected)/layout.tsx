@@ -7,6 +7,7 @@ import Navbar from '../../../components/layout/navbar'
 import { ToastContainer } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css';
 import DrawerMenu from '../../../components/layout/drawer_menu'
+import LoadingWrapper from './loading_wrapper'
 
 const layout = ({ children }: { children: ReactNode }) => {
 
@@ -21,7 +22,7 @@ const layout = ({ children }: { children: ReactNode }) => {
 
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
-  // const isTablet = useMediaQuery(theme.breakpoints.between('sm', 'md'));
+
 
   return (
     <GlobalProvider>
@@ -34,23 +35,25 @@ const layout = ({ children }: { children: ReactNode }) => {
         rtl={false}
         theme="light"
       />
-      <Box className='bg-dash'>
-        {isMobile ? (<DrawerMenu openDrawer={openDrawer} toggleDrawer={toggleDrawer} />) : (<SideBar open={openMenu} setOpen={setOpenMenu} />)}
-        <Box
-          sx={{ 
-            display: 'flex',
-            overflowX: 'hidden',
-            overflowY: 'scroll',
-            flexDirection: 'column',
-            width: isMobile ? '100%' : `calc(100% - ${openMenu ? 250 : 50}px)`,
-          }}
-        >
-          <Navbar open={openMenu} setOpen={isMobile ? setOpenDrawer : setOpenMenu} />
-          <Box sx={{ height: '100%', padding: '10px 25px' }}>
-            {children}
+      <LoadingWrapper>
+        <Box className='bg-dash'>
+          {isMobile ? (<DrawerMenu openDrawer={openDrawer} toggleDrawer={toggleDrawer} />) : (<SideBar open={openMenu} setOpen={setOpenMenu} />)}
+          <Box
+            sx={{ 
+              display: 'flex',
+              overflowX: 'hidden',
+              overflowY: 'scroll',
+              flexDirection: 'column',
+              width: isMobile ? '100%' : `calc(100% - ${openMenu ? 250 : 50}px)`,
+            }}
+          >
+            <Navbar open={openMenu} setOpen={isMobile ? setOpenDrawer : setOpenMenu} />
+            <Box sx={{ height: '100%', padding: '10px 25px' }}>
+              {children}
+            </Box>
           </Box>
         </Box>
-      </Box>
+      </LoadingWrapper>
     </GlobalProvider>
   )
 }

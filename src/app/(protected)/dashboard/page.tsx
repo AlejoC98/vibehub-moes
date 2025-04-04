@@ -6,15 +6,13 @@ import { Box } from '@mui/material'
 import Grid from '@mui/material/Grid2';
 import Metrics from '../../../../components/dashboard/metrics';
 import CategoryIcon from '@mui/icons-material/Category';
-import ImageIcon from '@mui/icons-material/Image';
 import AttachMoneyIcon from '@mui/icons-material/AttachMoney';
 import LocalShippingIcon from '@mui/icons-material/LocalShipping';
 import CallReceivedIcon from '@mui/icons-material/CallReceived';
 import { NumericFormat } from 'react-number-format'
-import { HashLoader } from 'react-spinners'
 
 const Dashboard = () => {
-const { products, users, orders, isLaunching, setIsLaunching } = useContext(GlobalContext);
+const { products, orders } = useContext(GlobalContext);
   const [revenue, setRevenue] = useState<number | string>();
 
   const data = [
@@ -131,19 +129,10 @@ const { products, users, orders, isLaunching, setIsLaunching } = useContext(Glob
     if (total) {
       setRevenue(total);
     }
-    
-    setTimeout(() => {
-      setIsLaunching(false);
-    }, 3000);
   }, [orders])
 
   return (
     <Box>
-      { isLaunching && (
-          <Box sx={{ position: 'absolute', zIndex: 10, top: 0, bottom: 0, left: 0, right: 0, display: 'grid', placeItems: 'center', background: 'rgba(29, 38, 51, 1)'}}>
-            <HashLoader color='#FFE900' size={80} />
-          </Box>
-        ) }
       <Grid container spacing={7}>
         <Grid size={{ xl:3 ,lg: 3, md:6, sm:12, xs: 12}}>
         <Metrics
