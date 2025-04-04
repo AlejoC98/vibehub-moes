@@ -34,7 +34,7 @@ export async function signup(username: string, password: string, redirectTo: boo
   const { data, error } = await supabase.auth.signUp(userData)
 
   if (error) {
-    return error.message;
+    throw new Error(error.message);
   }
 
   if (redirectTo == true) {
