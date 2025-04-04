@@ -1,7 +1,7 @@
 'use client'
 import { Box } from '@mui/material'
-import React, { ReactNode, useState } from 'react'
-import GlobalProvider from '../../../utils/context/global_provider'
+import React, { ReactNode, useContext, useState } from 'react'
+import GlobalProvider, { GlobalContext } from '../../../utils/context/global_provider'
 import SideBar from '../../../components/layout/sidebar'
 import Navbar from '../../../components/layout/navbar'
 import { ToastContainer } from 'react-toastify'
@@ -9,6 +9,7 @@ import 'react-toastify/dist/ReactToastify.css';
 
 const layout = ({ children} : {children: ReactNode}) => {
   const [openMenu, setOpenMenu] = useState<boolean>(false);
+
   return (
     <GlobalProvider>
       <ToastContainer

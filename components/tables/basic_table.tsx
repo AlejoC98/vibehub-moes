@@ -12,6 +12,8 @@ import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import { deepSearch } from '../../utils/functions/main';
+import Swal from 'sweetalert2';
+import { toast } from 'react-toastify';
 
 const BasicTable = ({
   title,
@@ -73,7 +75,7 @@ const BasicTable = ({
 
   const handleClose = () => {
     setOpenModal(false);
-    setFormData([]);
+    setFormData({});
   };
 
   const renderOptions = (
@@ -137,33 +139,24 @@ const BasicTable = ({
       router.push(`/orders/${data.order_number}`);
     } else if (Object.keys(data).includes('po_number')) {
       router.push(`${pathname}/${data.po_number}`);
+    } else if (Object.keys(data).includes('pl_number')) {
+      router.push(`${pathname}/${data.pl_number}`);
     }
   }
 
   const handleDelete = () => {
-    console.log('Sisa');
-    // Swal.fire({
-    //   title: 'Warning',
-    //   text: 'Are you sure you want to delete this user?',
-    //   icon: 'question',
-    //   confirmButtonText: 'Procceed',
-    //   showCancelButton: true,
-    // }).then((result) => {
-    //   if (result.isConfirmed) {
-    //     axios.post('/api/delete', {
-    //       ids: selectedRow,
-    //       model: 'user',
-    //       status: true
-    //     }).then((res) => {
-    //       if (res.data) {
-    //         toast.success('User deleted!');
-    //         data = data.filter(u => !selectedRow.includes(u.id));
-    //       }
-    //     }).catch((err) => {
-    //       toast.warning(err);
-    //     });
-    //   }
-    // })
+    Swal.fire({
+      title: 'Warning',
+      text: 'Are you sure you want to delete this user?',
+      icon: 'question',
+      confirmButtonText: 'Procceed',
+      showCancelButton: true,
+    }).then((result) => {
+      if (result.isConfirmed) {
+        toast.warning('Product Deleted');
+        console.log('Needs work');
+      }
+    })
   }
 
   const hanldeSelectRow = (rowSelectionModel: GridRowSelectionModel, details: GridCallbackDetails) => {

@@ -1,3 +1,4 @@
+import { Dayjs } from "dayjs";
 import { ReactNode } from "react";
 
 export interface Role {
@@ -22,7 +23,7 @@ export interface AccountContent {
     // user?: UserContent;
 }
 
-export interface TabContentProps {  
+export interface TabContentProps {
     index: number;
     value: number;
     children: ReactNode
@@ -72,6 +73,7 @@ export interface GlobalContent {
     orders?: OrderContent[];
     userAccount?: AccountContent;
     receivings?: ReceivingContent[];
+    shippings?: ShippingContent[];
 }
 
 export interface LocationContent {
@@ -168,7 +170,7 @@ export interface PickingProductContent {
     quantity?: number;
 }
 
-export interface ReceiveProductsInput extends ProductContent {
+export interface ReceivingProductsInput extends ProductContent {
     product_id?: number;
     id?: number;
     sku: string;
@@ -185,6 +187,33 @@ export interface ReceivingProductsContent {
     received_quantity: number;
     damage_quantity: number;
     products: ProductContent;
+}
+
+export interface ShippingContent {
+    pl_number: number;
+    carrier: string;
+    trailer_number: string;
+    shipped_out_at: Dayjs;
+    picker_name: string;
+    verified_by: string;
+    bol_number: string;
+    status: string;
+    notes: string;
+    shipped_quantity?: number;
+    created_at: string;
+    shippings_products:
+    { id: number, created_at: string, product_sku: string, shipping_id: number, product_quantity: number }[];
+}
+export interface ShippingInput {
+    pl_number: number;
+    carrier: string;
+    trailer_number: string;
+    shipped_out_at: Dayjs;
+    picker_name: string;
+    verified_by: string;
+    bol_number: string;
+    status: string;
+    notes: string;
 }
 
 export interface PositionContent {

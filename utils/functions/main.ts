@@ -72,4 +72,3 @@ export function generateBarcodesWithSeparator(name: string, rows: number, column
   
     return result.length > 0 ? result : [];
   };
-  

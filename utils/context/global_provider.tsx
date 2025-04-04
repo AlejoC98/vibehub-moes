@@ -1,6 +1,6 @@
 'use client'
 import { createContext, ReactNode, useEffect, useState } from "react";
-import { AccountContent, CustomerContent, GlobalContent, LocationContent, NotificationContent, OrderContent, ProductContent, RackContent, ReceivingContent, RoleContent, UserContent, VendorContent } from "../interfaces";
+import { AccountContent, CustomerContent, GlobalContent, LocationContent, NotificationContent, OrderContent, ProductContent, RackContent, ReceivingContent, RoleContent, ShippingContent, UserContent, VendorContent } from "../interfaces";
 import { createClient } from "../supabase/client";
 
 export const GlobalContext = createContext<GlobalContent>({});
@@ -13,6 +13,7 @@ const GlobalProvider = ({ children }: { children: ReactNode }) => {
     const [racks, setRacks] = useState<RackContent[]>([]);
     const [orders, setOrders] = useState<OrderContent[]>([]);
     const [receivings, setReceivings] = useState<ReceivingContent[]>([]);
+    const [shippings, setShippings] = useState<ShippingContent[]>([]);
     const [products, setProducts] = useState<ProductContent[]>([]);
     const [userAccount, setUserAccount] = useState<AccountContent>();
     const [locations, setLocations] = useState<LocationContent[]>([]);
@@ -59,10 +60,16 @@ const GlobalProvider = ({ children }: { children: ReactNode }) => {
                 }, 2000);
             })
             .on('postgres_changes', {
-                event: '*', schema: 'public', table: 'receiving'
+                event: '*', schema: 'public', table: 'receivings'
             }, (payload) => {
                 setTimeout(() => {
                     getReceivings();
+                }, 2000);
+            }).on('postgres_changes', {
+                event: '*', schema: 'public', table: 'shippings'
+            }, (payload) => {
+                setTimeout(() => {
+                    getShippings();
                 }, 2000);
             }).subscribe();
 
@@ -150,6 +157,14 @@ const GlobalProvider = ({ children }: { children: ReactNode }) => {
 
         getReceivings();
 
+        const getShippings = async () => {
+            const { data: shippingQuery, error } = await supabase.from('shippings').select('*, shippings_products(*)');
+
+            setShippings(shippingQuery || []);
+        }
+
+        getShippings();
+
         // const getLocations = async () => {
         //     const { data: locationsQuery, error: locationsError } = await supabase
         //         .from('racks')
@@ -168,7 +183,7 @@ const GlobalProvider = ({ children }: { children: ReactNode }) => {
 
 
     return (
-        <GlobalContext.Provider value={{ locations, roles, users, vendors, products, racks, notifications, orders, userAccount, receivings }}>{children}</GlobalContext.Provider>
+        <GlobalContext.Provider value={{ locations, roles, users, vendors, products, racks, notifications, orders, userAccount, receivings, shippings }}>{children}</GlobalContext.Provider>
     )
 };
 

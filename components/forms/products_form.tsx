@@ -25,8 +25,6 @@ const ProductsForm = ({ defaultData, setOpenModal }: { defaultData?: ProductCont
     }
   });
 
-    // const [sku, setSku] = useState<string>('');
-
     const handleCreateSku = () => {
       const sku = generateRandomNumberString(15);
       setValue('sku', sku);

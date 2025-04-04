@@ -5,7 +5,7 @@ import Grid from '@mui/material/Grid2';
 import { Block, NumberField } from '../../style/global';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { toast } from 'react-toastify';
-import { ProductContent, ReceiveProductsInput, ReceivingContent } from '../../utils/interfaces';
+import { ProductContent, ReceivingProductsInput, ReceivingContent } from '../../utils/interfaces';
 import { createClient } from '../../utils/supabase/client';
 import CheckIcon from '@mui/icons-material/Check';
 import { GlobalContext } from '../../utils/context/global_provider';
@@ -27,20 +27,20 @@ const ReceivingTask = ({ data, updateData } : { data: ReceivingContent, updateDa
     const [activeStep, setActiveStep] = useState<number>(0);
     const [trailerNumber, setTrailerNumber] = useState<string>();
     const [isCompleted, setIsCompleted] = useState<boolean>(false);
-    const [receProducts, setReceProducts] = useState<ReceiveProductsInput[]>([]);
+    const [receProducts, setReceProducts] = useState<ReceivingProductsInput[]>([]);
 
 
     const {
         reset,
         register,
         handleSubmit,
-    } = useForm<ReceiveProductsInput>({
+    } = useForm<ReceivingProductsInput>({
         defaultValues: {
             'damaged_quantity': 0
         }
     });
 
-    const handleValidateProduct: SubmitHandler<ReceiveProductsInput> = async (formData) => {
+    const handleValidateProduct: SubmitHandler<ReceivingProductsInput> = async (formData) => {
         try {
             const product = data.receiving_products?.find(rp => rp.products.sku == formData['sku'])
             if (product == null) {

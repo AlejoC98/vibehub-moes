@@ -8,10 +8,9 @@ import CloseIcon from '@mui/icons-material/Close';
 import SubmitButton from '../submit_button'
 import { Controller, SubmitHandler, useForm } from 'react-hook-form'
 import { toast } from 'react-toastify'
-import { DateTimePicker } from '@mui/x-date-pickers'
-import CustomDateTimePicker from '../datetime_picker'
 import { NumberField } from '../../style/global'
 import { createClient } from '../../utils/supabase/client'
+import CustomDatePicker from '../date_picker'
 
 const ReceivingForm = ({ defaultData, setOpenModal }: { defaultData?: ReceivingContent, setOpenModal?: (status: boolean) => void }) => {
 
@@ -187,7 +186,7 @@ const ReceivingForm = ({ defaultData, setOpenModal }: { defaultData?: ReceivingC
                             control={control}
                             rules={{ required: 'Arrived Date is required' }}
                             render={({ field: { onChange, value }, fieldState: { error } }) => (
-                                <CustomDateTimePicker
+                                <CustomDatePicker
                                     label="Arrived Date"
                                     value={value || null}
                                     onChange={onChange}

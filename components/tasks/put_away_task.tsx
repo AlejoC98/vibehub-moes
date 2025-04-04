@@ -4,7 +4,7 @@ import Grid from '@mui/material/Grid2';
 import { Block } from '../../style/global';
 import SearchIcon from '@mui/icons-material/Search';
 import { Button, IconButton, InputAdornment, List, ListItem, ListItemText, TextField } from '@mui/material';
-import { RackLocationContent, ReceiveProductsInput, ReceivingContent, ReceivingProductsContent } from '../../utils/interfaces';
+import { RackLocationContent, ReceivingProductsInput, ReceivingContent, ReceivingProductsContent } from '../../utils/interfaces';
 import { GlobalContext } from '../../utils/context/global_provider';
 import { toast } from 'react-toastify';
 import { createClient } from '../../utils/supabase/client';
@@ -15,7 +15,7 @@ const PutAwayTask = ({ data, updateData } : { data: ReceivingContent, updateData
     const { racks } = useContext(GlobalContext);
 
     const [findSku, setFindSku] = useState<string>();
-    const [putAwayProduct, setPutAwayProduct] = useState<ReceiveProductsInput>();
+    const [putAwayProduct, setPutAwayProduct] = useState<ReceivingProductsInput>();
     const [findLocation, setFindLocation] = useState<string>();
     const [putAwayRack, setPutAwayRack] = useState<RackLocationContent>();
     const [completeProducts, setCompletedProducts] = useState<number[]>([]);

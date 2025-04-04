@@ -6,8 +6,8 @@ import { NumberField } from '../../style/global';
 import { Controller, useForm } from 'react-hook-form';
 import { PickingContent, PickingProductContent } from '../../utils/interfaces';
 import { GlobalContext } from '../../utils/context/global_provider';
-import CustomDateTimePicker from '../datetime_picker';
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
+import CustomDatePicker from '../date_picker';
 
 
 const PickingForm = ({ defaultData, setOpenModal }: { defaultData?: PickingContent, setOpenModal?: (status: boolean) => void }) => {
@@ -71,7 +71,7 @@ const PickingForm = ({ defaultData, setOpenModal }: { defaultData?: PickingConte
                         control={control}
                         rules={{ required: 'Due Date is required' }}
                         render={({ field: { onChange, value }, fieldState: { error } }) => (
-                            <CustomDateTimePicker
+                            <CustomDatePicker
                                 label="Due Date"
                                 value={value || null}
                                 onChange={onChange}

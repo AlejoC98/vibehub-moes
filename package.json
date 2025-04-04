@@ -18,6 +18,7 @@
     "@mui/x-date-pickers": "^7.28.0",
     "@supabase/ssr": "^0.6.1",
     "@supabase/supabase-js": "^2.49.1",
+    "animate.css": "^4.1.1",
     "axios": "^1.8.4",
     "dayjs": "^1.11.13",
     "next": "15.2.3",
@@ -26,6 +27,7 @@
     "react-dom": "^19.0.0",
     "react-hook-form": "^7.54.2",
     "react-number-format": "^5.4.3",
+    "react-spinners": "^0.15.0",
     "react-to-print": "^3.0.5",
     "react-toastify": "^11.0.5",
     "sass": "^1.86.0",
@@ -35,6 +37,7 @@
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
+    "@types/react-input-mask": "^3.0.6",
     "typescript": "^5"
   }
 }
