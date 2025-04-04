@@ -5,10 +5,10 @@ import { GlobalContext } from '../../../../utils/context/global_provider'
 import { Box } from '@mui/material'
 import Grid from '@mui/material/Grid2';
 import Metrics from '../../../../components/dashboard/metrics';
-import CategoryIcon from '@mui/icons-material/Category';
+import DiscountIcon from '@mui/icons-material/Discount';
 import AttachMoneyIcon from '@mui/icons-material/AttachMoney';
 import LocalShippingIcon from '@mui/icons-material/LocalShipping';
-import CallReceivedIcon from '@mui/icons-material/CallReceived';
+import AssignmentReturnIcon from '@mui/icons-material/AssignmentReturn';
 import { NumericFormat } from 'react-number-format'
 
 const Dashboard = () => {
@@ -139,9 +139,9 @@ const { products, orders } = useContext(GlobalContext);
             color='#60992D'
             title='Products Available'
             icon={
-              <CategoryIcon sx={{ fontSize: 80, position: 'absolute' }} />
+              <DiscountIcon sx={{ fontSize: '5rem', color: 'rgba(255, 255, 255, .5)', position: 'absolute', top: 20, right: 10}} />
             }
-            content={`#${products?.length}`}
+            content={'N/A'}
             footer="Subio"
           />
         </Grid>
@@ -150,9 +150,9 @@ const { products, orders } = useContext(GlobalContext);
             color='#F07167'
             title='Orders Shipped'
             icon={
-              <LocalShippingIcon sx={{ fontSize: 80, position: 'absolute' }} />
+              <LocalShippingIcon sx={{ fontSize: '5rem', color: 'rgba(255, 255, 255, .5)', position: 'absolute', top: 20, right: 10}} />
             }
-            content={orders?.length.toString()}
+            content={'N/A'}
             footer="Last month"
           />
         </Grid>
@@ -161,9 +161,9 @@ const { products, orders } = useContext(GlobalContext);
             color='#0892A5'
             title='Returns'
             icon={
-              <CallReceivedIcon sx={{ fontSize: 80, position: 'absolute' }} />
+              <AssignmentReturnIcon sx={{ fontSize: '5rem', color: 'rgba(255, 255, 255, .5)', position: 'absolute', top: 20, right: 10}} />
             }
-            content={`2000`}
+            content={'N/A'}
             footer="Last month"
           />
         </Grid>
@@ -172,17 +172,18 @@ const { products, orders } = useContext(GlobalContext);
             color='#373F47'
             title='Month Revenue'
             icon={
-              <AttachMoneyIcon sx={{ fontSize: 80, position: 'absolute' }} />
+              <AttachMoneyIcon sx={{ fontSize: '5rem', color: 'rgba(255, 255, 255, .5)', position: 'absolute', top: 20, right: 10}} />
             }
-            content={
-              <NumericFormat
-                prefix="$"
-                thousandSeparator=","
-                decimalScale={2}
-                displayType="text"
-                value={revenue}
-              />
-            }
+            content={'N/A'}
+            // content={
+            //   <NumericFormat
+            //     prefix="$"
+            //     thousandSeparator=","
+            //     decimalScale={2}
+            //     displayType="text"
+            //     value={0}
+            //   />
+            // }
             footer="Last month"
           />
         </Grid>

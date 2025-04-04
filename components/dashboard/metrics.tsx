@@ -8,16 +8,22 @@ const Metrics = ({ color = '#333', title, icon, content, footer } : { color?: st
     const reponse = useMediaQuery('(min-width:600px)');
 
     return (
-        <Block sx={{ backgroundColor: color, color: '#ffffff'}}>
-            <Grid container spacing={2} className="h-full">
+        <Block sx={{ backgroundColor: color, color: '#ffffff', display: 'flex', justifyContent: 'space-between', placeItems: 'center', position: 'relative'}}>
+            <Box>
+            <Typography variant='h6'>{ title }</Typography>
+            <Typography variant='h5'>{ content }</Typography>
+            </Box>
+            <Box>{ icon }</Box>
+            
+            {/* <Grid container spacing={2} className="h-full">
                 <Grid size={12}>
                     <Box className="flex h-full w-full justify-center items-center">
-                        <Typography variant='h6'>{ title }</Typography>
+                        
                     </Box>
                 </Grid>
                 <Grid size={6}>
                     <Box className="flex justify-center">
-                        <Typography variant='h4'>{ content }</Typography>
+                        
                     </Box>
                 </Grid>
                 <Grid size={6}>
@@ -30,7 +36,7 @@ const Metrics = ({ color = '#333', title, icon, content, footer } : { color?: st
                         { footer }
                     </Box>
                 </Grid>
-            </Grid>
+            </Grid> */}
         </Block>
     )
 }
