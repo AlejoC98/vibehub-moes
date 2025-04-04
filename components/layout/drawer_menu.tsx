@@ -113,6 +113,7 @@ const DrawerMenu = ({ openDrawer, toggleDrawer }: { openDrawer: boolean, toggleD
     const handleRedirectMenu = (key: number, direction?: string) => {
         switch (direction) {
             case '#':
+                toggleDrawer(false);
                 Swal.fire({
                     icon: 'info',
                     title: "Almost There!",
