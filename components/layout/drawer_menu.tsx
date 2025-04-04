@@ -46,7 +46,7 @@ const DrawerMenu = ({ openDrawer, toggleDrawer }: { openDrawer: boolean, toggleD
             to: "#",
             icon: <AssignmentIcon />,
             submenu: [
-                ...(userAccount?.role?.id === 1 || userAccount?.role?.id === 2 || userAccount?.role?.id === 7 ? [
+                ...(userAccount?.role?.id === 1 || userAccount?.role?.id === 2 || userAccount?.role?.id === 3 ? [
                     {
                         id: 1,
                         title: "Shipping",
@@ -54,7 +54,7 @@ const DrawerMenu = ({ openDrawer, toggleDrawer }: { openDrawer: boolean, toggleD
                         icon: <LocalShippingIcon />
                     }
                 ] : []),
-                ...(userAccount?.role?.id === 1 || userAccount?.role?.id === 2 || userAccount?.role?.id === 7 ? [
+                ...(userAccount?.role?.id === 1 || userAccount?.role?.id === 2 || userAccount?.role?.id === 3 ? [
                     {
                         id: 2,
                         title: "Receiving",
@@ -76,7 +76,7 @@ const DrawerMenu = ({ openDrawer, toggleDrawer }: { openDrawer: boolean, toggleD
                 }
             ]
         },
-        ...(userAccount?.role?.id === 1 || userAccount?.role?.id === 2 || userAccount?.role?.id === 8 ? [
+        ...(userAccount?.role?.id === 1 || userAccount?.role?.id === 2 || userAccount?.role?.id === 3 ? [
             {
                 id: 4,
                 title: "Orders",
@@ -84,7 +84,7 @@ const DrawerMenu = ({ openDrawer, toggleDrawer }: { openDrawer: boolean, toggleD
                 icon: <DvrIcon />
             }
         ] : []),
-        ...(userAccount?.role?.id === 1 || userAccount?.role?.id === 2 || userAccount?.role?.id === 8 ? [
+        ...(userAccount?.role?.id === 1 || userAccount?.role?.id === 2 || userAccount?.role?.id === 3 ? [
             {
                 id: 5,
                 title: "Return",
@@ -92,7 +92,7 @@ const DrawerMenu = ({ openDrawer, toggleDrawer }: { openDrawer: boolean, toggleD
                 icon: <UndoIcon />
             }
         ] : []),
-        ...(userAccount?.role?.id === 1 || userAccount?.role?.id === 2 || userAccount?.role?.id === 8 ? [
+        ...(userAccount?.role?.id === 1 || userAccount?.role?.id === 3 ? [
             {
                 id: 6,
                 title: "Vendors",
@@ -100,7 +100,7 @@ const DrawerMenu = ({ openDrawer, toggleDrawer }: { openDrawer: boolean, toggleD
                 icon: <StorefrontIcon />
             }
         ] : []),
-        ...(userAccount?.role?.id === 1 || userAccount?.role?.id === 2 ? [
+        ...(userAccount?.role?.id === 1 || userAccount?.role?.id === 3 ? [
             {
                 id: 7,
                 title: "Users",

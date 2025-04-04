@@ -47,7 +47,7 @@ const SideBar = ({ open, setOpen }: { open: boolean, setOpen: (status: boolean) 
             to: "#",
             icon: <AssignmentIcon />,
             submenu: [
-                ...(userAccount?.role?.id === 1 || userAccount?.role?.id === 2 || userAccount?.role?.id === 7 ? [
+                ...(userAccount?.role?.id === 1 || userAccount?.role?.id === 2 || userAccount?.role?.id === 3 ? [
                     {
                         id: 1,
                         title: "Shipping",
@@ -55,7 +55,7 @@ const SideBar = ({ open, setOpen }: { open: boolean, setOpen: (status: boolean) 
                         icon: <LocalShippingIcon />
                     }
                 ] : []),
-                ...(userAccount?.role?.id === 1 || userAccount?.role?.id === 2 || userAccount?.role?.id === 7 ? [
+                ...(userAccount?.role?.id === 1 || userAccount?.role?.id === 2 || userAccount?.role?.id === 3 ? [
                     {
                         id: 2,
                         title: "Receiving",
@@ -77,7 +77,7 @@ const SideBar = ({ open, setOpen }: { open: boolean, setOpen: (status: boolean) 
                 }
             ]
         },
-        ...(userAccount?.role?.id === 1 || userAccount?.role?.id === 2 || userAccount?.role?.id === 8 ? [
+        ...(userAccount?.role?.id === 1 || userAccount?.role?.id === 2 || userAccount?.role?.id === 3 ? [
             {
                 id: 4,
                 title: "Orders",
@@ -85,7 +85,7 @@ const SideBar = ({ open, setOpen }: { open: boolean, setOpen: (status: boolean) 
                 icon: <DvrIcon />
             }
         ] : []),
-        ...(userAccount?.role?.id === 1 || userAccount?.role?.id === 2 || userAccount?.role?.id === 8 ? [
+        ...(userAccount?.role?.id === 1 || userAccount?.role?.id === 2 || userAccount?.role?.id === 3 ? [
             {
                 id: 5,
                 title: "Return",
@@ -93,7 +93,7 @@ const SideBar = ({ open, setOpen }: { open: boolean, setOpen: (status: boolean) 
                 icon: <UndoIcon />
             }
         ] : []),
-        ...(userAccount?.role?.id === 1 || userAccount?.role?.id === 2 || userAccount?.role?.id === 8 ? [
+        ...(userAccount?.role?.id === 1 || userAccount?.role?.id === 3 ? [
             {
                 id: 6,
                 title: "Vendors",
@@ -101,7 +101,7 @@ const SideBar = ({ open, setOpen }: { open: boolean, setOpen: (status: boolean) 
                 icon: <StorefrontIcon />
             }
         ] : []),
-        ...(userAccount?.role?.id === 1 || userAccount?.role?.id === 2 ? [
+        ...(userAccount?.role?.id === 1 || userAccount?.role?.id === 3 ? [
             {
                 id: 7,
                 title: "Users",
@@ -110,6 +110,7 @@ const SideBar = ({ open, setOpen }: { open: boolean, setOpen: (status: boolean) 
             }
         ] : []),
     ];
+
 
     const [menuOpen, setMenuOpen] = useState<number | null>(1);
     const [sideWidth, setSideWidth] = useState<number>(250);
