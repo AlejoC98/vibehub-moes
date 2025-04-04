@@ -1,7 +1,20 @@
-import { Button } from '@mui/material'
+import { Button, ButtonProps } from '@mui/material'
 import React, { ReactNode } from 'react'
 
-const SubmitButton = ( { fullWidth, variant, styles, icon, btnText, isLoading = false } : { fullWidth: boolean, variant: "text" | "outlined" | "contained", styles?: string, icon?: ReactNode, btnText: string, isLoading: boolean}) => {
+interface SubmitButtonProps extends ButtonProps {
+  styles?: string;
+  icon?: ReactNode;
+  btnText: string;
+  isLoading?: boolean;
+}
+
+const SubmitButton = ( { fullWidth,
+  variant = 'contained',
+  styles,
+  icon,
+  btnText,
+  isLoading = false,
+  ...rest } : SubmitButtonProps) => {
   return (
     <Button
         className={styles}
@@ -11,6 +24,7 @@ const SubmitButton = ( { fullWidth, variant, styles, icon, btnText, isLoading = 
         startIcon={icon}
         variant={variant}
         type='submit'
+        {...rest}
     >
         { btnText }
   </Button>

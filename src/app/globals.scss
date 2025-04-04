@@ -68,6 +68,14 @@ main {
   overflow: hidden;
 }
 
+.btn-canary {
+  background: $canary !important;
+}
+
+.btn-bittersweet {
+  background: $bittersweet !important;
+}
+
 .oleo-title {
   font-family: 'CinemaScript', sans-serif !important;
   color: #ffffff;
@@ -103,4 +111,28 @@ main {
 .no-spinner::-webkit-inner-spin-button {
   -webkit-appearance: none !important;
   margin: 0 !important;
+}
+
+// SPLASH LOGO
+
+.splashContainer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  overflow: hidden;
+}
+
+.imageWrapper {
+  transition: transform 1s ease-in-out;
+  transform: scale(1);
+  max-width: 700px;
+  max-height: 700px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.shrink {
+  transform: scale(0.3);
 }

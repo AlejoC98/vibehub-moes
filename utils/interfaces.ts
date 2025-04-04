@@ -74,6 +74,8 @@ export interface GlobalContent {
     userAccount?: AccountContent;
     receivings?: ReceivingContent[];
     shippings?: ShippingContent[];
+    isLaunching: boolean;
+    setIsLaunching: (status: boolean) => void
 }
 
 export interface LocationContent {
@@ -253,28 +255,19 @@ export interface PositionProductContent {
 export interface NotificationContent {
     id: number;
     title: string;
-    content: string;
-    icon: string;
-    usernotificationstatus: NotificationStatusContent[];
-    linkTo: string;
-    reference: string;
-    deleted?: boolean;
-    createdBy?: number;
-    updatedBy?: number;
-    createdAt?: Date;
-    updatedAt?: Date;
+    text: string;
+    type: string;
+    status: string;
+    created_by: number;
+    usernotificationstatus: RoleNotificationsContent[];
 }
 
-export interface NotificationStatusContent {
+
+export interface RoleNotificationsContent {
     id: number;
-    userId: number;
-    notificationId: number;
-    open: boolean;
-    deleted?: boolean;
-    createdBy?: number;
-    updatedBy?: number;
-    createdAt?: Date;
-    updatedAt?: Date;
+    role_id: number;
+    created_at?: Date;
+    notification_id: number;
 }
 
 export interface CustomerInput {

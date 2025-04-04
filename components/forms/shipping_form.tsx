@@ -1,5 +1,5 @@
 'use client'
-import { Box, Button, Divider, IconButton, InputAdornment, List, ListItem, ListItemText, TextField, Typography } from '@mui/material'
+import { Box, Button, Divider, IconButton, InputAdornment, List, ListItem, ListItemText, TextField, Typography, useMediaQuery, useTheme } from '@mui/material'
 import React, { useContext, useEffect, useState } from 'react'
 import Grid from '@mui/material/Grid2';
 import { ShippingContent, ShippingInput } from '../../utils/interfaces';
@@ -17,7 +17,7 @@ import { GlobalContext } from '../../utils/context/global_provider';
 const ShippingForm = ({ defaultData, setOpenModal }: { defaultData?: ShippingContent, setOpenModal?: (status: boolean) => void }) => {
 
     const supabase = createClient();
-    const { shippings } = useContext(GlobalContext);
+    const { shippings, userAccount } = useContext(GlobalContext);
 
     const {
         register,
@@ -36,6 +36,9 @@ const ShippingForm = ({ defaultData, setOpenModal }: { defaultData?: ShippingCon
     const [shippedProductError, setShippedProductError] = useState<string | null>(null);
     const [shippedProductQty, setShippedProductQty] = useState<number | null>(null);
     const [isLoading, setIsLoading] = useState<boolean>(false);
+
+    const theme = useTheme();
+    const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
 
     const handleAddProducts = () => {
         var existingPro = shippedProducts.find(p => p.sku == shippedProductSku);
@@ -93,6 +96,27 @@ const ShippingForm = ({ defaultData, setOpenModal }: { defaultData?: ShippingCon
                 }
             }
 
+            // Create Notification
+
+            const { data: newNoti, error} = await supabase.from('notifications').insert({
+                'title': 'New Shipped Created',
+                'text': 'New Record Created',
+                'type': 'Shipping',
+                'status': 'New',
+                'created_by': userAccount?.role?.id,
+            }).select().single();
+
+            if (error) {
+                console.log(error);
+            }
+
+            for (var role of [1, 3]) {
+                await supabase.from('roles_notifications').insert({
+                    'notification_id': newNoti!['id'],
+                    'role_id': role,
+                });
+            }
+
             setOpenModal!(false);
             toast.success('Record Created!');
 
@@ -122,7 +146,7 @@ const ShippingForm = ({ defaultData, setOpenModal }: { defaultData?: ShippingCon
     return (
         <Box sx={{ flexGrow: 1, padding: 5 }}>
             <form onSubmit={handleSubmit(handleCreateRecord)}>
-                <Grid container spacing={5}>
+                <Grid container spacing={2}>
                     <Grid size={12}>
                         <Controller
                             name="shipped_out_at"
@@ -146,7 +170,7 @@ const ShippingForm = ({ defaultData, setOpenModal }: { defaultData?: ShippingCon
                             )}
                         />
                     </Grid>
-                    <Grid size={6}>
+                    <Grid size={{ lg: 6, md: 6, sm: 12, xs: 12}}>
                         <NumberField
                             required
                             fullWidth
@@ -157,7 +181,7 @@ const ShippingForm = ({ defaultData, setOpenModal }: { defaultData?: ShippingCon
                             helperText={errors.pl_number?.message}
                         />
                     </Grid>
-                    <Grid size={6}>
+                    <Grid size={{ lg: 6, md: 6, sm: 12, xs: 12}}>
                         <NumberField
                             required
                             fullWidth
@@ -173,7 +197,7 @@ const ShippingForm = ({ defaultData, setOpenModal }: { defaultData?: ShippingCon
                             helperText={errors.bol_number?.message}
                         />
                     </Grid>
-                    <Grid size={6}>
+                    <Grid size={{ lg: 6, md: 6, sm: 12, xs: 12}}>
                         <TextField
                             fullWidth
                             required
@@ -183,7 +207,7 @@ const ShippingForm = ({ defaultData, setOpenModal }: { defaultData?: ShippingCon
                             helperText={errors.carrier?.message}
                         />
                     </Grid>
-                    <Grid size={6}>
+                    <Grid size={{ lg: 6, md: 6, sm: 12, xs: 12}}>
                         <TextField
                             fullWidth
                             required
@@ -193,7 +217,7 @@ const ShippingForm = ({ defaultData, setOpenModal }: { defaultData?: ShippingCon
                             helperText={errors.trailer_number?.message}
                         />
                     </Grid>
-                    <Grid size={6}>
+                    <Grid size={{ lg: 6, md: 6, sm: 12, xs: 12}}>
                         <TextField
                             fullWidth
                             required
@@ -203,7 +227,7 @@ const ShippingForm = ({ defaultData, setOpenModal }: { defaultData?: ShippingCon
                             helperText={errors.picker_name?.message}
                         />
                     </Grid>
-                    <Grid size={6}>
+                    <Grid size={{ lg: 6, md: 6, sm: 12, xs: 12}}>
                         <TextField
                             fullWidth
                             required
@@ -221,9 +245,10 @@ const ShippingForm = ({ defaultData, setOpenModal }: { defaultData?: ShippingCon
                             </Box>
                             <Divider />
                             <Box sx={{ display: 'flex', flexDirection: 'column', maxHeight: 300, overflowY: 'scroll'}}>
-                                <Box sx={{ display: 'flex', justifyContent: 'space-between', m: 1 }}>
+                                <Box sx={{ display: 'flex', justifyContent: 'space-between', m: 1, flexDirection: isMobile ? 'column' : 'row', gap: isMobile ? 1 : 0}}>
                                     <TextField
                                         size='small'
+                                        placeholder={isMobile ? 'Product Sku' : ''}
                                         value={shippedProductSku || ''}
                                         onChange={(event) => {
                                             setShippedProductSku(event.target.value);
@@ -232,6 +257,7 @@ const ShippingForm = ({ defaultData, setOpenModal }: { defaultData?: ShippingCon
                                     <TextField
                                         size='small'
                                         type='number'
+                                        placeholder={isMobile ? 'Product Quantity' : ''}
                                         slotProps={{
                                             htmlInput: { min: 0 },
                                         }}

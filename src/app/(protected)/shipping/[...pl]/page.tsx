@@ -1,5 +1,5 @@
 'use client'
-import { Box, Button, IconButton, Typography } from '@mui/material'
+import { Box, Button, IconButton, Typography, useMediaQuery, useTheme } from '@mui/material'
 import React, { useContext, useEffect, useState } from 'react'
 import Grid from '@mui/material/Grid2';
 import ArrowBackTwoToneIcon from '@mui/icons-material/ArrowBackTwoTone';
@@ -18,6 +18,8 @@ const ShippingDetails = () => {
   const params = useParams();
   const { shippings } = useContext(GlobalContext);
   const [data, setData] = useState<ShippingContent>();
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
 
   const shippingProductsColumns: GridColDef[] = [
     { field: 'id', headerName: 'ID' },
@@ -76,56 +78,56 @@ const ShippingDetails = () => {
     <Box>
       <Grid container spacing={2}>
             <Grid size={1}>
-                <Box className="w-10">
+                <Box sx={{ display: 'grid', placeItems: 'center'}}>
                     <IconButton onClick={() => router.back()}>
                         <ArrowBackTwoToneIcon />
                     </IconButton>
                 </Box>
             </Grid>
             <Grid size={11}>
-              <Box sx={{ display: 'flex', placeItems: 'center', gap: 2}}>
+              <Box sx={{ display: 'flex', justifyContent: isMobile ? 'center' : 'normal', placeItems: 'center', gap: 2}}>
                 <Typography variant='h5' fontWeight={'bold'}>
                   Shipping Details
                 </Typography>
                 {generateStatusBlock(data?.status || '')}
               </Box>
             </Grid>
-            <Grid size={6}>
+            <Grid size={{ lg: 6, md: 6, sm: 12, xs: 12}} sx={{ mb: 10}}>
               <Block>
                 <Grid container spacing={5}>
-                  <Grid size={3}>
+                  <Grid size={{ lg: 3, md: 3, sm: 6, xs: 6}}>
                     <Typography fontWeight={'bold'}>Created At</Typography>
                     <Typography>{ dayjs(data?.created_at).format('ddd MMM DD YYYY') }</Typography>
                   </Grid>
-                  <Grid size={3}>
+                  <Grid size={{ lg: 3, md: 3, sm: 6, xs: 6}}>
                     <Typography fontWeight={'bold'}>PL Number</Typography>
                     <Typography>{ data?.pl_number }</Typography>
                   </Grid>
-                  <Grid size={3}>
+                  <Grid size={{ lg: 3, md: 3, sm: 6, xs: 6}}>
                     <Typography fontWeight={'bold'}>BOL Number</Typography>
                     <Typography>{ data?.bol_number }</Typography>
                   </Grid>
-                  <Grid size={3}>
+                  <Grid size={{ lg: 3, md: 3, sm: 6, xs: 6}}>
                     <Typography fontWeight={'bold'}>Carrier</Typography>
                     <Typography>{ data?.carrier }</Typography>
                   </Grid>
-                  <Grid size={3}>
+                  <Grid size={{ lg: 3, md: 3, sm: 6, xs: 6}}>
                     <Typography fontWeight={'bold'}>Trailer #</Typography>
                     <Typography>{ data?.trailer_number }</Typography>
                   </Grid>
-                  <Grid size={3}>
+                  <Grid size={{ lg: 3, md: 3, sm: 6, xs: 6}}>
                     <Typography fontWeight={'bold'}>Picker Name</Typography>
                     <Typography>{ data?.picker_name }</Typography>
                   </Grid>
-                  <Grid size={3}>
+                  <Grid size={{ lg: 3, md: 3, sm: 6, xs: 6}}>
                     <Typography fontWeight={'bold'}>Verified By</Typography>
                     <Typography>{ data?.verified_by }</Typography>
                   </Grid>
-                  <Grid size={3}>
+                  <Grid size={{ lg: 3, md: 3, sm: 6, xs: 6}}>
                     <Typography fontWeight={'bold'}>Total Products Quantity</Typography>
                     <Typography>{ data?.shipped_quantity }</Typography>
                   </Grid>
-                  <Grid size={3}>
+                  <Grid size={{ lg: 3, md: 3, sm: 6, xs: 6}}>
                     <Typography fontWeight={'bold'}>Shipped At</Typography>
                     <Typography>{ dayjs(data?.created_at).format('ddd MMM DD YYYY') }</Typography>
                   </Grid>
@@ -136,7 +138,7 @@ const ShippingDetails = () => {
                 </Grid>
               </Block>
             </Grid>
-            <Grid size={6}>
+            <Grid size={{ lg: 6, md: 6, sm: 12, xs: 12}} sx={{ mb: 10}}>
               <Block>
                <BasicTable title='Product on order' data={data?.shippings_products || []} columns={shippingProductsColumns} />
               </Block>

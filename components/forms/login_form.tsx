@@ -7,17 +7,21 @@ import LoginIcon from '@mui/icons-material/Login';
 import KeyIcon from '@mui/icons-material/Key';
 import SubmitButton from '../submit_button';
 import { login } from '@/app/(public)/auth/login/actions';
+import { toast } from 'react-toastify';
 
 const LoginForm = () => {
   const [loading, setIsloading] = useState<boolean>(false);
   const [username, setUsername] = useState<string>('');
   const [password, setPassword] = useState<string>('');
 
-  const handleLogin = (event: FormEvent<HTMLFormElement>) => {
+  const handleLogin = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     setIsloading(true);
 
-    login(username, password);
+    var status = await login(username, password);
+
+    toast.warning(status);
+    setIsloading(false);
   }
 
   return (
@@ -74,7 +78,7 @@ const LoginForm = () => {
                 />
               </Grid>
               <Grid size={12}>
-                <SubmitButton fullWidth={true} variant='contained' styles='bg-bittersweet' isLoading={loading} btnText='Sign In' icon={<LoginIcon />} />
+                <SubmitButton fullWidth={true} variant='contained' styles='bg-bittersweet' isLoading={loading} btnText='Sign In' icon={<LoginIcon />} className='btn-bittersweet' />
               </Grid>
             </Grid>
       </form>

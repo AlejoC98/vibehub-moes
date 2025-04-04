@@ -1,61 +1,62 @@
 'use client'
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import Grid from '@mui/material/Grid2';
-import Paper from '@mui/material/Paper';
-import { styled, useTheme } from '@mui/material/styles';
+// import Paper from '@mui/material/Paper';
+// import { styled, useTheme } from '@mui/material/styles';
 import Image from 'next/image';
-import { Box, useMediaQuery } from '@mui/material';
+import { Box, useMediaQuery, useTheme } from '@mui/material';
 import LoginForm from '../../../../../components/forms/login_form';
 
-// const Item = styled(Paper)(({ theme }) => ({
-//     // backgroundColor: '#fff',
-//     ...theme.typography.body2,
-//     padding: theme.spacing(1),
-//     textAlign: 'center',
-//     color: theme.palette.text.secondary,
-//     ...theme.applyStyles('dark', {
-//         backgroundColor: '#1A2027',
-//     }),
-// }));
-
 const Login = () => {
+
+    const [shrink, setShrink] = useState(false);
+
     const theme = useTheme();
-    const isExtraSmallScreen = useMediaQuery(theme.breakpoints.down('xs'));
-    const isSmallScreen = useMediaQuery(theme.breakpoints.down('sm'));
-    const isMediumScreen = useMediaQuery(theme.breakpoints.down('md'));
-    const isLargeScreen = useMediaQuery(theme.breakpoints.down('lg'));
-    // const isMediumScreen = useMediaQuery(theme.breakpoints.between('sm', 'md'));
+    const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
+
+    useEffect(() => {
+        const timeout = setTimeout(() => {
+            if (isMobile) {
+                setShrink(true);
+            } else {
+                setShrink(false);
+            }
+        }, 500);
+
+        return () => clearTimeout(timeout);
+    }, [isMobile]);
 
     return (
         <Grid container spacing={2} sx={{ width: '100%' }}>
             <Grid size={12}>
-                <Box sx={{ padding: '20px 10px' }}>
+                <Box sx={{ transition: 'all 2s ease-in-out', padding: '20px 10px', display: 'flex', justifyContent: shrink ? 'center' : 'normal'}}>
                     <Image
                         alt='logo'
-                        width={300}
-                        height={100}
+                        width={shrink ? 200 : 300}
+                        height={shrink ? 70 :100}
+                        style={{ }}
                         sizes='100vh'
-                        className='w-full h-full max-w-44'
                         src='/static/img/logos/vibehub-horizontal-white-logo.png'
                     />
-
                 </Box>
             </Grid>
-            <Grid size={{ lg: 6, md: 6, sm: 12 }} sx={{ margin: '0 auto'}}>
+            <Grid size={{ lg: 6, md: 6, sm: 12 }} sx={{ margin: '0 auto' }}>
                 <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                    {/* <SplashLogo /> */}
                     <Image
                         alt='auth'
-                        width={isExtraSmallScreen ? 300 : isSmallScreen ? 400 : isMediumScreen ? 450 : isLargeScreen ? 550 : 700}
-                        height={isExtraSmallScreen ? 300 : isSmallScreen ? 400 : isMediumScreen ? 450 : isLargeScreen ? 550 : 700}
+                        width={shrink ? 300 : 600}
+                        height={shrink ? 300 : 600}
+                        style={{ transition: 'all 2s ease-in-out' }}
                         sizes='100vh'
                         src='/static/img/bg-auth-1.png'
                     />
                 </Box>
             </Grid>
-            <Grid size={{ lg: 6, md: 6, sm: 12 }} sx={{ margin: '0 auto'}}>
-            <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', padding: isSmallScreen ? '5rem 0' : 0, margin: '0'}}>
-                <LoginForm />
-            </Box>
+            <Grid size={{ lg: 6, md: 6, sm: 12 }} sx={{ margin: '0 auto' }}>
+                <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', padding: isMobile ? '5rem 0' : 0, margin: '0' }}>
+                    <LoginForm />
+                </Box>
             </Grid>
         </Grid>
     )

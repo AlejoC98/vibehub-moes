@@ -3,11 +3,17 @@ import { createContext, ReactNode, useEffect, useState } from "react";
 import { AccountContent, CustomerContent, GlobalContent, LocationContent, NotificationContent, OrderContent, ProductContent, RackContent, ReceivingContent, RoleContent, ShippingContent, UserContent, VendorContent } from "../interfaces";
 import { createClient } from "../supabase/client";
 
-export const GlobalContext = createContext<GlobalContent>({});
+export const GlobalContext = createContext<GlobalContent>({
+    isLaunching: true,
+    setIsLaunching: function (status: boolean): void {
+        throw new Error("Function not implemented.");
+    }
+});
 
 const GlobalProvider = ({ children }: { children: ReactNode }) => {
     const supabase = createClient();
 
+    const [isLaunching, setIsLaunching] = useState<boolean>(true);
     const [roles, setRoles] = useState<RoleContent[]>([]);
     const [users, setUsers] = useState<UserContent[]>([]);
     const [racks, setRacks] = useState<RackContent[]>([]);
@@ -23,55 +29,64 @@ const GlobalProvider = ({ children }: { children: ReactNode }) => {
     useEffect(() => {
         // Realtime changes 
         const channel = supabase.channel('realtime changes').on('postgres_changes', {
-            event: '*', schema: 'public', table: 'products'
+            event: '*', schema: 'public', table: 'shippings'
         }, (payload) => {
             setTimeout(() => {
-                getProducts();
+                getShippings();
             }, 2000);
         }).on('postgres_changes', {
-                event: '*', schema: 'public', table: 'racks'
-            }, (payload) => {
-                setTimeout(() => {
-                    getRacks();
-                }, 2000);
-            }).on('postgres_changes', {
-                event: '*', schema: 'public', table: 'racks_locations'
-            }, (payload) => {
-                setTimeout(() => {
-                    getRacks();
-                }, 2000);
-            }).on('postgres_changes', {
-                event: '*', schema: 'public', table: 'racks_locations_products'
-            }, (payload) => {
-                setTimeout(() => {
-                    getRacks();
-                }, 2000);
-            }).on('postgres_changes', {
-                event: '*', schema: 'public', table: 'accounts'
-            }, (payload) => {
-                setTimeout(() => {
-                    getUser();
-                }, 2000);
-            }).on('postgres_changes', {
-                event: '*', schema: 'public', table: 'vendors'
-            }, (payload) => {
-                setTimeout(() => {
-                    getVendors();
-                }, 2000);
-            })
-            .on('postgres_changes', {
-                event: '*', schema: 'public', table: 'receivings'
-            }, (payload) => {
-                setTimeout(() => {
-                    getReceivings();
-                }, 2000);
-            }).on('postgres_changes', {
-                event: '*', schema: 'public', table: 'shippings'
-            }, (payload) => {
-                setTimeout(() => {
-                    getShippings();
-                }, 2000);
-            }).subscribe();
+            event: '*', schema: 'public', table: 'notifications'
+        }, (payload) => {
+            setTimeout(async() => {
+                var currentUserSession = await supabase.auth.getUser();
+
+                var { data: userData, error } = await supabase.from('accounts').select().eq('user_id', currentUserSession?.data!.user!.id).single();
+
+                const notification = payload.new as NotificationContent;
+
+                if (userData.id != notification.created_by) {
+                    getNotifications(userData.role_id);
+                }
+            }, 2000);
+        }).subscribe();
+        // .on('postgres_changes', {
+        //         event: '*', schema: 'public', table: 'racks'
+        //     }, (payload) => {
+        //         setTimeout(() => {
+        //             getRacks();
+        //         }, 2000);
+        //     }).on('postgres_changes', {
+        //         event: '*', schema: 'public', table: 'racks_locations'
+        //     }, (payload) => {
+        //         setTimeout(() => {
+        //             getRacks();
+        //         }, 2000);
+        //     }).on('postgres_changes', {
+        //         event: '*', schema: 'public', table: 'racks_locations_products'
+        //     }, (payload) => {
+        //         setTimeout(() => {
+        //             getRacks();
+        //         }, 2000);
+        //     }).on('postgres_changes', {
+        //         event: '*', schema: 'public', table: 'accounts'
+        //     }, (payload) => {
+        //         setTimeout(() => {
+        //             getUser();
+        //         }, 2000);
+        //     }).on('postgres_changes', {
+        //         event: '*', schema: 'public', table: 'vendors'
+        //     }, (payload) => {
+        //         setTimeout(() => {
+        //             getVendors();
+        //         }, 2000);
+        //     })
+        //     .on('postgres_changes', {
+        //         event: '*', schema: 'public', table: 'receivings'
+        //     }, (payload) => {
+        //         setTimeout(() => {
+        //             getReceivings();
+        //         }, 2000);
+        //     })
 
         const getProducts = async () => {
             var returnProducts = [];
@@ -103,6 +118,13 @@ const GlobalProvider = ({ children }: { children: ReactNode }) => {
 
         getRacks();
 
+        const getNotifications = async (role?: number) => {
+            const { data: notiQuery, error } = await supabase.from('roles_notifications').select('*, notifications(*)')
+            .eq('role_id',userAccount != undefined ? userAccount?.role?.id : role);
+
+            setNotifications(notiQuery || []);
+        }
+
         const getAccountInformation = async () => {
             const { data: userData } = await supabase.auth.getUser();
 
@@ -122,6 +144,8 @@ const GlobalProvider = ({ children }: { children: ReactNode }) => {
                     'name': account['roles']['name'],
                 },
             });
+
+            getNotifications(account['role_id']);
         }
 
         getAccountInformation();
@@ -165,17 +189,6 @@ const GlobalProvider = ({ children }: { children: ReactNode }) => {
 
         getShippings();
 
-        // const getLocations = async () => {
-        //     const { data: locationsQuery, error: locationsError } = await supabase
-        //         .from('racks')
-        //         .select('*,racks_locations (*, racks_locations_products(*))');
-
-
-        //     setLocations(locationsQuery || []);
-        // }
-
-        // getLocations();
-
         return () => {
             supabase.removeChannel(channel);
         }
@@ -183,7 +196,7 @@ const GlobalProvider = ({ children }: { children: ReactNode }) => {
 
 
     return (
-        <GlobalContext.Provider value={{ locations, roles, users, vendors, products, racks, notifications, orders, userAccount, receivings, shippings }}>{children}</GlobalContext.Provider>
+        <GlobalContext.Provider value={{ locations, roles, users, vendors, products, racks, notifications, orders, userAccount, receivings, shippings, isLaunching, setIsLaunching }}>{children}</GlobalContext.Provider>
     )
 };
 

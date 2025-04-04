@@ -201,9 +201,13 @@ const BasicTable = ({
           </Box>
         </Grid>
         <Grid size={{ lg:4, md: 4, sm: 12, xs: 12}}>
-          <Box sx={{display: { lg: 'flex', md: 'flex', sm: 'none', xs: 'none'}, width: '100%'}}>
+          <Box sx={{width: '100%'}}>
             <Box sx={{ flexGrow: 1 }} />
-            <Box sx={{display: 'flex', gap: 1}}>
+            <Box sx={{
+              display: 'flex',
+              gap: 1,
+              justifyContent: { lg: 'normal', md: 'normal', sm: 'end', xs: 'end'}
+            }}>
               {selectedRow != null && (
                 <Button variant='contained' className='bg-red-700 hover:bg-red-800 ml-5' onClick={handleDelete}>
                   <DeleteIcon />
