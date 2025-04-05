@@ -119,7 +119,7 @@ const PickListForm = ({ defaultData, setOpenModal }: { defaultData?: ShippingCon
     }
 
     useEffect(() => {
-        var currentShipping = shippings?.find(s => s.trailer_number == params?.trailer![0]);
+        var currentShipping = shippings?.find(s => s.trailer_number == params?.trailer);
 
         if (currentShipping != null) {
             setOrderId(currentShipping.id.toString());
