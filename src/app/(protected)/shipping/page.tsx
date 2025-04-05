@@ -7,20 +7,26 @@ import BasicTable from '../../../../components/tables/basic_table';
 import ShippingForm from '../../../../components/forms/shipping_form';
 import { GlobalContext } from '../../../../utils/context/global_provider';
 import { GridColDef } from '@mui/x-data-grid';
+import dayjs from 'dayjs';
 
 const Shipping = () => {
 
   const { shippings } = useContext(GlobalContext);
 
   const shippingColumns: GridColDef[] = [
-      { field: 'id', headerName: 'ID' },
-      { field: 'pl_number', headerName: 'PL #' },
+      { field: 'pl_number', headerName: 'PL #', pinnable: true},
       { field: 'bol_number', headerName: 'BOL #' },
       { field: 'carrier', headerName: 'Carrier' },
       { field: 'trailer_number', headerName: 'Trailer #' },
       { field: 'picker_name', headerName: 'Picker' },
       { field: 'verified_by', headerName: 'Verified By' },
       { field: 'shipped_quantity', headerName: 'Shipped Quantity' },
+      { field: 'created_at', headerName: 'Created At', renderCell: (params) => {
+        return dayjs(params.row.created_at).format('ddd MMM DD YYYY');
+      }},
+      { field: 'shipped_out_at', headerName: 'Shipped Out', renderCell: (params) => {
+        return dayjs(params.row.shipped_out_at).format('ddd MMM DD YYYY');
+      }},
       { field: 'status', headerName: 'Status', renderCell: (params) => {
         switch (params.row.status) {
           case 'Pending':

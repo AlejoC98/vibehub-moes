@@ -251,7 +251,7 @@ const BasicTable = ({
       { createForm !== undefined && (
         <Dialog onClose={handleClose} open={openModal} fullWidth>
           <DialogTitle>
-            <Typography>{createFormTitle}</Typography>
+            <Typography align='center' fontWeight='bold' sx={{ fontSize: 25}}>{createFormTitle}</Typography>
           </DialogTitle>
           {cloneElement(createForm, { defaultData: formData, setOpenModal: setOpenModal })}
         </Dialog>

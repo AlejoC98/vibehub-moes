@@ -96,8 +96,6 @@ const ShippingForm = ({ defaultData, setOpenModal }: { defaultData?: ShippingCon
                 }
             }
 
-            // Create Notification
-
             const { data: newNoti, error} = await supabase.from('notifications').insert({
                 'title': 'New Shipped Created',
                 'text': 'New Record Created',
