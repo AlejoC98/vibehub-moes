@@ -9,7 +9,6 @@ const LoadingWrapper = ({ children }: { children: ReactNode }) => {
     const { isLaunching, setIsLaunching } = useContext(GlobalContext);
 
     useEffect(() => {
-        console.log(isLaunching);
         setTimeout(() => {
           setIsLaunching(false);
         }, 3000);

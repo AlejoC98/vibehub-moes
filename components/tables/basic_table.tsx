@@ -139,6 +139,8 @@ const BasicTable = ({
       router.push(`/orders/${data.order_number}`);
     } else if (Object.keys(data).includes('po_number')) {
       router.push(`${pathname}/${data.po_number}`);
+    } else if (Object.keys(data).includes('trailer_number')) {
+      router.push(`${pathname}/${data.trailer_number}`);
     } else if (Object.keys(data).includes('pl_number')) {
       router.push(`${pathname}/${data.pl_number}`);
     }
@@ -206,7 +208,7 @@ const BasicTable = ({
             <Box sx={{
               display: 'flex',
               gap: 1,
-              justifyContent: { lg: 'normal', md: 'normal', sm: 'end', xs: 'end'}
+              justifyContent: { lg: 'end', md: 'end', sm: 'end', xs: 'end'}
             }}>
               {selectedRow != null && (
                 <Button variant='contained' className='bg-red-700 hover:bg-red-800 ml-5' onClick={handleDelete}>

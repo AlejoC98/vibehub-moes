@@ -1,6 +1,6 @@
 'use client'
 import { createContext, ReactNode, useEffect, useState } from "react";
-import { AccountContent, CustomerContent, GlobalContent, LocationContent, NotificationContent, OrderContent, ProductContent, RackContent, ReceivingContent, RoleContent, ShippingContent, UserContent, VendorContent } from "../interfaces";
+import { AccountContent, CustomerContent, GlobalContent, LocationContent, NotificationContent, OrderContent, ProductContent, RackContent, ReceivingContent, RoleContent, RoleNotificationContent, ShippingContent, UserContent, VendorContent } from "../interfaces";
 import { createClient } from "../supabase/client";
 
 export const GlobalContext = createContext<GlobalContent>({
@@ -24,15 +24,21 @@ const GlobalProvider = ({ children }: { children: ReactNode }) => {
     const [userAccount, setUserAccount] = useState<AccountContent>();
     const [locations, setLocations] = useState<LocationContent[]>([]);
     const [vendors, setVendors] = useState<VendorContent[]>([]);
-    const [notifications, setNotifications] = useState<NotificationContent[]>([]);
+    const [notifications, setNotifications] = useState<RoleNotificationContent[]>([]);
 
     useEffect(() => {
         // Realtime changes 
         const channel = supabase.channel('realtime changes').on('postgres_changes', {
-            event: '*', schema: 'public', table: 'shippings'
+            event: '*', schema: 'public', table: 'shippings_orders'
         }, (payload) => {
             setTimeout(() => {
-                getShippings();
+                getShippingsOrders();
+            }, 2000);
+        }).on('postgres_changes', {
+            event: '*', schema: 'public', table: 'shippings_pick_list'
+        }, (payload) => {
+            setTimeout(() => {
+                getShippingsOrders();
             }, 2000);
         }).on('postgres_changes', {
             event: '*', schema: 'public', table: 'notifications'
@@ -42,11 +48,11 @@ const GlobalProvider = ({ children }: { children: ReactNode }) => {
 
                 var { data: userData, error } = await supabase.from('accounts').select().eq('user_id', currentUserSession?.data!.user!.id).single();
 
-                const notification = payload.new as NotificationContent;
+                // const notification = payload.new as NotificationContent;
 
-                if (userData.id != notification.created_by) {
-                    getNotifications(userData.role_id);
-                }
+                getNotifications(userData.role_id);
+                // if (userData.id != notification.created_by) {
+                // }
             }, 2000);
         }).subscribe();
         // .on('postgres_changes', {
@@ -181,13 +187,13 @@ const GlobalProvider = ({ children }: { children: ReactNode }) => {
 
         getReceivings();
 
-        const getShippings = async () => {
-            const { data: shippingQuery, error } = await supabase.from('shippings').select('*, shippings_products(*)');
+        const getShippingsOrders = async () => {
+            const { data: shippingQuery, error } = await supabase.from('shippings_orders').select('*, shippings_pick_list(*, shippings_products(*))');
 
             setShippings(shippingQuery || []);
         }
 
-        getShippings();
+        getShippingsOrders();
 
         return () => {
             supabase.removeChannel(channel);

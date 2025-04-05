@@ -69,7 +69,7 @@ export interface GlobalContent {
     products?: ProductContent[];
     racks?: RackContent[];
     positions?: PositionContent[];
-    notifications?: NotificationContent[];
+    notifications?: RoleNotificationContent[];
     orders?: OrderContent[];
     userAccount?: AccountContent;
     receivings?: ReceivingContent[];
@@ -192,25 +192,38 @@ export interface ReceivingProductsContent {
 }
 
 export interface ShippingContent {
-    pl_number: number;
+    id: number;
     carrier: string;
+    dock_door: number;
     trailer_number: string;
+    created_at: string;
+    status: string;
+    shipped_at: string;
+    total_shipped: number;
+    shippings_pick_list: PickListContent[];
+}
+
+export interface PickListContent {
+    pl_number: number;
     shipped_out_at: Dayjs;
     picker_name: string;
     verified_by: string;
     bol_number: string;
-    status: string;
+    total_products: number,
     notes: string;
-    shipped_quantity?: number;
     created_at: string;
     shippings_products:
     { id: number, created_at: string, product_sku: string, shipping_id: number, product_quantity: number }[];
 }
+
 export interface ShippingInput {
-    pl_number: number;
     carrier: string;
+    dock_door: number;
     trailer_number: string;
-    shipped_out_at: Dayjs;
+}
+
+export interface PickListInput {
+    pl_number: number;
     picker_name: string;
     verified_by: string;
     bol_number: string;
@@ -252,12 +265,21 @@ export interface PositionProductContent {
     updatedAt?: Date;
 }
 
+export interface RoleNotificationContent {
+    created_at: string;
+    id: number,
+    notification_id: number;
+    notifications: NotificationContent;
+    role_id: number;
+}
+
 export interface NotificationContent {
     id: number;
     title: string;
     text: string;
     type: string;
     status: string;
+    redirect_to: string;
     created_by: number;
     usernotificationstatus: RoleNotificationsContent[];
 }

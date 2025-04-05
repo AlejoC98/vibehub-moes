@@ -4,23 +4,18 @@ import React, { useContext } from 'react'
 import Grid from '@mui/material/Grid2';
 import { Block } from '../../../../style/global';
 import BasicTable from '../../../../components/tables/basic_table';
-import ShippingForm from '../../../../components/forms/shipping_form';
 import { GlobalContext } from '../../../../utils/context/global_provider';
 import { GridColDef } from '@mui/x-data-grid';
 import dayjs from 'dayjs';
+import ShippingForm from '../../../../components/forms/shipping_form';
 
 const Shipping = () => {
 
   const { shippings } = useContext(GlobalContext);
 
   const shippingColumns: GridColDef[] = [
-      { field: 'pl_number', headerName: 'PL #', pinnable: true},
-      { field: 'bol_number', headerName: 'BOL #' },
       { field: 'carrier', headerName: 'Carrier' },
       { field: 'trailer_number', headerName: 'Trailer #' },
-      { field: 'picker_name', headerName: 'Picker' },
-      { field: 'verified_by', headerName: 'Verified By' },
-      { field: 'shipped_quantity', headerName: 'Shipped Quantity' },
       { field: 'created_at', headerName: 'Created At', renderCell: (params) => {
         return dayjs(params.row.created_at).format('ddd MMM DD YYYY');
       }},
@@ -62,7 +57,7 @@ const Shipping = () => {
         <Grid container spacing={5}>
             <Grid size={12}>
                 <Block>
-                    <BasicTable title='Shipping Records' data={shippings || []} columns={shippingColumns} createForm={<ShippingForm />} createFormTitle='Create Shipping Record' />
+                    <BasicTable title='Shipping Orders' data={shippings || []} columns={shippingColumns} createForm={<ShippingForm />} createFormTitle='Create Shipping Order' />
                 </Block>
             </Grid>
         </Grid>

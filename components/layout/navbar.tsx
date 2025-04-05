@@ -1,6 +1,6 @@
 'use client'
-import { Badge, Box, Divider, IconButton, InputAdornment, ListItemIcon, ListItemText, Menu, MenuItem, Toolbar, Typography, useMediaQuery, useTheme } from '@mui/material'
-import React, { MouseEvent, useContext, useRef, useState } from 'react'
+import { Badge, Box, Divider, IconButton, InputAdornment, ListItemButton, ListItemIcon, ListItemText, Menu, MenuItem, Toolbar, Typography, useMediaQuery, useTheme } from '@mui/material'
+import React, { MouseEvent, useContext, useEffect, useRef, useState } from 'react'
 import { Search, SearchIconWrapper, StyledInputBase, VibeNavbar } from '../../style/global'
 import MenuIcon from '@mui/icons-material/Menu'
 import SearchIcon from '@mui/icons-material/Search';
@@ -13,13 +13,18 @@ import AddIcon from '@mui/icons-material/Add';
 import DeleteIcon from '@mui/icons-material/Delete';
 import AutorenewIcon from '@mui/icons-material/Autorenew';
 import PriorityHighIcon from '@mui/icons-material/PriorityHigh';
+import { useRouter } from 'next/navigation'
+import { NotificationContent } from '../../utils/interfaces'
+import { createClient } from '../../utils/supabase/client'
 
 const Navbar = ({ open, setOpen }: { open: boolean, setOpen: (status: boolean) => void }) => {
 
+    const router = useRouter();
+    const supabase = createClient();
     const { notifications } = useContext(GlobalContext);
     const searchRef = useRef<HTMLInputElement>(null);
     const menuId = 'primary-search-account-menu';
-    const [closedNotifcation, setClosedNotification] = useState<number>(0);
+    const [pendingNotifcation, setPendingNotification] = useState<number>(0);
     const [anchorNoti, setAnchorNoti] = useState<null | HTMLElement>(null);
     const [anchorSett, setAnchorSett] = React.useState<null | HTMLElement>(null);
     const isMenuOpen = Boolean(anchorNoti);
@@ -41,7 +46,7 @@ const Navbar = ({ open, setOpen }: { open: boolean, setOpen: (status: boolean) =
 
     const handleSettMenu = (event: React.MouseEvent<HTMLElement>) => {
         setAnchorSett(event.currentTarget);
-      };
+    };
 
     const handleMenuClose = () => {
         setAnchorNoti(null);
@@ -49,28 +54,36 @@ const Navbar = ({ open, setOpen }: { open: boolean, setOpen: (status: boolean) =
 
     const handleSettingsClose = () => {
         setAnchorSett(null);
-      };
+    };
 
     const renderSettingMenu = (
         <Menu
-                id="menu-appbar"
-                anchorEl={anchorSett}
-                anchorOrigin={{
-                    vertical: 'bottom',
-                    horizontal: 'right'
-                }}
-                keepMounted
-                transformOrigin={{
-                  vertical: 'top',
-                  horizontal: 'right',
-                }}
-                open={Boolean(anchorSett)}
-                onClose={handleSettingsClose}
-              >
-                <MenuItem onClick={handleSettingsClose}>Profile</MenuItem>
-                <MenuItem onClick={() => signout()}>Log Out</MenuItem>
-              </Menu>
+            id="menu-appbar"
+            anchorEl={anchorSett}
+            anchorOrigin={{
+                vertical: 'bottom',
+                horizontal: 'right'
+            }}
+            keepMounted
+            transformOrigin={{
+                vertical: 'top',
+                horizontal: 'right',
+            }}
+            open={Boolean(anchorSett)}
+            onClose={handleSettingsClose}
+        >
+            <MenuItem onClick={handleSettingsClose}>Profile</MenuItem>
+            <MenuItem onClick={() => signout()}>Log Out</MenuItem>
+        </Menu>
     );
+
+    const handleOpenNoti = async(noti: NotificationContent) => {
+        setAnchorNoti(null);
+
+        await supabase.from('notifications').update({'status': 'Opened'}).eq('id', noti.id);
+
+        router.push(noti.redirect_to);
+    }
 
     const renderNotiMenu = (
         <Menu
@@ -84,14 +97,14 @@ const Navbar = ({ open, setOpen }: { open: boolean, setOpen: (status: boolean) =
             onClose={handleMenuClose}
         >
             {notifications?.map(noti => (
-                <MenuItem key={noti.id}>
+                <ListItemButton key={noti.id} onClick={() => handleOpenNoti(noti.notifications)}>
                     <ListItemIcon>
                         <Box>
-                            {noti.status === "New" ? <AddIcon /> : noti.status === "update" ? <AutorenewIcon /> : noti.status === "delete" ? <DeleteIcon /> : <PriorityHighIcon />}
+                            {noti.notifications.status === "New" ? <AddIcon /> : noti.notifications.status === "update" ? <AutorenewIcon /> : noti.notifications.status === "delete" ? <DeleteIcon /> : <PriorityHighIcon />}
                         </Box>
                     </ListItemIcon>
-                    <ListItemText primary={noti.title} secondary={noti.text} />
-                </MenuItem>
+                    <ListItemText primary={noti.notifications.title} secondary={noti.notifications.text} />
+                </ListItemButton>
             ))}
             {notifications?.length === 0 && (
                 <MenuItem disabled>
@@ -105,11 +118,22 @@ const Navbar = ({ open, setOpen }: { open: boolean, setOpen: (status: boolean) =
         </Menu>
     )
 
+    useEffect(() => {
+        if (notifications?.length! > 0) {
+            const totalNewNotifications = notifications!.filter(
+                item => item.notifications?.status === 'New'
+              ).length;
+            
+              setPendingNotification(totalNewNotifications);
+        }
+        // console.log(notifications);
+    }, [notifications])
+
     return (
         <Box>
             <VibeNavbar position='static'>
                 <Toolbar>
-                <IconButton
+                    <IconButton
                         size="large"
                         edge="start"
                         color="inherit"
@@ -122,7 +146,7 @@ const Navbar = ({ open, setOpen }: { open: boolean, setOpen: (status: boolean) =
                         <MenuIcon />
                     </IconButton>
                     <Box sx={{ flexGrow: 1 }} />
-                    <Search sx={{ width: isMobile ? 'none' : '100%'}}>
+                    <Search sx={{ width: isMobile ? 'none' : '100%' }}>
                         <SearchIconWrapper>
                             <SearchIcon />
                         </SearchIconWrapper>
@@ -155,7 +179,7 @@ const Navbar = ({ open, setOpen }: { open: boolean, setOpen: (status: boolean) =
                             aria-haspopup="true"
                             onClick={handleMenuOpen}
                         >
-                            <Badge badgeContent={closedNotifcation} color='error'>
+                            <Badge badgeContent={pendingNotifcation} color='error'>
                                 <NotificationsIcon />
                             </Badge>
                         </IconButton>
