@@ -12,7 +12,7 @@ import AssignmentReturnIcon from '@mui/icons-material/AssignmentReturn';
 import { NumericFormat } from 'react-number-format'
 
 const Dashboard = () => {
-const { products, orders, setIsLaunching } = useContext(GlobalContext);
+const { products, orders, shippings, setIsLaunching } = useContext(GlobalContext);
   const [revenue, setRevenue] = useState<number | string>();
 
   const data = [
@@ -154,7 +154,7 @@ const { products, orders, setIsLaunching } = useContext(GlobalContext);
             icon={
               <LocalShippingIcon sx={{ fontSize: '5rem', color: 'rgba(255, 255, 255, .5)', position: 'absolute', top: 20, right: 10}} />
             }
-            content={'N/A'}
+            content={shippings?.length}
             footer="Last month"
           />
         </Grid>
