@@ -114,11 +114,10 @@ const DrawerMenu = ({ openDrawer, toggleDrawer }: { openDrawer: boolean, toggleD
     ];
 
     const handleRedirectMenu = (key: number, direction?: string) => {
+        var isSudmenu = MenuList.find(m => m.id == key);
         switch (direction) {
             case '#':
-                var isSudmenu = MenuList.find(m => m.id == key);
-
-                if (isSudmenu?.submenu?.length == 0) {
+                if (isSudmenu != undefined || isSudmenu!.submenu?.length == 0) {
                     Swal.fire({
                         icon: 'info',
                         title: "Almost There!",
@@ -139,6 +138,7 @@ const DrawerMenu = ({ openDrawer, toggleDrawer }: { openDrawer: boolean, toggleD
                             `
                         }
                     });
+                    checkDefaultActive();
                 } else {
                     setMenuOpen(key !== menuOpen ? key : null);
                 }
@@ -148,7 +148,6 @@ const DrawerMenu = ({ openDrawer, toggleDrawer }: { openDrawer: boolean, toggleD
                     if (key !== menuOpen) {
                         setMenuOpen(key);
                         if (direction != undefined) {
-                            toggleDrawer(false);
                             setIsLaunching(true);
                             router.push(direction!);
                         }
