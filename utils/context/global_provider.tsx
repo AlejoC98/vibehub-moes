@@ -152,19 +152,11 @@ const GlobalProvider = ({ children }: { children: ReactNode }) => {
 
             const { data: account, error: accountError } = await supabase
                 .from('accounts')
-                .select('*, accounts_roles(*, roles(id, name))')
+                .select('*, accounts_roles(*, roles(id, name)), locations(*)')
                 .eq('user_id', userData.user!.id)
                 .single();
 
-            setUserAccount({
-                'id': account.id,
-                'user_id': account.user_id,
-                'first_name': account.first_name,
-                'last_name': account.last_name,
-                'email': userData.user!.email,
-                'username': 'string',
-                'accounts_roles': account.accounts_roles,
-            });
+            setUserAccount(account);
 
             getNotifications(account['role_id']);
         }

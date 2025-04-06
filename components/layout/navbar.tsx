@@ -21,7 +21,7 @@ const Navbar = ({ open, setOpen }: { open: boolean, setOpen: (status: boolean) =
 
     const router = useRouter();
     const supabase = createClient();
-    const { notifications } = useContext(GlobalContext);
+    const { notifications, setIsLaunching } = useContext(GlobalContext);
     const searchRef = useRef<HTMLInputElement>(null);
     const menuId = 'primary-search-account-menu';
     const [pendingNotifcation, setPendingNotification] = useState<number>(0);
@@ -56,6 +56,12 @@ const Navbar = ({ open, setOpen }: { open: boolean, setOpen: (status: boolean) =
         setAnchorSett(null);
     };
 
+    const handleOpenSettMenu = (redirectTo: string) => {
+        handleSettingsClose();
+        setIsLaunching(true);
+        router.push(redirectTo);
+    }
+
     const renderSettingMenu = (
         <Menu
             id="menu-appbar"
@@ -72,7 +78,7 @@ const Navbar = ({ open, setOpen }: { open: boolean, setOpen: (status: boolean) =
             open={Boolean(anchorSett)}
             onClose={handleSettingsClose}
         >
-            <MenuItem onClick={handleSettingsClose}>Profile</MenuItem>
+            <MenuItem onClick={() => handleOpenSettMenu('/profile')}>Profile</MenuItem>
             <MenuItem onClick={() => signout()}>Log Out</MenuItem>
         </Menu>
     );

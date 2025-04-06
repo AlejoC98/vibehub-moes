@@ -8,7 +8,7 @@ export interface Role {
 
 export interface AccountRolesContent {
     id: number;
-    roles: Role[];
+    roles: Role;
     role_id: number;
     account_id: number;
     created_at: string;
@@ -23,12 +23,14 @@ export interface MenuItem {
 }
 
 export interface AccountContent {
-    id: number;
+    id?: number;
     user_id: string;
     first_name?: string;
     last_name?: string;
     email?: string;
     username?: string;
+    phone: number;
+    locations: LocationContent;
     accounts_roles?: AccountRolesContent[];
 }
 
@@ -75,6 +77,8 @@ export interface GlobalContent {
 export interface LocationContent {
     id: number;
     name: string;
+    city: string,
+    state: string;
     street: string;
     zip: number;
     deleted: boolean;
