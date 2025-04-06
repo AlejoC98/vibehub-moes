@@ -267,7 +267,10 @@ const SideBar = ({ open, setOpen }: { open: boolean, setOpen: (status: boolean) 
                     </Box>
                 ))}
                 <Box sx={{ height: 50 }} />
-                <ListItemButton onClick={() => handleRedirectMenu(24, '/help-center')} selected={menuOpen == 24}>
+                <ListItemButton onClick={() => {
+                    setMenuOpen(null);
+                    handleRedirectMenu(24, '/help-center');
+                }} selected={menuOpen == 24}>
                     <ListItemIcon>
                     <HugeiconsIcon icon={CustomerService01Icon} />
                     </ListItemIcon>

@@ -259,6 +259,17 @@ const DrawerMenu = ({ openDrawer, toggleDrawer }: { openDrawer: boolean, toggleD
                         </Collapse>
                     </Box>
                 ))}
+                <Box sx={{ height: 20 }} />
+                <ListItemButton onClick={() => {
+                    setMenuOpen(null);
+                    toggleDrawer(false);
+                    handleRedirectMenu(24, '/help-center');
+                }} selected={menuOpen == 24}>
+                    <ListItemIcon>
+                    <HugeiconsIcon icon={CustomerService01Icon} />
+                    </ListItemIcon>
+                    <ListItemText primary={'Help Center'} />
+                </ListItemButton>
             </Drawer>
         </Fragment>
     )
