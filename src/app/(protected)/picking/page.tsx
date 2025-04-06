@@ -1,3 +1,4 @@
+'use client'
 import { Box, TextField, Typography } from '@mui/material'
 import React, { useContext, useEffect } from 'react'
 import Grid from '@mui/material/Grid2';
