@@ -23,7 +23,7 @@ const HelpCenter = () => {
                         <Typography variant='h3' textAlign='center'>FAQs</Typography>
                         <Typography textAlign='center'>Require assistance? Here are some of our commonly asked questions!</Typography>
                         <Typography textAlign='center' sx={{ fontSize: 12, color: '#6e829f'}}>Discover answers to common queries and find solutions to your concerns with our comprehensive list of frequently asked questions.</Typography>
-                        <Box sx={{ paddingLeft: '6rem', paddingRight: '6rem'}}>
+                        <Box sx={{ paddingLeft: { xl: '6rem', lg: '6rem', md: 0, sm: 0, xs: 0}, paddingRight: { xl: '6rem', lg: '6rem', md: 0, sm: 0, xs: 0}}}>
                             <Accordion>
                                 <AccordionSummary
                                     expandIcon={<ExpandMoreIcon />}
@@ -64,7 +64,7 @@ const HelpCenter = () => {
                                 </AccordionDetails>
                             </Accordion>
                         </Box>
-                        <Box sx={{ maxWidth: 800, padding: '2rem 4rem', margin: '0 auto', background: '#f9f9fa'}}>
+                        <Box sx={{ maxWidth: 800, padding: { xl: '2rem 4rem', lg: '2rem 4rem', md: '2rem 1rem', sm: '2rem 1rem', xs: '2rem 1rem'}, margin: '0 auto', background: '#f9f9fa'}}>
                             <TicketForm />
                         </Box>
                     </Block>

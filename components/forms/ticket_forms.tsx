@@ -45,7 +45,7 @@ const TicketForm = () => {
                 <Grid size={12}>
                     <Typography>Contact our support team for personalized assistance. Your satisfaction is our priority! Write your question below and we'll get back to you shortly.</Typography>
                 </Grid>
-                <Grid size={6}>
+                <Grid size={{ xl: 6, lg: 6, md: 12, sm: 12, xs: 12}}>
                     <TextField
                         fullWidth
                         required
@@ -53,7 +53,7 @@ const TicketForm = () => {
                         {...register('full_name', { required: 'Name is required' })}
                     />
                 </Grid>
-                <Grid size={6}>
+                <Grid size={{ xl: 6, lg: 6, md: 12, sm: 12, xs: 12}}>
                     <TextField
                         fullWidth
                         required
@@ -72,7 +72,7 @@ const TicketForm = () => {
                     />
                 </Grid>
                 <Grid size={12}>
-                    <SubmitButton fullWidth={true} isLoading={isLaoding} btnText='Submit' />
+                    <SubmitButton fullWidth={true} isLoading={isLaoding} btnText='Submit' style={{ background: '#146c7f'}}/>
                 </Grid>
             </Grid>
         </form>
