@@ -79,7 +79,10 @@ const Navbar = ({ open, setOpen }: { open: boolean, setOpen: (status: boolean) =
             onClose={handleSettingsClose}
         >
             <MenuItem onClick={() => handleOpenSettMenu('/profile')}>Profile</MenuItem>
-            <MenuItem onClick={() => signout()}>Log Out</MenuItem>
+            <MenuItem onClick={() => {
+                setIsLaunching(true);
+                signout();
+            }}>Log Out</MenuItem>
         </Menu>
     );
 
@@ -132,7 +135,6 @@ const Navbar = ({ open, setOpen }: { open: boolean, setOpen: (status: boolean) =
             
               setPendingNotification(totalNewNotifications);
         }
-        // console.log(notifications);
     }, [notifications])
 
     return (
