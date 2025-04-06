@@ -46,6 +46,7 @@ main {
 .bg-dash {
   height: 100vh;
   display: flex;
+  display: relative;
   overflow-y: hidden;
   background-size: cover;
   background-position: center;

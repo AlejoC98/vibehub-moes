@@ -35,11 +35,11 @@ const layout = ({ children }: { children: ReactNode }) => {
         rtl={false}
         theme="light"
       />
-      <LoadingWrapper>
-        <Box className='bg-dash'>
+      <Box className='bg-dash'>
+        <LoadingWrapper>
           {isMobile ? (<DrawerMenu openDrawer={openDrawer} toggleDrawer={toggleDrawer} />) : (<SideBar open={openMenu} setOpen={setOpenMenu} />)}
           <Box
-            sx={{ 
+            sx={{
               display: 'flex',
               overflowX: 'hidden',
               overflowY: 'scroll',
@@ -52,8 +52,8 @@ const layout = ({ children }: { children: ReactNode }) => {
               {children}
             </Box>
           </Box>
-        </Box>
-      </LoadingWrapper>
+        </LoadingWrapper>
+      </Box>
     </GlobalProvider>
   )
 }

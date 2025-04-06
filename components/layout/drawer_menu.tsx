@@ -49,7 +49,7 @@ const DrawerMenu = ({ openDrawer, toggleDrawer }: { openDrawer: boolean, toggleD
                     {
                         id: 2,
                         title: "Receiving",
-                        to: "/receiving",
+                        to: "#",
                         icon: <HugeiconsIcon icon={LiftTruckIcon} />
                     }
                 ] : []),
@@ -57,7 +57,7 @@ const DrawerMenu = ({ openDrawer, toggleDrawer }: { openDrawer: boolean, toggleD
                     {
                         id: 3,
                         title: "Replenishment",
-                        to: "/replenishment",
+                        to: "#",
                         icon: <HugeiconsIcon icon={PackageMovingIcon} />
                     },
                 ] : []),
@@ -65,7 +65,7 @@ const DrawerMenu = ({ openDrawer, toggleDrawer }: { openDrawer: boolean, toggleD
                     {
                         id: 4,
                         title: "Picking",
-                        to: "/picking",
+                        to: "#",
                         icon: <HugeiconsIcon icon={TaskDaily01Icon} />
                     }
                 ] : []),
@@ -99,7 +99,7 @@ const DrawerMenu = ({ openDrawer, toggleDrawer }: { openDrawer: boolean, toggleD
             {
                 id: 7,
                 title: "Vendors",
-                to: "/vendors",
+                to: "#",
                 icon: <HugeiconsIcon icon={Store02Icon} />
             }
         ] : []),
