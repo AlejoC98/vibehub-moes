@@ -10,44 +10,44 @@ import { toast } from 'react-toastify'
 const CarrierForm = ({ defaultData, setOpenModal }: { defaultData?: CarriersContent, setOpenModal?: (status: boolean) => void }) => {
 
     const [isLoading, setIsLoading] = useState<boolean>(false);
-        const supabase = createClient();
-    
-        const {
-            register,
-            setValue,
-            handleSubmit,
-        } = useForm<CarriersContent>({
-            defaultValues: {
-                ...defaultData
-            }
-        });
+    const supabase = createClient();
 
-            const handleCreateCarrier: SubmitHandler<CarriersContent> = async (formData) => {
-                try {
-                    setIsLoading(true);
-        
-                    const { data: uniqueQuery, error: uniqueError } = await supabase.from('carriers').select().eq('name', formData['name']).maybeSingle();
-        
-                    if (uniqueQuery != null) {
-                        throw new Error('Name duplicated');
-                    }
-        
-                    const { data, error } = await supabase.from('carriers').insert({
-                        'name': formData['name']
-                    }).select();
-        
-                    if (error) {
-                        throw new Error(error.message);
-                    }
-        
-                    toast.success('Carrier Created!');
-        
-                } catch (error: any) {
-                    toast.error(error.message);
-                }
-                setIsLoading(false);
-                setOpenModal!(false);
+    const {
+        register,
+        setValue,
+        handleSubmit,
+    } = useForm<CarriersContent>({
+        defaultValues: {
+            ...defaultData
+        }
+    });
+
+    const handleCreateCarrier: SubmitHandler<CarriersContent> = async (formData) => {
+        try {
+            setIsLoading(true);
+
+            const { data: uniqueQuery, error: uniqueError } = await supabase.from('carriers').select().eq('name', formData['name']).maybeSingle();
+
+            if (uniqueQuery != null) {
+                throw new Error('Name duplicated');
             }
+
+            const { data, error } = await supabase.from('carriers').insert({
+                'name': formData['name']
+            }).select();
+
+            if (error) {
+                throw new Error(error.message);
+            }
+
+            toast.success('Carrier Created!');
+
+        } catch (error: any) {
+            toast.error(error.message);
+        }
+        setIsLoading(false);
+        setOpenModal!(false);
+    }
 
     return (
         <Box sx={{ flexGrow: 1, padding: 5 }}>

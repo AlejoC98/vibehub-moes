@@ -1,6 +1,6 @@
 import React, { FormEvent, useState } from 'react';
 import Grid from '@mui/material/Grid2';
-import { Box, InputAdornment, Typography } from '@mui/material';
+import { Box, IconButton, InputAdornment, Typography } from '@mui/material';
 import { WhiteTextField } from '../../style/global';
 import PersonIcon from '@mui/icons-material/Person';
 import LoginIcon from '@mui/icons-material/Login';
@@ -8,11 +8,14 @@ import KeyIcon from '@mui/icons-material/Key';
 import SubmitButton from '../submit_button';
 import { login } from '@/app/(public)/auth/login/actions';
 import { toast } from 'react-toastify';
+import VisibilityIcon from '@mui/icons-material/Visibility';
+import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
 
 const LoginForm = () => {
   const [loading, setIsloading] = useState<boolean>(false);
   const [username, setUsername] = useState<string>('');
   const [password, setPassword] = useState<string>('');
+  const [showPassword, setShowPassword] = useState<boolean>(false);
 
   const handleLogin = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -65,13 +68,22 @@ const LoginForm = () => {
                     setPassword(event.target.value); 
                   }}
                   placeholder='Password'
-                  type='password'
+                  type={showPassword ? 'text' : 'password'}
                   slotProps={{
                     input: {
                       startAdornment: (
                         <InputAdornment position='start' className="text-white">
                           <KeyIcon sx={{color: '#fff'}} />
                         </InputAdornment>
+                      ),
+                      endAdornment: (
+                        <IconButton onClick={() => setShowPassword(!showPassword)}>
+                          { showPassword ? (
+                            <VisibilityOffIcon sx={{ color: '#fff'}} />
+                          ) : (
+                            <VisibilityIcon sx={{ color: '#fff'}} />
+                          )}
+                        </IconButton>
                       )
                     }
                   }}

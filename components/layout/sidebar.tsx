@@ -4,7 +4,6 @@ import { Avatar, Box, Collapse, IconButton, List, ListItem, ListItemButton, List
 import { MenuItem } from '../../utils/interfaces';
 import ExpandLess from '@mui/icons-material/ExpandLess';
 import ExpandMore from '@mui/icons-material/ExpandMore';
-import HelpOutlineIcon from '@mui/icons-material/HelpOutline';
 import Link from 'next/link';
 import { GlobalContext } from '../../utils/context/global_provider';
 import { usePathname, useRouter } from 'next/navigation';
@@ -19,6 +18,9 @@ const SideBar = ({ open, setOpen }: { open: boolean, setOpen: (status: boolean) 
 
     const router = useRouter();
     const pathname = usePathname();
+
+    const [menuOpen, setMenuOpen] = useState<number | null>(1);
+    const [sideWidth, setSideWidth] = useState<number>(250);
 
     const MenuList: MenuItem[] = [
         {
@@ -114,9 +116,6 @@ const SideBar = ({ open, setOpen }: { open: boolean, setOpen: (status: boolean) 
             }
         ] : []),
     ];
-
-    const [menuOpen, setMenuOpen] = useState<number | null>(1);
-    const [sideWidth, setSideWidth] = useState<number>(250);
 
     const handleRedirectMenu = (key: number, direction?: string) => {
         var isSudmenu = MenuList.find(m => m.id == key);
@@ -268,9 +267,9 @@ const SideBar = ({ open, setOpen }: { open: boolean, setOpen: (status: boolean) 
                     </Box>
                 ))}
                 <Box sx={{ height: 50 }} />
-                <ListItemButton>
+                <ListItemButton onClick={() => handleRedirectMenu(24, '/help-center')} selected={menuOpen == 24}>
                     <ListItemIcon>
-                        <HelpOutlineIcon />
+                    <HugeiconsIcon icon={CustomerService01Icon} />
                     </ListItemIcon>
                     <ListItemText primary={'Help Center'} />
                 </ListItemButton>

@@ -52,6 +52,18 @@ const GlobalProvider = ({ children }: { children: ReactNode }) => {
                 getNotifications(userData.role_id);
             }, 2000);
         }).on('postgres_changes', {
+            event: '*', schema: 'public', table: 'accounts'
+        }, (payload) => {
+            setTimeout(() => {
+                getUser();
+            }, 2000);
+        }).on('postgres_changes', {
+            event: '*', schema: 'public', table: 'accounts_roles'
+        }, (payload) => {
+            setTimeout(() => {
+                getUser();
+            }, 2000);
+        }).on('postgres_changes', {
             event: '*', schema: 'public', table: 'carriers'
         }, (payload) => {
             setTimeout(() => {
@@ -76,13 +88,13 @@ const GlobalProvider = ({ children }: { children: ReactNode }) => {
         //         setTimeout(() => {
         //             getRacks();
         //         }, 2000);
-        //     }).on('postgres_changes', {
-        //         event: '*', schema: 'public', table: 'accounts'
-        //     }, (payload) => {
-        //         setTimeout(() => {
-        //             getUser();
-        //         }, 2000);
-        //     }).on('postgres_changes', {
+            // }).on('postgres_changes', {
+            //     event: '*', schema: 'public', table: 'accounts'
+            // }, (payload) => {
+            //     setTimeout(() => {
+            //         getUser();
+            //     }, 2000);
+            // }).on('postgres_changes', {
         //         event: '*', schema: 'public', table: 'vendors'
         //     }, (payload) => {
         //         setTimeout(() => {

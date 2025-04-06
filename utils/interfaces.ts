@@ -386,3 +386,9 @@ export interface OrderProducts {
     quantity: number;
     createdBy: number;
 }
+
+export interface TicketInput {
+    full_name: string;
+    username: string;
+    message: string;
+}
