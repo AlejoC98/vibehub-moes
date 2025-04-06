@@ -39,7 +39,7 @@ const ShippingForm = ({ defaultData, setOpenModal }: { defaultData?: ShippingCon
                 'type': 'Shipping',
                 'status': 'New',
                 'redirect_to': `/shipping/${newOrder['trailer_number']}`,
-                'created_by': userAccount?.role?.id,
+                'created_by': userAccount?.id,
             }).select().single();
 
             if (error) {
