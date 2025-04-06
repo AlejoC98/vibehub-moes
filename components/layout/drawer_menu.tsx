@@ -138,6 +138,7 @@ const DrawerMenu = ({ openDrawer, toggleDrawer }: { openDrawer: boolean, toggleD
                             `
                         }
                     });
+                    toggleDrawer(false);
                     checkDefaultActive();
                 } else {
                     setMenuOpen(key !== menuOpen ? key : null);

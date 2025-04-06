@@ -19,6 +19,7 @@ const LoadingWrapper = ({ children }: { children: ReactNode }) => {
           bottom: 0,
           left: 0,
           right: 0,
+          minHeight: '100vh',
           display: isLaunching ? 'grid' : 'none',
           placeItems: 'center',
           transition: 'display 1s ease-in-out',
