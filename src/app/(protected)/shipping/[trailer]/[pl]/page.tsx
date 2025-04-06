@@ -71,7 +71,7 @@ const PickListDetails = () => {
         </Grid>
         <Grid size={{ xl: 9, lg: 9, md: 12, sm: 12, xs: 12}} sx={{ marginBottom: 5}}>
           <Block>
-          <BasicTable title='Product on order' data={data?.shippings_products || []} columns={shippingProductsColumns} />
+          <BasicTable title='Product on order' data={data?.shippings_products || []} columns={shippingProductsColumns} created_column={true} />
           </Block>
         </Grid>
       </Details>

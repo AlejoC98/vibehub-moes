@@ -1,4 +1,4 @@
-import { Box, TextField } from '@mui/material'
+import { Autocomplete, Box, TextField } from '@mui/material'
 import React, { useContext, useState } from 'react'
 import Grid from '@mui/material/Grid2'
 import { ShippingContent, ShippingInput } from '../../utils/interfaces';
@@ -14,6 +14,7 @@ const ShippingForm = ({ defaultData, setOpenModal }: { defaultData?: ShippingCon
 
     const {
         register,
+        setValue,
         handleSubmit,
         formState: { errors },
     } = useForm<ShippingInput>({});
@@ -21,7 +22,12 @@ const ShippingForm = ({ defaultData, setOpenModal }: { defaultData?: ShippingCon
     const router = useRouter();
     const supabase = createClient();
     const [isLoading, setIsLoading] = useState<boolean>(false);
-    const { userAccount } = useContext(GlobalContext);
+    const { userAccount, carriers } = useContext(GlobalContext);
+
+    const carriersOptions = carriers!.map(carrier => ({
+        value: carrier.id,
+        label: carrier.name
+    }));
 
     const handleCreateOrder: SubmitHandler<ShippingInput> = async (formData) => {
         try {
@@ -57,6 +63,7 @@ const ShippingForm = ({ defaultData, setOpenModal }: { defaultData?: ShippingCon
             router.push(`shipping/${formData.trailer_number}`);
 
         } catch (error: any) {
+            setIsLoading(false);
             toast.warning(error.message);
         }
     }
@@ -66,13 +73,22 @@ const ShippingForm = ({ defaultData, setOpenModal }: { defaultData?: ShippingCon
             <form onSubmit={handleSubmit(handleCreateOrder)}>
                 <Grid container spacing={2}>
                     <Grid size={12}>
-                        <TextField
+                        <Autocomplete
                             fullWidth
-                            required
-                            label="Carrier"
-                            {...register('carrier', { required: 'Carrier is required' })}
-                            error={!!errors.carrier}
-                            helperText={errors.carrier?.message}
+                            disablePortal
+                            options={carriersOptions}
+                            value={carriersOptions.find(r => r.label === defaultData?.carrier) || null}
+                            onInputChange={(event, newValue) => {
+                                const selectedValue = carriersOptions.find(v => v.label === newValue)?.label;
+                                setValue('carrier', selectedValue!);
+                            }}
+                            renderInput={
+                                (params) => <TextField
+                                    {...params}
+                                    label="Carrier"
+                                    required
+                                />
+                            }
                         />
                     </Grid>
                     <Grid size={12}>

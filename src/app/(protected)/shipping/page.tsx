@@ -61,7 +61,7 @@ const Shipping = () => {
         <Grid container spacing={5}>
             <Grid size={12}>
                 <Block>
-                    <BasicTable title='Shipping Orders' data={shippings || []} columns={shippingColumns} createForm={<ShippingForm />} createFormTitle='Create Shipping Order' />
+                    <BasicTable title='Shipping Orders' data={shippings || []} columns={shippingColumns} createForm={<ShippingForm />} createFormTitle='Create Shipping Order' created_column={true} />
                 </Block>
             </Grid>
         </Grid>

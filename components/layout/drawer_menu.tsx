@@ -148,6 +148,7 @@ const DrawerMenu = ({ openDrawer, toggleDrawer }: { openDrawer: boolean, toggleD
                     if (key !== menuOpen) {
                         setMenuOpen(key);
                         if (direction != undefined) {
+                            toggleDrawer(false);
                             setIsLaunching(true);
                             router.push(direction!);
                         }

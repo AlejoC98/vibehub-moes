@@ -58,7 +58,7 @@ const UsersForms = ({ defaultData, setOpenModal }: { defaultData?: AccountConten
                     'location_id': 1,
                     'email': data['email'],
                     'username': data['username']
-                }, { onConflict: 'id' }).select().single();
+                }, { onConflict: 'email' }).select().single();
 
                 if (error) {
                     throw new Error(error.message);

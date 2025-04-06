@@ -1,6 +1,6 @@
 'use client'
 import { createContext, ReactNode, useEffect, useState } from "react";
-import { AccountContent, CustomerContent, GlobalContent, LocationContent, NotificationContent, OrderContent, ProductContent, RackContent, ReceivingContent, RoleContent, RoleNotificationContent, ShippingContent, VendorContent } from "../interfaces";
+import { AccountContent, CarriersContent, CustomerContent, GlobalContent, LocationContent, NotificationContent, OrderContent, ProductContent, RackContent, ReceivingContent, RoleContent, RoleNotificationContent, ShippingContent, VendorsContent } from "../interfaces";
 import { createClient } from "../supabase/client";
 
 export const GlobalContext = createContext<GlobalContent>({
@@ -23,7 +23,8 @@ const GlobalProvider = ({ children }: { children: ReactNode }) => {
     const [products, setProducts] = useState<ProductContent[]>([]);
     const [userAccount, setUserAccount] = useState<AccountContent>();
     const [locations, setLocations] = useState<LocationContent[]>([]);
-    const [vendors, setVendors] = useState<VendorContent[]>([]);
+    const [vendors, setVendors] = useState<VendorsContent[]>([]);
+    const [carriers, setCarriers] = useState<CarriersContent[]>([]);
     const [notifications, setNotifications] = useState<RoleNotificationContent[]>([]);
 
     useEffect(() => {
@@ -43,12 +44,18 @@ const GlobalProvider = ({ children }: { children: ReactNode }) => {
         }).on('postgres_changes', {
             event: '*', schema: 'public', table: 'notifications'
         }, (payload) => {
-            setTimeout(async() => {
+            setTimeout(async () => {
                 var currentUserSession = await supabase.auth.getUser();
 
                 var { data: userData, error } = await supabase.from('accounts').select().eq('user_id', currentUserSession?.data!.user!.id).single();
 
                 getNotifications(userData.role_id);
+            }, 2000);
+        }).on('postgres_changes', {
+            event: '*', schema: 'public', table: 'carriers'
+        }, (payload) => {
+            setTimeout(() => {
+                getCarriers();
             }, 2000);
         }).subscribe();
         // .on('postgres_changes', {
@@ -138,6 +145,7 @@ const GlobalProvider = ({ children }: { children: ReactNode }) => {
                 .single();
 
             setUserAccount({
+                'id': account.id,
                 'user_id': account.user_id,
                 'first_name': account.first_name,
                 'last_name': account.last_name,
@@ -181,6 +189,14 @@ const GlobalProvider = ({ children }: { children: ReactNode }) => {
 
         getVendors();
 
+        const getCarriers = async () => {
+            const { data: carriersQuery, error } = await supabase.from('carriers').select();
+
+            setCarriers(carriersQuery || []);
+        }
+
+        getCarriers();
+
         const getReceivings = async () => {
             const { data: receivingQuery, error: receivingError } = await supabase.from('receiving').select('*, vendors(id, name), receiving_products(*, products(*))');
             setReceivings(receivingQuery || []);
@@ -203,7 +219,7 @@ const GlobalProvider = ({ children }: { children: ReactNode }) => {
 
 
     return (
-        <GlobalContext.Provider value={{ locations, roles, users, vendors, products, racks, notifications, orders, userAccount, receivings, shippings, isLaunching, setIsLaunching }}>{children}</GlobalContext.Provider>
+        <GlobalContext.Provider value={{ locations, roles, users, vendors, carriers, products, racks, notifications, orders, userAccount, receivings, shippings, isLaunching, setIsLaunching }}>{children}</GlobalContext.Provider>
     )
 };
 

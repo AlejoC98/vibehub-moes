@@ -23,7 +23,7 @@ export interface MenuItem {
 }
 
 export interface AccountContent {
-    id?: number;
+    id: number;
     user_id: string;
     first_name?: string;
     last_name?: string;
@@ -58,7 +58,8 @@ export interface GlobalContent {
     locations?: LocationContent[];
     roles?: RoleContent[];
     users?: AccountContent[];
-    vendors?: VendorContent[];
+    vendors?: VendorsContent[];
+    carriers?: CarriersContent[];
     products?: ProductContent[];
     racks?: RackContent[];
     positions?: PositionContent[];
@@ -144,7 +145,7 @@ export interface ReceivingContent {
     trailer_number: string;
     assign_to: number,
     receiving_products?: ReceivingProductsContent[];
-    vendors?: VendorContent[];
+    vendors?: VendorsContent[];
     status: string;
 }
 
@@ -191,6 +192,7 @@ export interface ShippingContent {
     created_at: string;
     status: string;
     shipped_at: string;
+    created_by: number;
     total_shipped: number;
     shippings_pick_list: PickListContent[];
 }
@@ -204,6 +206,7 @@ export interface PickListContent {
     total_products: number,
     notes: string;
     created_at: string;
+    created_by: number;
     shippings_products:
     { id: number, created_at: string, product_sku: string, shipping_id: number, product_quantity: number }[];
 }
@@ -312,8 +315,17 @@ export interface CustomerContent {
     updatedAt?: Date;
 }
 
-export interface VendorContent {
+export interface VendorsContent {
     id: number;
+    name: string;
+}
+
+export interface CarriersContent {
+    id: number;
+    name: string;
+}
+
+export interface CarriersInput {
     name: string;
 }
 

@@ -13,12 +13,12 @@ const Vendors = () => {
     const { vendors } = useContext(GlobalContext);
 
     const vendorsColumns: GridColDef[] = [
-            { field: 'id', headerName: 'ID'},
-            { field: 'name', headerName: 'Name'},
-            // { field: 'deleted', headerName: 'Status', renderCell: (params) => (
-            //   <Box className={`${params.row.deleted ? 'bg-red-800' : 'bg-green-800'} text-white px-2 py-1 rounded-lg`}>{params.row.deleted ? 'Inactive' : 'Active'}</Box>
-            // )}
-          ];
+        { field: 'id', headerName: 'ID'},
+        { field: 'name', headerName: 'Name'},
+        // { field: 'deleted', headerName: 'Status', renderCell: (params) => (
+        //   <Box className={`${params.row.deleted ? 'bg-red-800' : 'bg-green-800'} text-white px-2 py-1 rounded-lg`}>{params.row.deleted ? 'Inactive' : 'Active'}</Box>
+        // )}
+    ];
 
   return (
     <Box>

@@ -1,8 +1,8 @@
 'use client'
-import { Box, Button, Divider, IconButton, InputAdornment, List, ListItem, ListItemText, TextField, Typography, useMediaQuery, useTheme } from '@mui/material'
+import { Autocomplete, Box, Button, Divider, IconButton, InputAdornment, List, ListItem, ListItemText, TextField, Typography, useMediaQuery, useTheme } from '@mui/material'
 import React, { useContext, useEffect, useState } from 'react'
 import Grid from '@mui/material/Grid2';
-import { PickListInput, ShippingContent } from '../../utils/interfaces';
+import { PickListInput, PickListContent, ShippingContent } from '../../utils/interfaces';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { NumberField } from '../../style/global';
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
@@ -13,23 +13,41 @@ import { createClient } from '../../utils/supabase/client';
 import { GlobalContext } from '../../utils/context/global_provider';
 import { useParams } from 'next/navigation';
 
-const PickListForm = ({ defaultData, setOpenModal }: { defaultData?: ShippingContent, setOpenModal?: (status: boolean) => void }) => {
+interface CustomPickList extends ShippingContent, PickListContent {}
+
+const PickListForm = ({ defaultData, setOpenModal }: { defaultData?: CustomPickList, setOpenModal?: (status: boolean) => void }) => {
 
     const params = useParams();
     const supabase = createClient();
-    const { shippings } = useContext(GlobalContext);
+    const { shippings, users, userAccount } = useContext(GlobalContext);
 
     const {
         register,
-        control,
+        setValue,
         handleSubmit,
         formState: { errors },
     } = useForm<PickListInput>({
-        // defaultValues: {
-        //     ...defaultData,
-        //     shipped_out_at: defaultData != undefined ? dayjs(defaultData['shipped_out_at']) : dayjs(),
-        //   }
+        defaultValues: {
+            ...defaultData,
+        }
     });
+
+    const usersOptions = users
+        ?.filter(user =>
+            user.accounts_roles?.some(role => role.role_id === 5)
+        ).map(user => ({
+            value: user.id,
+            label: user.username
+        })) || [];
+
+    const teamLeadOptions = users
+        ?.filter(user =>
+            user.accounts_roles?.some(role => role.role_id === 3)
+        ).map(user => ({
+            value: user.id,
+            label: user.username
+        })) || [];
+
 
     const [shippedProducts, setShippedProducts] = useState<Array<{ sku: string, quantity: number }>>([]);
     const [shippedProductSku, setShippedProductSku] = useState<string>('');
@@ -77,6 +95,7 @@ const PickListForm = ({ defaultData, setOpenModal }: { defaultData?: ShippingCon
                 'shipping_order_id': orderId,
                 'total_products': totalQuantity,
                 'bol_number': `MOES${formData['bol_number']}`,
+                'created_by': userAccount?.id,
             }).select().single();
 
             if (newStatus.error != null) {
@@ -85,9 +104,10 @@ const PickListForm = ({ defaultData, setOpenModal }: { defaultData?: ShippingCon
 
             for (var product of shippedProducts) {
                 const newSPStatus = await supabase.from('shippings_products').insert({
-                   'shipping_pick_list_id': newStatus.data['id'],
-                   'product_sku': product['sku'],
-                   'product_quantity': product['quantity']
+                    'shipping_pick_list_id': newStatus.data['id'],
+                    'product_sku': product['sku'],
+                    'product_quantity': product['quantity'],
+                    'created_by': userAccount?.id,
                 });
 
                 if (newSPStatus.error != null) {
@@ -107,14 +127,13 @@ const PickListForm = ({ defaultData, setOpenModal }: { defaultData?: ShippingCon
     }
 
     const loadShippingProducts = () => {
-        const currentShipping = shippings?.find(s => s.trailer_number == defaultData?.trailer_number);
+        // const currentShipping = shippings?.find(s => s.trailer_number == defaultData?.trailer_number);
 
-        if (currentShipping != null) {
-            for (var order of currentShipping.shippings_pick_list) {
-                for (var item of order.shippings_products) {
-                    setShippedProducts((prev) => [...prev, { sku: item.product_sku, quantity: item.product_quantity }]);
-                }
+        if (defaultData?.shippings_products != null) {
+            for (var item of defaultData?.shippings_products) {
+                setShippedProducts((prev) => [...prev, { sku: item.product_sku, quantity: item.product_quantity }]);
             }
+            // for (var order of currentShipping.shippings_pick_list) {}
         }
     }
 
@@ -134,30 +153,7 @@ const PickListForm = ({ defaultData, setOpenModal }: { defaultData?: ShippingCon
         <Box sx={{ flexGrow: 1, padding: 5 }}>
             <form onSubmit={handleSubmit(handleCreateRecord)}>
                 <Grid container spacing={2}>
-                    {/* <Grid size={12}>
-                        <Controller
-                            name="shipped_out_at"
-                            control={control}
-                            rules={{ required: 'Due Date is required' }}
-                            render={({ field: { onChange, value }, fieldState: { error } }) => (
-                                <CustomDatePicker
-                                    label="Shipped Out At"
-                                    value={value || null}
-                                    defaultValue={dayjs()}
-                                    onChange={onChange}
-                                    slotProps={{
-                                        textField: {
-                                            required: true,
-                                            fullWidth: true,
-                                            error: !!error,
-                                            helperText: error?.message,
-                                        },
-                                    }}
-                                />
-                            )}
-                        />
-                    </Grid> */}
-                    <Grid size={{ lg: 6, md: 6, sm: 12, xs: 12}}>
+                    <Grid size={{ lg: 6, md: 6, sm: 12, xs: 12 }}>
                         <NumberField
                             required
                             fullWidth
@@ -168,7 +164,7 @@ const PickListForm = ({ defaultData, setOpenModal }: { defaultData?: ShippingCon
                             helperText={errors.pl_number?.message}
                         />
                     </Grid>
-                    <Grid size={{ lg: 6, md: 6, sm: 12, xs: 12}}>
+                    <Grid size={{ lg: 6, md: 6, sm: 12, xs: 12 }}>
                         <NumberField
                             required
                             fullWidth
@@ -176,43 +172,62 @@ const PickListForm = ({ defaultData, setOpenModal }: { defaultData?: ShippingCon
                             type='number'
                             slotProps={{
                                 input: {
-                                  startAdornment: <InputAdornment position="start">MOES</InputAdornment>,
+                                    startAdornment: <InputAdornment position="start">MOES</InputAdornment>,
                                 },
-                              }}
+                            }}
                             {...register('bol_number', { required: 'We need to know whom verified!' })}
                             error={!!errors.bol_number}
                             helperText={errors.bol_number?.message}
                         />
                     </Grid>
-                    <Grid size={{ lg: 6, md: 6, sm: 12, xs: 12}}>
-                        <TextField
+                    <Grid size={{ lg: 6, md: 6, sm: 12, xs: 12 }}>
+                        <Autocomplete
                             fullWidth
-                            required
-                            label="Picker Name"
-                            {...register('picker_name', { required: 'The picker name is required' })}
-                            error={!!errors.picker_name}
-                            helperText={errors.picker_name?.message}
+                            disablePortal
+                            options={usersOptions}
+                            value={usersOptions.find(r => r.label === defaultData?.picker_name) || null}
+                            onInputChange={(event, newValue) => {
+                                const selectedValue = usersOptions.find(v => v.label === newValue)?.label;
+                                setValue('picker_name', selectedValue!);
+                            }}
+                            renderInput={
+                                (params) => <TextField
+                                    {...params}
+                                    label="Picker Name"
+                                    required
+                                />
+                            }
                         />
                     </Grid>
-                    <Grid size={{ lg: 6, md: 6, sm: 12, xs: 12}}>
-                        <TextField
+                    <Grid size={{ lg: 6, md: 6, sm: 12, xs: 12 }}>
+                        <Autocomplete
                             fullWidth
-                            required
-                            label="Verified By"
-                            {...register('verified_by', { required: 'We need to know whom verified!' })}
-                            error={!!errors.verified_by}
-                            helperText={errors.verified_by?.message}
+                            disablePortal
+                            options={teamLeadOptions}
+                            value={teamLeadOptions.find(r => r.label === defaultData?.verified_by) || null}
+                            onInputChange={(event, newValue) => {
+                                const selectedValue = teamLeadOptions.find(v => v.label === newValue)?.label;
+                                setValue('verified_by', selectedValue!);
+                            }}
+                            renderInput={
+                                (params) => <TextField
+                                    {...params}
+                                    label="Verified By"
+                                    required
+                                />
+                            }
                         />
+                        <Typography sx={{ fontSize: 12, color: '#989898'}}>Only Team Leands can Verified</Typography>
                     </Grid>
                     <Grid size={12}>
                         <Box sx={{ border: '1px solid', borderRadius: 1, borderColor: '#c6c6c6', padding: 1 }}>
-                            <Box sx={{ display: 'flex', justifyContent: 'space-between', padding: '0 5rem'}}>
+                            <Box sx={{ display: 'flex', justifyContent: 'space-between', padding: '0 5rem' }}>
                                 <Typography>Sku</Typography>
                                 <Typography>Qty</Typography>
                             </Box>
                             <Divider />
-                            <Box sx={{ display: 'flex', flexDirection: 'column', maxHeight: 300, overflowY: 'scroll'}}>
-                                <Box sx={{ display: 'flex', justifyContent: 'space-between', m: 1, flexDirection: isMobile ? 'column' : 'row', gap: isMobile ? 1 : 0}}>
+                            <Box sx={{ display: 'flex', flexDirection: 'column', maxHeight: 300, overflowY: 'scroll' }}>
+                                <Box sx={{ display: 'flex', justifyContent: 'space-between', m: 1, flexDirection: isMobile ? 'column' : 'row', gap: isMobile ? 1 : 0 }}>
                                     <TextField
                                         size='small'
                                         placeholder={isMobile ? 'Product Sku' : ''}

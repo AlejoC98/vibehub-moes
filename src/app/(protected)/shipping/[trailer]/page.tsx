@@ -83,7 +83,7 @@ const OrderDetails = () => {
         </Grid>
         <Grid size={{ xl: 10, lg: 10, md: 12, sm: 12, xs: 12}} sx={{ marginBottom: 5}}>
           <Block>
-            <BasicTable title='Pick Lists' data={data?.shippings_pick_list || []} columns={PickListColumns} createForm={data?.status != 'Shipped' ? <PickListForm /> : undefined} createFormTitle={data?.status != 'Shipped' ?'Add Pick List' : undefined} />
+            <BasicTable title='Pick Lists' data={data?.shippings_pick_list || []} columns={PickListColumns} createForm={data?.status != 'Shipped' ? <PickListForm /> : undefined} createFormTitle={data?.status != 'Shipped' ?'Add Pick List' : undefined} created_column={true} />
           </Block>
         </Grid>
       </Details>

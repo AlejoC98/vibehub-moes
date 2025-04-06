@@ -20,17 +20,19 @@ const BasicTable = ({
   title,
   data,
   columns,
+  created_column = false,
   createForm,
   createFormTitle,
 } : { 
   title: string,
   data: Array<any>,
   columns: GridColDef[],
+  created_column?: boolean,
   createForm?: ReactElement<any>,
   createFormTitle?: string,
 }) => {
   
-  const { setIsLaunching } = useContext(GlobalContext);
+  const { setIsLaunching, users } = useContext(GlobalContext);
 
   const router = useRouter();
   const pathname = usePathname();
@@ -45,6 +47,17 @@ const BasicTable = ({
   const tableContent = useRef(null);
 
   const defaultColumns: GridColDef[] = [
+    ...(created_column
+      ? [    { field: 'created_by', headerName: 'Created By', renderCell: (params:any) => {
+        var userName;
+        if (params.row.created_by == 1) {
+          userName = {username: 'Alejoc98'}
+        } else {
+          userName = users?.find(u => u.id == params.row.created_by);
+        }
+        return userName!.username || params.row.created_by;
+      }},]
+      : []),
     {
       field: 'actions',
       headerName: 'Actions',

@@ -2,12 +2,12 @@ import { Box, TextField } from '@mui/material'
 import React, { useState } from 'react'
 import Grid from '@mui/material/Grid2';
 import { SubmitHandler, useForm } from 'react-hook-form';
-import { VendorContent } from '../../utils/interfaces';
 import SubmitButton from '../submit_button';
 import { toast } from 'react-toastify';
 import { createClient } from '../../utils/supabase/client';
+import { VendorsContent } from '../../utils/interfaces';
 
-const VendorsForm = ({ defaultData, setOpenModal }: { defaultData?: VendorContent, setOpenModal?: (status: boolean) => void }) => {
+const VendorsForm = ({ defaultData, setOpenModal }: { defaultData?: VendorsContent, setOpenModal?: (status: boolean) => void }) => {
 
     const [isLoading, setIsLoading] = useState<boolean>(false);
     const supabase = createClient();
@@ -16,13 +16,13 @@ const VendorsForm = ({ defaultData, setOpenModal }: { defaultData?: VendorConten
         register,
         setValue,
         handleSubmit,
-    } = useForm<VendorContent>({
+    } = useForm<VendorsContent>({
         defaultValues: {
             ...defaultData
         }
     });
 
-    const handleCreateVendor: SubmitHandler<VendorContent> = async (formData) => {
+    const handleCreateVendor: SubmitHandler<VendorsContent> = async (formData) => {
         try {
             setIsLoading(true);
 
