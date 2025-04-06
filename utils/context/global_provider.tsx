@@ -1,6 +1,6 @@
 'use client'
 import { createContext, ReactNode, useEffect, useState } from "react";
-import { AccountContent, CustomerContent, GlobalContent, LocationContent, NotificationContent, OrderContent, ProductContent, RackContent, ReceivingContent, RoleContent, RoleNotificationContent, ShippingContent, UserContent, VendorContent } from "../interfaces";
+import { AccountContent, CustomerContent, GlobalContent, LocationContent, NotificationContent, OrderContent, ProductContent, RackContent, ReceivingContent, RoleContent, RoleNotificationContent, ShippingContent, VendorContent } from "../interfaces";
 import { createClient } from "../supabase/client";
 
 export const GlobalContext = createContext<GlobalContent>({
@@ -15,7 +15,7 @@ const GlobalProvider = ({ children }: { children: ReactNode }) => {
 
     const [isLaunching, setIsLaunching] = useState<boolean>(true);
     const [roles, setRoles] = useState<RoleContent[]>([]);
-    const [users, setUsers] = useState<UserContent[]>([]);
+    const [users, setUsers] = useState<AccountContent[]>([]);
     const [racks, setRacks] = useState<RackContent[]>([]);
     const [orders, setOrders] = useState<OrderContent[]>([]);
     const [receivings, setReceivings] = useState<ReceivingContent[]>([]);
@@ -48,11 +48,7 @@ const GlobalProvider = ({ children }: { children: ReactNode }) => {
 
                 var { data: userData, error } = await supabase.from('accounts').select().eq('user_id', currentUserSession?.data!.user!.id).single();
 
-                // const notification = payload.new as NotificationContent;
-
                 getNotifications(userData.role_id);
-                // if (userData.id != notification.created_by) {
-                // }
             }, 2000);
         }).subscribe();
         // .on('postgres_changes', {
@@ -125,8 +121,9 @@ const GlobalProvider = ({ children }: { children: ReactNode }) => {
         getRacks();
 
         const getNotifications = async (role?: number) => {
-            const { data: notiQuery, error } = await supabase.from('roles_notifications').select('*, notifications(*)')
-            .eq('role_id',userAccount != undefined ? userAccount?.role?.id : role);
+            const roleIds = userAccount?.accounts_roles?.map(item => item.role_id) || [];
+
+            const { data: notiQuery, error } = await supabase.from('roles_notifications').select('*, notifications(*)').in('role_id', roleIds);
 
             setNotifications(notiQuery || []);
         }
@@ -136,19 +133,17 @@ const GlobalProvider = ({ children }: { children: ReactNode }) => {
 
             const { data: account, error: accountError } = await supabase
                 .from('accounts')
-                .select('*, roles (id, name)')
+                .select('*, accounts_roles(*, roles(id, name))')
                 .eq('user_id', userData.user!.id)
                 .single();
 
             setUserAccount({
-                'first_name': 'string',
-                'last_name': 'string',
+                'user_id': account.user_id,
+                'first_name': account.first_name,
+                'last_name': account.last_name,
                 'email': userData.user!.email,
                 'username': 'string',
-                'role': {
-                    'id': account['role_id'],
-                    'name': account['roles']['name'],
-                },
+                'accounts_roles': account.accounts_roles,
             });
 
             getNotifications(account['role_id']);
@@ -165,9 +160,15 @@ const GlobalProvider = ({ children }: { children: ReactNode }) => {
         getRoles();
 
         const getUser = async () => {
-            const { data: usersQuery, error: userError } = await supabase.from('accounts').select('*, roles(id, name)').not('role_id', 'eq', 1);
+            const { data: usersQuery, error: userError } = await supabase
+                .from('accounts')
+                .select('*, accounts_roles(*, roles(id, name))');
 
-            setUsers(usersQuery || []);
+            const filteredUsers = usersQuery?.filter(account =>
+                !account.accounts_roles?.some((ar: any) => ar.roles?.id === 1)
+            );
+
+            setUsers(filteredUsers || []);
         }
 
         getUser();

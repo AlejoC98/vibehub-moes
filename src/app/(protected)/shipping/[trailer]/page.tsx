@@ -16,7 +16,7 @@ import CompleteOrderForm from '../../../../../components/forms/complete_shipping
 const OrderDetails = () => {
 
   const params = useParams();
-  const { shippings } = useContext(GlobalContext);
+  const { shippings, setIsLaunching } = useContext(GlobalContext);
   const [data, setData] = useState<ShippingContent>();
   const [totalOrderShipped, setTotalOrderShipped] = useState<number>();
 
@@ -42,6 +42,7 @@ const OrderDetails = () => {
         text: 'We couldn\'t find this information'
       });
     }
+    setIsLaunching(false);
   }, [params])
 
   return (

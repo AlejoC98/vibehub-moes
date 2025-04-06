@@ -11,7 +11,7 @@ import { GlobalContext } from '../../../../utils/context/global_provider'
 import { ProductContent, RackLocationContent } from '../../../../utils/interfaces'
 
 const Inventory = () => {
-    const { products, racks } = useContext(GlobalContext);
+    const { products, racks, setIsLaunching } = useContext(GlobalContext);
     const [isLoading, setIsLoading] = useState<boolean>(true);
     const [locationData, setLocationData] = useState<RackLocationContent[]>([]);
 
@@ -56,6 +56,7 @@ const Inventory = () => {
 
 
       useEffect(() => {
+        setIsLaunching(false);
         organizeLocationData();
       }, [])
   return (

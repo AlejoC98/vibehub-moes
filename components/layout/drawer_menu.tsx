@@ -1,30 +1,21 @@
 'use client'
 import { Box, Collapse, Drawer, IconButton, List, ListItem, ListItemButton, ListItemIcon, ListItemText } from '@mui/material'
-import React, { Fragment, useContext, useState } from 'react'
+import React, { Fragment, useContext, useEffect, useState } from 'react'
 import { GlobalContext } from '../../utils/context/global_provider';
-import { useRouter } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 import { MenuItem } from '../../utils/interfaces';
-import DashboardIcon from '@mui/icons-material/Dashboard';
-import GroupIcon from '@mui/icons-material/Group';
-import InventoryIcon from '@mui/icons-material/Inventory';
-import StorefrontIcon from '@mui/icons-material/Storefront';
 import ExpandLess from '@mui/icons-material/ExpandLess';
 import ExpandMore from '@mui/icons-material/ExpandMore';
-import LocalShippingIcon from '@mui/icons-material/LocalShipping';
-import ReceiptLongIcon from '@mui/icons-material/ReceiptLong';
-import ChecklistIcon from '@mui/icons-material/Checklist';
-import OpenWithIcon from '@mui/icons-material/OpenWith';
-import AssignmentIcon from '@mui/icons-material/Assignment';
-import HelpOutlineIcon from '@mui/icons-material/HelpOutline';
-import UndoIcon from '@mui/icons-material/Undo';
-import DvrIcon from '@mui/icons-material/Dvr';
 import Swal from 'sweetalert2';
+import { HugeiconsIcon } from '@hugeicons/react';
+import { DashboardSquare02Icon, WarehouseIcon, FlowIcon, Trolley02Icon, LiftTruckIcon, PackageMovingIcon, TaskDaily01Icon, ComputerDollarIcon, ReturnRequestIcon, TruckDeliveryIcon, Store02Icon, UserGroupIcon, CustomerService01Icon } from '@hugeicons/core-free-icons';
 
 const DrawerMenu = ({ openDrawer, toggleDrawer }: { openDrawer: boolean, toggleDrawer: (status: boolean) => void }) => {
 
-    const { userAccount } = useContext(GlobalContext);
+    const { userAccount, setIsLaunching } = useContext(GlobalContext);
 
     const router = useRouter();
+    const pathname = usePathname();
     const [menuOpen, setMenuOpen] = useState<number | null>(1);
 
     const MenuList: MenuItem[] = [
@@ -32,80 +23,92 @@ const DrawerMenu = ({ openDrawer, toggleDrawer }: { openDrawer: boolean, toggleD
             id: 1,
             title: "Dashboard",
             to: "/dashboard",
-            icon: <DashboardIcon />
+            icon: <HugeiconsIcon icon={DashboardSquare02Icon} />
         },
         {
             id: 2,
             title: "Inventory",
-            to: "#",
-            icon: <InventoryIcon />
+            to: "/inventory",
+            icon: <HugeiconsIcon icon={WarehouseIcon} />
         },
         {
             id: 3,
             title: "Logistics",
-            to: "#",
-            icon: <AssignmentIcon />,
+            // to: "#",
+            icon: <HugeiconsIcon icon={FlowIcon} />,
             submenu: [
-                ...(userAccount?.role?.id === 1 || userAccount?.role?.id === 2 || userAccount?.role?.id === 3 ? [
+                ...(userAccount?.accounts_roles?.some(role => role.role_id === 7) ? [
                     {
                         id: 1,
                         title: "Shipping",
                         to: "/shipping",
-                        icon: <LocalShippingIcon />
+                        icon: <HugeiconsIcon icon={Trolley02Icon} />
                     }
                 ] : []),
-                ...(userAccount?.role?.id === 1 || userAccount?.role?.id === 2 || userAccount?.role?.id === 3 ? [
+                ...(userAccount?.accounts_roles?.some(role => role.role_id === 8) ? [
                     {
                         id: 2,
                         title: "Receiving",
-                        to: "#",
-                        icon: <ReceiptLongIcon />
+                        to: "/receiving",
+                        icon: <HugeiconsIcon icon={LiftTruckIcon} />
                     }
                 ] : []),
-                {
-                    id: 3,
-                    title: "Replenishment",
-                    to: "#",
-                    icon: <OpenWithIcon />
-                },
-                {
-                    id: 4,
-                    title: "Picking",
-                    to: "#",
-                    icon: <ChecklistIcon />
-                }
+                ...(userAccount?.accounts_roles?.some(role => role.role_id === 9) ? [
+                    {
+                        id: 3,
+                        title: "Replenishment",
+                        to: "/replenishment",
+                        icon: <HugeiconsIcon icon={PackageMovingIcon} />
+                    },
+                ] : []),
+                ...(userAccount?.accounts_roles?.some(role => role.role_id === 5) ? [
+                    {
+                        id: 4,
+                        title: "Picking",
+                        to: "/picking",
+                        icon: <HugeiconsIcon icon={TaskDaily01Icon} />
+                    }
+                ] : []),
             ]
         },
-        ...(userAccount?.role?.id === 1 || userAccount?.role?.id === 2 || userAccount?.role?.id === 3 ? [
+        ...(userAccount?.accounts_roles?.some(role => role.role_id === 2 || role.role_id === 3) ? [
             {
                 id: 4,
                 title: "Orders",
                 to: "#",
-                icon: <DvrIcon />
+                icon: <HugeiconsIcon icon={ComputerDollarIcon} />
             }
         ] : []),
-        ...(userAccount?.role?.id === 1 || userAccount?.role?.id === 2 || userAccount?.role?.id === 3 ? [
+        ...(userAccount?.accounts_roles?.some(role => role.role_id === 2 || role.role_id === 3) ? [
             {
                 id: 5,
                 title: "Return",
                 to: "#",
-                icon: <UndoIcon />
+                icon: <HugeiconsIcon icon={ReturnRequestIcon} />
             }
         ] : []),
-        ...(userAccount?.role?.id === 1 || userAccount?.role?.id === 3 ? [
+        ...(userAccount?.accounts_roles?.some(role => role.role_id === 2 || role.role_id === 3) ? [
             {
                 id: 6,
-                title: "Vendors",
-                to: "#",
-                icon: <StorefrontIcon />
+                title: "Carriers",
+                to: "/carriers",
+                icon: <HugeiconsIcon icon={TruckDeliveryIcon} />
             }
         ] : []),
-        ...(userAccount?.role?.id === 1 || userAccount?.role?.id === 3 ? [
+        ...(userAccount?.accounts_roles?.some(role => role.role_id === 2 || role.role_id === 3) ? [
             {
                 id: 7,
+                title: "Vendors",
+                to: "/vendors",
+                icon: <HugeiconsIcon icon={Store02Icon} />
+            }
+        ] : []),
+        ...(userAccount?.accounts_roles?.some(role => role.role_id === 2 || role.role_id === 3) ? [
+            {
+                id: 8,
                 title: "Users",
-                to: "#",
-                icon: <GroupIcon />
+                to: "/users",
+                icon: <HugeiconsIcon icon={UserGroupIcon} />
             }
         ] : []),
     ];
@@ -113,38 +116,75 @@ const DrawerMenu = ({ openDrawer, toggleDrawer }: { openDrawer: boolean, toggleD
     const handleRedirectMenu = (key: number, direction?: string) => {
         switch (direction) {
             case '#':
-                toggleDrawer(false);
-                Swal.fire({
-                    icon: 'info',
-                    title: "Almost There!",
-                    html: `This feature isn’t available on your current plan.</br>Reach out to our support team to upgrade and unlock it!`,
-                    confirmButtonColor: '#549F93',
-                    showClass: {
-                        popup: `
+                var isSudmenu = MenuList.find(m => m.id == key);
+
+                if (isSudmenu?.submenu?.length == 0) {
+                    Swal.fire({
+                        icon: 'info',
+                        title: "Almost There!",
+                        html: `This feature isn’t available on your current plan.</br>Reach out to our support team to upgrade and unlock it!`,
+                        confirmButtonColor: '#549F93',
+                        showClass: {
+                            popup: `
                             animate__animated
                             animate__fadeInUp
                             animate__faster
-                          `
-                    },
-                    hideClass: {
-                        popup: `
+                            `
+                        },
+                        hideClass: {
+                            popup: `
                             animate__animated
                             animate__fadeOutDown
                             animate__faster
-                          `
-                    }
-                });
+                            `
+                        }
+                    });
+                } else {
+                    setMenuOpen(key !== menuOpen ? key : null);
+                }
                 break;
             default:
-                setMenuOpen(key !== menuOpen ? key : null);
                 if (direction != undefined) {
-                    toggleDrawer(false);
-                    router.push(direction!);
+                    if (key !== menuOpen) {
+                        setMenuOpen(key);
+                        if (direction != undefined) {
+                            toggleDrawer(false);
+                            setIsLaunching(true);
+                            router.push(direction!);
+                        }
+                    }
+                } else if (isSudmenu?.submenu?.length! > 0) {
+                    setMenuOpen(key !== menuOpen ? key : null);
                 }
                 break;
         }
-
     }
+
+    const checkDefaultActive = () => {
+        for (const item of MenuList) {
+            if (item.to?.toLowerCase() === pathname) {
+                if (item.id !== menuOpen) {
+                    setMenuOpen(item.id);
+                }
+                return;
+            }
+
+            if (item.submenu) {
+                for (const sub of item.submenu) {
+                    if (sub.to?.toLowerCase() === pathname) {
+                        if (item.id !== menuOpen) {
+                            setMenuOpen(item.id);
+                        }
+                        return;
+                    }
+                }
+            }
+        }
+    };
+
+    useEffect(() => {
+        checkDefaultActive();
+    }, [userAccount?.accounts_roles]);
 
     return (
         <Fragment key={'bottom'}>

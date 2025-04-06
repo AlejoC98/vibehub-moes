@@ -1,12 +1,15 @@
 import { Box, TextField, Typography } from '@mui/material'
-import React from 'react'
+import React, { useContext, useEffect } from 'react'
 import Grid from '@mui/material/Grid2';
 import { Block } from '../../../../style/global';
 import BasicTable from '../../../../components/tables/basic_table';
 import PickingForm from '../../../../components/forms/picking_form';
 import { GridColDef } from '@mui/x-data-grid';
+import { GlobalContext } from '../../../../utils/context/global_provider';
 
 const Picking = () => {
+
+    const { setIsLaunching } = useContext(GlobalContext);
 
       const pickingColumns: GridColDef[] = [
         { field: 'id', headerName: 'ID' },
@@ -24,6 +27,10 @@ const Picking = () => {
         //   <Box className={`${params.row.deleted ? 'bg-red-800' : 'bg-green-800'} text-white px-2 py-1 rounded-lg`}>{params.row.deleted ? 'Inactive' : 'Active'}</Box>
         // )}
       ];
+
+    useEffect(() => {
+      setIsLaunching(false);
+    }, []);
 
   return (
     <Box>

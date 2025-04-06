@@ -1,6 +1,6 @@
-import React, { useContext, useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import { SubmitHandler, useForm } from 'react-hook-form';
-import { UserContent } from '../../utils/interfaces';
+import { AccountContent } from '../../utils/interfaces';
 import { GlobalContext } from '../../utils/context/global_provider';
 import { Box, FormControl, InputLabel, MenuItem, Select, SelectChangeEvent, TextField } from '@mui/material';
 import Grid from '@mui/material/Grid2';
@@ -8,17 +8,14 @@ import SubmitButton from '../submit_button';
 import { toast } from 'react-toastify';
 import { createClient } from '../../utils/supabase/client';
 import { signup } from '@/app/(public)/auth/login/actions';
+import MultipleSelectChip from '../multi_select_chip';
 
-const UsersForms = ({ defaultData, setOpenModal }: { defaultData?: any, setOpenModal?: (status: boolean) => void }) => {
+
+const UsersForms = ({ defaultData, setOpenModal }: { defaultData?: AccountContent, setOpenModal?: (status: boolean) => void }) => {
 
     const supabase = createClient();
-    const { roles } = useContext(GlobalContext);
+    const { roles, userAccount, users } = useContext(GlobalContext);
     const [isLoading, setIsLoading] = useState<boolean>(false);
-
-    const poOptions = roles!.map(item => ({
-        value: item.id,
-        label: item.name
-    }));
 
     const {
         register,
@@ -26,33 +23,57 @@ const UsersForms = ({ defaultData, setOpenModal }: { defaultData?: any, setOpenM
         setValue,
         watch,
         formState: { errors },
-    } = useForm<UserContent>({
+    } = useForm<AccountContent>({
         defaultValues: {
             ...defaultData,
         }
     });
+    
+    const [selectedRoles, setSelectedRoles] = useState<number[]>([]);
 
-    const handleCreateReceiving: SubmitHandler<UserContent> = async (data) => {
+    const canSeeManager = userAccount?.accounts_roles?.some(role => role.id === 1 || role.id === 2);
+
+    const poOptions = roles!.filter(item => canSeeManager || item.name !== 'Manager').map(item => ({ id: item.id, name: item.name }));
+
+
+    const handleCreateUser: SubmitHandler<AccountContent> = async (data) => {
         try {
             setIsLoading(true);
-            
-            const userData = await signup(data['email']!, process.env.DEFAULT_PASSWORD || 'v1b3h0b2025', false);
 
-            if (userData.user) {
-                const { data: newAccount, error} = await supabase.from('accounts').insert({
-                    'first_name': data['firstName'],
-                    'last_name': data['lastName'],
-                    'user_id': userData.user.id,
+            var userId = undefined;
+            
+            if (Object.keys(defaultData!).length == 0) {
+                const userData = await signup(data['email']!, process.env.DEFAULT_PASSWORD || 'v1b3h0b2025', false);
+
+                userId =  userData?.user?.id;
+            } else {
+                userId =  defaultData?.user_id;
+            }
+
+            if (userId != undefined) {
+                const { data: newAccount, error } = await supabase.from('accounts').upsert({
+                    'first_name': data['first_name'],
+                    'last_name': data['last_name'],
+                    'user_id': userId,
                     'location_id': 1,
-                    'role_id': data['roleId'],
+                    'email': data['email'],
                     'username': data['username']
-                }).select();
+                }, { onConflict: 'id' }).select().single();
 
                 if (error) {
                     throw new Error(error.message);
                 }
 
-                toast.success('User created!');
+                // Assing Roles
+                for (var role of selectedRoles) {
+                    const { data, error } = await supabase.from('accounts_roles').insert({ account_id: newAccount.id, role_id: role });
+
+                    if (error) {
+                        throw new Error(error.message);
+                    }
+                }
+
+                toast.success(`User ${Object.keys(defaultData!).length > 0 ? 'updated' : 'created'}!`);
                 setIsLoading(false);
                 setOpenModal!(false);
             }
@@ -62,9 +83,23 @@ const UsersForms = ({ defaultData, setOpenModal }: { defaultData?: any, setOpenM
         }
     }
 
+    const loadUserRoles = async() => {
+        var editedUser = users?.find(u => u.id == defaultData?.id!);
+        if (editedUser != null) {
+            const roleIds = editedUser!.accounts_roles!.map(role => role.role_id);
+            setSelectedRoles(roleIds);
+        }
+    }
+
+    useEffect(() => {
+        if (defaultData != undefined && Object.keys(defaultData).length > 0) {
+            loadUserRoles();
+        }
+    }, [defaultData])
+
     return (
         <Box sx={{ flexGrow: 1, padding: 5 }}>
-            <form onSubmit={handleSubmit(handleCreateReceiving)}>
+            <form onSubmit={handleSubmit(handleCreateUser)}>
                 <Grid container spacing={2}>
                     <Grid size={6}>
                         <TextField
@@ -73,7 +108,7 @@ const UsersForms = ({ defaultData, setOpenModal }: { defaultData?: any, setOpenM
                             label="Email"
                             {...register('email', { required: 'First Name is required' })}
                             error={!!errors.email}
-                            helperText={errors.email?.message}
+                            helperText={errors.email?.message || 'Used for password resets'}
                         />
                     </Grid>
                     <Grid size={6}>
@@ -81,9 +116,9 @@ const UsersForms = ({ defaultData, setOpenModal }: { defaultData?: any, setOpenM
                             label="First Name"
                             required
                             fullWidth
-                            {...register('firstName', { required: 'First Name is required' })}
-                            error={!!errors.firstName}
-                            helperText={errors.firstName?.message}
+                            {...register('first_name', { required: 'First Name is required' })}
+                            error={!!errors.first_name}
+                            helperText={errors.first_name?.message}
                         />
                     </Grid>
                     <Grid size={6}>
@@ -91,9 +126,9 @@ const UsersForms = ({ defaultData, setOpenModal }: { defaultData?: any, setOpenM
                             label="Last Name"
                             required
                             fullWidth
-                            {...register('lastName', { required: 'Last Name is required' })}
-                            error={!!errors.lastName}
-                            helperText={errors.lastName?.message}
+                            {...register('last_name', { required: 'Last Name is required' })}
+                            error={!!errors.last_name}
+                            helperText={errors.last_name?.message}
                         />
                     </Grid>
                     <Grid size={6}>
@@ -107,25 +142,14 @@ const UsersForms = ({ defaultData, setOpenModal }: { defaultData?: any, setOpenM
                         />
                     </Grid>
                     <Grid size={12}>
-                        <FormControl fullWidth required>
-                            <InputLabel id="demo-simple-select-label">Role</InputLabel>
-                            <Select
-                                labelId="demo-simple-select-label"
-                                id="demo-simple-select"
-                                {...register('roleId')}
-                                value={watch('roleId') || ''}
-                                label="Role"
-                            >
-                                {poOptions.map(option => (
-                                    <MenuItem key={option.value} value={option.value}>
-                                        {option.label}
-                                    </MenuItem>
-                                ))}
-                            </Select>
-                        </FormControl>
+                        <MultipleSelectChip
+                            options={poOptions}
+                            value={selectedRoles}
+                            onChange={setSelectedRoles}
+                        />
                     </Grid>
                     <Grid size={12}>
-                        <SubmitButton fullWidth={true} variant='contained' isLoading={isLoading} btnText='Create' />
+                        <SubmitButton fullWidth={true} variant='contained' isLoading={isLoading} btnText={Object.keys(defaultData!).length > 0 ? 'Update' : 'Create'} />
                     </Grid>
                 </Grid>
             </form>

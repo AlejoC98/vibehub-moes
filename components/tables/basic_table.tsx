@@ -2,7 +2,7 @@
 import { Box, Button, Dialog, DialogTitle, IconButton, InputAdornment, Menu, MenuItem, TextField, Typography } from '@mui/material';
 import { DataGrid, GridCallbackDetails, GridColDef, GridRowId, GridRowSelectionModel } from '@mui/x-data-grid'
 import { usePathname, useRouter } from 'next/navigation';
-import React, { cloneElement, MouseEvent, ReactElement, useRef, useState } from 'react';
+import React, { cloneElement, MouseEvent, ReactElement, useContext, useRef, useState } from 'react';
 import Grid from '@mui/material/Grid2';
 import AddIcon from '@mui/icons-material/Add'
 import MoreVertIcon from '@mui/icons-material/MoreVert';
@@ -14,6 +14,7 @@ import VisibilityIcon from '@mui/icons-material/Visibility';
 import { deepSearch } from '../../utils/functions/main';
 import Swal from 'sweetalert2';
 import { toast } from 'react-toastify';
+import { GlobalContext } from '../../utils/context/global_provider';
 
 const BasicTable = ({
   title,
@@ -28,7 +29,10 @@ const BasicTable = ({
   createForm?: ReactElement<any>,
   createFormTitle?: string,
 }) => {
-    const router = useRouter();
+  
+  const { setIsLaunching } = useContext(GlobalContext);
+
+  const router = useRouter();
   const pathname = usePathname();
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const menuId = 'primary-search-account-menu';
@@ -127,6 +131,7 @@ const BasicTable = ({
   }
 
   const handleViewDetails = (data: any) => {
+    setIsLaunching(true);
     if (Object.keys(data).includes('sku')) {
       router.push(`${pathname}/${data.sku}`);
     } else if (Object.keys(data).includes('username')) {

@@ -8,9 +8,31 @@ import { NextRequest, NextResponse } from 'next/server';
 export async function login(username: string, password: string) {
   const supabase = await createClient();
 
-  const data = {
-    email: username,
-    password: password,
+  var data = {
+    email: '',
+    password: '',
+  }
+
+  if (username.includes('@')) {
+
+    data = {
+      email: username,
+      password: password,
+    }
+
+  } else {
+    const { data: userQuery, error: userError } = await supabase.from('accounts').select().eq('username', username).maybeSingle();
+
+    if (userError) {
+      return userError.message;
+    }
+
+    if (userQuery != null) {
+      data = {
+        email: userQuery.email,
+        password: password,
+      }
+    }
   }
 
   const { error } = await supabase.auth.signInWithPassword(data)
@@ -18,6 +40,7 @@ export async function login(username: string, password: string) {
   if (error) {
     return error.message;
   }
+
 
   revalidatePath('/', 'layout')
   redirect('/dashboard')

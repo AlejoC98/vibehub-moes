@@ -1,7 +1,7 @@
 'use client'
-import { Box, Button } from '@mui/material';
+import { Box } from '@mui/material';
 import Grid from '@mui/material/Grid2';
-import React, { useContext } from 'react'
+import React, { useContext, useEffect } from 'react'
 import { GlobalContext } from '../../../../utils/context/global_provider';
 import BasicTable from '../../../../components/tables/basic_table';
 import { GridColDef } from '@mui/x-data-grid';
@@ -10,7 +10,7 @@ import { Block } from '../../../../style/global';
 
 const Receiving = () => {
   
-  const { receivings } = useContext(GlobalContext);
+  const { receivings, setIsLaunching } = useContext(GlobalContext);
 
   const receivingColumns: GridColDef[] = [
     { field: 'id', headerName: 'ID' },
@@ -27,6 +27,10 @@ const Receiving = () => {
     //   <Box className={`${params.row.deleted ? 'bg-red-800' : 'bg-green-800'} text-white px-2 py-1 rounded-lg`}>{params.row.deleted ? 'Inactive' : 'Active'}</Box>
     // )}
   ];
+
+  useEffect(() => {
+    setIsLaunching(false);
+  }, []);
 
   return (
     <Box>

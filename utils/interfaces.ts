@@ -6,21 +6,30 @@ export interface Role {
     name: string;
 }
 
+export interface AccountRolesContent {
+    id: number;
+    roles: Role[];
+    role_id: number;
+    account_id: number;
+    created_at: string;
+}
+
 export interface MenuItem {
     id: number,
     title: string;
-    to: string;
+    to?: string;
     icon: ReactNode;
     submenu?: MenuItem[] | [];
 }
 
 export interface AccountContent {
+    id?: number;
+    user_id: string;
     first_name?: string;
     last_name?: string;
     email?: string;
     username?: string;
-    role?: Role;
-    // user?: UserContent;
+    accounts_roles?: AccountRolesContent[];
 }
 
 export interface TabContentProps {
@@ -33,22 +42,6 @@ export interface TabListProps {
     index: number;
     label: string;
     content: TabContentProps
-}
-
-export interface UserContent {
-    id?: number;
-    firstName: string;
-    lastName: string;
-    email?: string;
-    roleId?: number;
-    username?: string;
-    // location?: LocationContent;
-    // password?: string;
-    // deleted?: boolean;
-    // account?: AccountContent;
-    // role?: RoleContent;
-    // createdBy: number;
-    // createdAt: Date;
 }
 
 export interface RoleOpt {
@@ -64,7 +57,7 @@ export interface LocationOpt {
 export interface GlobalContent {
     locations?: LocationContent[];
     roles?: RoleContent[];
-    users?: UserContent[];
+    users?: AccountContent[];
     vendors?: VendorContent[];
     products?: ProductContent[];
     racks?: RackContent[];
@@ -153,7 +146,6 @@ export interface ReceivingContent {
     receiving_products?: ReceivingProductsContent[];
     vendors?: VendorContent[];
     status: string;
-    // items: Array<{product_id: string, quantity: number}>;
 }
 
 export interface PickingContent {

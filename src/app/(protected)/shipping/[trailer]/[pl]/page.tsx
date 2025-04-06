@@ -14,7 +14,7 @@ import Details from '../../../../../../components/details';
 const PickListDetails = () => {
 
   const params = useParams();
-  const { shippings } = useContext(GlobalContext);
+  const { shippings, setIsLaunching } = useContext(GlobalContext);
 
   const [data, setData] = useState<PickListContent>();
 
@@ -37,6 +37,7 @@ const PickListDetails = () => {
         text: 'We couldn\'t find this information'
       });
     }
+    setIsLaunching(false);
   }, [params])
 
   return (

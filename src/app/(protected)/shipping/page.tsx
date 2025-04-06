@@ -1,6 +1,6 @@
 'use client'
 import { Box, Typography } from '@mui/material'
-import React, { useContext } from 'react'
+import React, { useContext, useEffect } from 'react'
 import Grid from '@mui/material/Grid2';
 import { Block } from '../../../../style/global';
 import BasicTable from '../../../../components/tables/basic_table';
@@ -11,7 +11,7 @@ import ShippingForm from '../../../../components/forms/shipping_form';
 
 const Shipping = () => {
 
-  const { shippings } = useContext(GlobalContext);
+  const { shippings, setIsLaunching } = useContext(GlobalContext);
 
   const shippingColumns: GridColDef[] = [
       { field: 'carrier', headerName: 'Carrier' },
@@ -51,6 +51,10 @@ const Shipping = () => {
         }
       }}
     ];
+
+  useEffect(() => {
+    setIsLaunching(false);
+  }, []);
 
   return (
     <Box>
