@@ -29,19 +29,22 @@ const GlobalProvider = ({ children }: { children: ReactNode }) => {
 
     useEffect(() => {
         // Realtime changes 
-        const channel = supabase.channel('realtime changes').on('postgres_changes', {
+        const channel = supabase.channel('realtime changes')
+        .on('postgres_changes', {
             event: '*', schema: 'public', table: 'shippings_orders'
         }, (payload) => {
             setTimeout(() => {
                 getShippingsOrders();
-            }, 2000);
-        }).on('postgres_changes', {
+            }, 1000);
+        })
+        .on('postgres_changes', {
             event: '*', schema: 'public', table: 'shippings_pick_list'
         }, (payload) => {
             setTimeout(() => {
                 getShippingsOrders();
-            }, 2000);
-        }).on('postgres_changes', {
+            }, 1000);
+        })
+        .on('postgres_changes', {
             event: '*', schema: 'public', table: 'notifications'
         }, (payload) => {
             setTimeout(async () => {
@@ -50,63 +53,67 @@ const GlobalProvider = ({ children }: { children: ReactNode }) => {
                 var { data: userData, error } = await supabase.from('accounts').select().eq('user_id', currentUserSession?.data!.user!.id).single();
 
                 getNotifications(userData.role_id);
-            }, 2000);
-        }).on('postgres_changes', {
+            }, 1000);
+        })
+        .on('postgres_changes', {
             event: '*', schema: 'public', table: 'accounts'
         }, (payload) => {
             setTimeout(() => {
                 getUser();
-            }, 2000);
-        }).on('postgres_changes', {
+            }, 1000);
+        })
+        .on('postgres_changes', {
             event: '*', schema: 'public', table: 'accounts_roles'
         }, (payload) => {
             setTimeout(() => {
                 getUser();
-            }, 2000);
-        }).on('postgres_changes', {
-            event: '*', schema: 'public', table: 'carriers'
+            }, 1000);
+        })
+        .on('postgres_changes', {
+            event: 'INSERT', schema: 'public', table: 'carriers'
         }, (payload) => {
             setTimeout(() => {
                 getCarriers();
-            }, 2000);
-        }).subscribe();
+            }, 1000);
+        })
+        .subscribe();
         // .on('postgres_changes', {
         //         event: '*', schema: 'public', table: 'racks'
         //     }, (payload) => {
         //         setTimeout(() => {
         //             getRacks();
-        //         }, 2000);
+        //         }, 1000);
         //     }).on('postgres_changes', {
         //         event: '*', schema: 'public', table: 'racks_locations'
         //     }, (payload) => {
         //         setTimeout(() => {
         //             getRacks();
-        //         }, 2000);
+        //         }, 1000);
         //     }).on('postgres_changes', {
         //         event: '*', schema: 'public', table: 'racks_locations_products'
         //     }, (payload) => {
         //         setTimeout(() => {
         //             getRacks();
-        //         }, 2000);
+        //         }, 1000);
             // }).on('postgres_changes', {
             //     event: '*', schema: 'public', table: 'accounts'
             // }, (payload) => {
             //     setTimeout(() => {
             //         getUser();
-            //     }, 2000);
+            //     }, 1000);
             // }).on('postgres_changes', {
         //         event: '*', schema: 'public', table: 'vendors'
         //     }, (payload) => {
         //         setTimeout(() => {
         //             getVendors();
-        //         }, 2000);
+        //         }, 1000);
         //     })
         //     .on('postgres_changes', {
         //         event: '*', schema: 'public', table: 'receivings'
         //     }, (payload) => {
         //         setTimeout(() => {
         //             getReceivings();
-        //         }, 2000);
+        //         }, 1000);
         //     })
 
         const getProducts = async () => {

@@ -185,7 +185,7 @@ const PickListForm = ({ defaultData, setOpenModal }: { defaultData?: CustomPickL
                             fullWidth
                             disablePortal
                             options={usersOptions}
-                            value={usersOptions.find(r => r.label === defaultData?.picker_name) || null}
+                            defaultValue={usersOptions.find(r => r.label === defaultData?.picker_name) || null}
                             onInputChange={(event, newValue) => {
                                 const selectedValue = usersOptions.find(v => v.label === newValue)?.label;
                                 setValue('picker_name', selectedValue!);
@@ -204,7 +204,7 @@ const PickListForm = ({ defaultData, setOpenModal }: { defaultData?: CustomPickL
                             fullWidth
                             disablePortal
                             options={teamLeadOptions}
-                            value={teamLeadOptions.find(r => r.label === defaultData?.verified_by) || null}
+                            defaultValue={teamLeadOptions.find(r => r.label === defaultData?.verified_by) || null}
                             onInputChange={(event, newValue) => {
                                 const selectedValue = teamLeadOptions.find(v => v.label === newValue)?.label;
                                 setValue('verified_by', selectedValue!);

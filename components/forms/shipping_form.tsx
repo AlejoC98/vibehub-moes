@@ -15,6 +15,7 @@ const ShippingForm = ({ defaultData, setOpenModal }: { defaultData?: ShippingCon
     const {
         register,
         setValue,
+        getValues,
         handleSubmit,
         formState: { errors },
     } = useForm<ShippingInput>({});
@@ -33,7 +34,7 @@ const ShippingForm = ({ defaultData, setOpenModal }: { defaultData?: ShippingCon
         try {
             setIsLoading(true);
 
-            const { data: newOrder, error: orderError } = await supabase.from('shippings_orders').insert({ ...formData }).select().single();
+            const { data: newOrder, error: orderError } = await supabase.from('shippings_orders').insert({ ...formData, 'created_by': userAccount?.id, }).select().single();
 
             if (orderError) {
                 throw new Error(orderError.message);
@@ -59,8 +60,10 @@ const ShippingForm = ({ defaultData, setOpenModal }: { defaultData?: ShippingCon
                 });
             }
 
-            setIsLoading(false);
-            router.push(`shipping/${formData.trailer_number}`);
+            setTimeout(() => {
+                setIsLoading(false);
+                router.push(`shipping/${formData.trailer_number}`);
+            }, 1500);
 
         } catch (error: any) {
             setIsLoading(false);
@@ -77,7 +80,7 @@ const ShippingForm = ({ defaultData, setOpenModal }: { defaultData?: ShippingCon
                             fullWidth
                             disablePortal
                             options={carriersOptions}
-                            value={carriersOptions.find(r => r.label === defaultData?.carrier) || null}
+                            defaultValue={carriersOptions.find(r => r.label === defaultData?.carrier) || null}
                             onInputChange={(event, newValue) => {
                                 const selectedValue = carriersOptions.find(v => v.label === newValue)?.label;
                                 setValue('carrier', selectedValue!);

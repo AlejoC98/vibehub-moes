@@ -51,7 +51,7 @@ const PickingForm = ({ defaultData, setOpenModal }: { defaultData?: PickingConte
                         fullWidth
                         disablePortal
                         options={usOptions}
-                        value={usOptions.find(r => r.value === defaultData?.assign_to)}
+                        defaultValue={usOptions.find(r => r.value === defaultData?.assign_to) || null}
                         onInputChange={(event, newValue) => {
                             const selectedValue = usOptions.find(v => v.label === newValue)?.value;
                             setValue('assign_to', selectedValue!);

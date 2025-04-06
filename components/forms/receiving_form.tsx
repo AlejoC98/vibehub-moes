@@ -147,7 +147,7 @@ const ReceivingForm = ({ defaultData, setOpenModal }: { defaultData?: ReceivingC
                             fullWidth
                             disablePortal
                             options={veOptions}
-                            value={veOptions.find(r => r.value === defaultData?.vendor_id)}
+                            defaultValue={veOptions.find(r => r.value === defaultData?.vendor_id) || null}
                             onInputChange={(event, newValue) => {
                                 const selectedValue = veOptions.find(v => v.label === newValue)?.value;
                                 setValue('vendor_id', selectedValue!);
@@ -166,7 +166,7 @@ const ReceivingForm = ({ defaultData, setOpenModal }: { defaultData?: ReceivingC
                             fullWidth
                             disablePortal
                             options={usOptions}
-                            value={usOptions.find(r => r.value === defaultData?.assign_to)}
+                            defaultValue={usOptions.find(r => r.value === defaultData?.assign_to) || null}
                             onInputChange={(event, newValue) => {
                                 const selectedValue = usOptions.find(v => v.label === newValue)?.value;
                                 setValue('assign_to', selectedValue!);
