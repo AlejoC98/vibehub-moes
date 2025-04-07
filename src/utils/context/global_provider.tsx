@@ -1,6 +1,6 @@
 'use client'
 import { createContext, ReactNode, useEffect, useState } from "react";
-import { AccountContent, CarriersContent, CustomerContent, GlobalContent, LocationContent, NotificationContent, OrderContent, ProductContent, RackContent, ReceivingContent, RoleContent, RoleNotificationContent, ShippingContent, VendorsContent } from "@/utils/interfaces";
+import { AccountContent, AccountRolesContent, CarriersContent, CustomerContent, GlobalContent, LocationContent, NotificationContent, OrderContent, ProductContent, RackContent, ReceivingContent, RoleContent, RoleNotificationContent, ShippingContent, VendorsContent } from "@/utils/interfaces";
 import { createClient } from "@/utils/supabase/client";
 
 export const GlobalContext = createContext<GlobalContent>({
@@ -52,7 +52,7 @@ const GlobalProvider = ({ children }: { children: ReactNode }) => {
 
                 var { data: userData, error } = await supabase.from('accounts').select().eq('user_id', currentUserSession?.data!.user!.id).single();
 
-                getNotifications(userData.role_id);
+                getNotifications(userData.accounts_roles);
             }, 1000);
         })
         .on('postgres_changes', {
@@ -146,8 +146,15 @@ const GlobalProvider = ({ children }: { children: ReactNode }) => {
 
         getRacks();
 
-        const getNotifications = async (role?: number) => {
-            const roleIds = userAccount?.accounts_roles?.map(item => item.role_id) || [];
+        const getNotifications = async (account_roles?: AccountRolesContent[]) => {
+
+            var roleIds:number[] = [];
+
+            if (roles?.length == 0) {
+                roleIds = userAccount?.accounts_roles?.map(item => item.role_id) || [];
+            } else {
+                roleIds = account_roles?.map((item: any) => item.role_id) || [];
+            }
 
             const { data: notiQuery, error } = await supabase.from('roles_notifications').select('*, notifications(*)').in('role_id', roleIds);
 
@@ -159,13 +166,13 @@ const GlobalProvider = ({ children }: { children: ReactNode }) => {
 
             const { data: account, error: accountError } = await supabase
                 .from('accounts')
-                .select('*, accounts_roles(*, roles(id, name)), locations(*)')
+                .select('*, locations!accounts_location_id_fkey(*), accounts_roles(*, roles(id, name))')
                 .eq('user_id', userData.user!.id)
                 .single();
 
             setUserAccount(account);
 
-            getNotifications(account['role_id']);
+            getNotifications(account.accounts_roles);
         }
 
         getAccountInformation();

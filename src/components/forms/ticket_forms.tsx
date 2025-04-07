@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useContext, useState } from 'react'
 import Grid from '@mui/material/Grid2'
 import { TextField, Typography } from '@mui/material'
 import { SubmitHandler, useForm } from 'react-hook-form';
@@ -6,10 +6,12 @@ import { TicketInput } from '@/utils/interfaces';
 import { toast } from 'react-toastify';
 import SubmitButton from '@/components/submit_button'
 import { createClient } from '@/utils/supabase/client';
+import { GlobalContext } from '@/utils/context/global_provider';
 
 const TicketForm = () => {
 
     const supabase = createClient();
+    const { userAccount } = useContext(GlobalContext);
 
     const {
         reset,
@@ -22,7 +24,10 @@ const TicketForm = () => {
     const handleSubmitTicket: SubmitHandler<TicketInput> = async (formData) => {
         try {
             setIsLoading(true);
-            const { data, error } = await supabase.from('tickets').insert({...formData});
+            const { data, error } = await supabase.from('tickets').insert({
+                ...formData,
+                'created_by': userAccount?.id,
+            });
 
             if (error) {
                 throw new Error(error.message);

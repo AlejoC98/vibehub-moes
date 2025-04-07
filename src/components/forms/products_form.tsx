@@ -1,5 +1,5 @@
 'use client'
-import React, { useState } from 'react'
+import React, { useContext, useState } from 'react'
 import { ProductContent } from '@/utils/interfaces'
 import { generateRandomNumberString } from '@/utils/functions/main';
 import Grid from '@mui/material/Grid2';
@@ -9,10 +9,12 @@ import { NumericFormat } from 'react-number-format';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { createClient } from '@/utils/supabase/client';
 import { toast } from 'react-toastify';
+import { GlobalContext } from '@/utils/context/global_provider';
 
 const ProductsForm = ({ defaultData, setOpenModal }: { defaultData?: ProductContent, setOpenModal?: (status: boolean) => void }) => {
 
   const supabase = createClient();
+  const { userAccount } = useContext(GlobalContext);
 
   const {
     register,
@@ -40,6 +42,7 @@ const ProductsForm = ({ defaultData, setOpenModal }: { defaultData?: ProductCont
           "name": formData["name"],
           "unit_price": formData["unit_price"],
           "total_price": formData["total_price"],
+          'created_by': userAccount?.id
         });
         if (error) {
           throw new Error(error.message);

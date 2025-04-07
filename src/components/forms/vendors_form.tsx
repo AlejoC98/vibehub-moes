@@ -1,16 +1,18 @@
 import { Box, TextField } from '@mui/material'
-import React, { useState } from 'react'
+import React, { useContext, useState } from 'react'
 import Grid from '@mui/material/Grid2';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import SubmitButton from '@/components/submit_button'
 import { toast } from 'react-toastify';
 import { createClient } from '@/utils/supabase/client';
 import { VendorsContent } from '@/utils/interfaces';
+import { GlobalContext } from '@/utils/context/global_provider';
 
 const VendorsForm = ({ defaultData, setOpenModal }: { defaultData?: VendorsContent, setOpenModal?: (status: boolean) => void }) => {
 
     const [isLoading, setIsLoading] = useState<boolean>(false);
     const supabase = createClient();
+    const { userAccount } = useContext(GlobalContext);
 
     const {
         register,
@@ -33,7 +35,8 @@ const VendorsForm = ({ defaultData, setOpenModal }: { defaultData?: VendorsConte
             }
 
             const { data, error } = await supabase.from('vendors').insert({
-                'name': formData['name']
+                'name': formData['name'],
+                'created_by': userAccount?.id
             }).select();
 
             if (error) {

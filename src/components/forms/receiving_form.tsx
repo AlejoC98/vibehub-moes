@@ -15,7 +15,7 @@ import CustomDatePicker from '@/components/date_picker'
 const ReceivingForm = ({ defaultData, setOpenModal }: { defaultData?: ReceivingContent, setOpenModal?: (status: boolean) => void }) => {
 
     const supabase = createClient();
-    const { products, users, vendors } = useContext(GlobalContext);
+    const { products, users, vendors, userAccount } = useContext(GlobalContext);
     const [isLoading, setIsLoading] = useState<boolean>(false);
     const [checked, setChecked] = useState<{ product_id: number; quantity: number }[]>([]);
     const [searchData, setSearchData] = useState<ProductContent[]>([]);
@@ -99,7 +99,8 @@ const ReceivingForm = ({ defaultData, setOpenModal }: { defaultData?: ReceivingC
                 'po_number': formData['po_number'],
                 'vendor_id': formData['vendor_id'],
                 'arrived_at': formData['arrived_at'],
-                'trailer_number': formData['trailer_number']
+                'trailer_number': formData['trailer_number'],
+                'created_by': userAccount?.id
             }).select().single();
 
             if (newReError) {

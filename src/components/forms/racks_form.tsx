@@ -1,6 +1,6 @@
 'use client'
 import { Box, Button, IconButton, TextField } from '@mui/material'
-import React, { useState } from 'react'
+import React, { useContext, useState } from 'react'
 import Grid from '@mui/material/Grid2';
 import QrCodeIcon from '@mui/icons-material/QrCode';
 import { generateBarcodesWithSeparator, generateRandomNumberString } from '@/utils/functions/main';
@@ -9,10 +9,12 @@ import { SubmitHandler, useForm } from 'react-hook-form';
 import { toast } from 'react-toastify';
 import { createClient } from '@/utils/supabase/client';
 import SubmitButton from '@/components/submit_button'
+import { GlobalContext } from '@/utils/context/global_provider';
 
 const RacksForm = ({ defaultData, setOpenModal }: { defaultData?: RackContent, setOpenModal?: (status: boolean) => void }) => {
 
   const supabase = createClient();
+  const { userAccount } = useContext(GlobalContext);
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
   const {
@@ -34,6 +36,7 @@ const RacksForm = ({ defaultData, setOpenModal }: { defaultData?: RackContent, s
           "name": formData['name'],
           "columns": formData['columns'],
           "rows": formData['rows'],
+          "created_by": userAccount?.id
         }).select().maybeSingle();
 
         if (newRack != null) {

@@ -11,7 +11,7 @@ import CloseIcon from '@mui/icons-material/Close';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import VisibilityIcon from '@mui/icons-material/Visibility';
-import { deepSearch } from '@/utils/functions/main';
+import { deepSearch, exportToExcel } from '@/utils/functions/main';
 import Swal from 'sweetalert2';
 import { toast } from 'react-toastify';
 import { GlobalContext } from '@/utils/context/global_provider';
@@ -99,6 +99,14 @@ const BasicTable = ({
     setFormData({});
   };
 
+  const handleCreateXlsxFile = () => {
+    try {
+      exportToExcel(data, defaultColumns);
+    } catch (error: any) {
+      toast.warning(error.message);
+    }
+  }
+
   const renderOptions = (
     <Menu
       anchorEl={anchorEl}
@@ -120,7 +128,7 @@ const BasicTable = ({
         content={() => tableContent.current}
       /> */}
       <MenuItem>IMPORT</MenuItem>
-      <MenuItem>EXPORT</MenuItem>
+      <MenuItem onClick={handleCreateXlsxFile}>EXPORT</MenuItem>
     </Menu>
   );
 
