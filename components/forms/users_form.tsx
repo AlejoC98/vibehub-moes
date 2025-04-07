@@ -63,7 +63,8 @@ const UsersForms = ({ defaultData, setOpenModal }: { defaultData?: AccountConten
                 if (error) {
                     throw new Error(error.message);
                 }
-
+                
+                await supabase.from('accounts_roles').delete().eq('account_id', newAccount.id);
                 // Assing Roles
                 for (var role of selectedRoles) {
                     const { data, error } = await supabase.from('accounts_roles').insert({ account_id: newAccount.id, role_id: role });

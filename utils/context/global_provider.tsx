@@ -226,8 +226,7 @@ const GlobalProvider = ({ children }: { children: ReactNode }) => {
         return () => {
             supabase.removeChannel(channel);
         }
-    }, [supabase])
-
+    }, [supabase]);
 
     return (
         <GlobalContext.Provider value={{ locations, roles, users, vendors, carriers, products, racks, notifications, orders, userAccount, receivings, shippings, isLaunching, setIsLaunching }}>{children}</GlobalContext.Provider>

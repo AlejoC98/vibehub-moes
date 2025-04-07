@@ -32,7 +32,7 @@ const SideBar = ({ open, setOpen }: { open: boolean, setOpen: (status: boolean) 
         {
             id: 2,
             title: "Inventory",
-            to: "/inventory",
+            to: "#",
             icon: <HugeiconsIcon icon={WarehouseIcon} />
         },
         {

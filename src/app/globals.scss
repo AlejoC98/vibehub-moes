@@ -29,12 +29,39 @@ main {
   overflow: hidden;
 }
 
-.btn-canary {
-  background: $canary !important;
+.btn-gunmetal {
+  background-color: $gunmetal !important;
+  color: #fff !important;
+}
+
+.btn-gunmetal-dark {
+  background-color: $gunmetal-dark !important;
+  color: #fff !important;
 }
 
 .btn-bittersweet {
-  background: $bittersweet !important;
+  background-color: $bittersweet !important;
+  color: #fff !important;
+}
+
+.btn-cyan-dark {
+  background-color: $cyan-dark !important;
+  color: #fff !important;
+}
+
+.btn-canary {
+  background-color: $canary !important;
+  color: #000 !important;
+}
+
+.btn-munsell {
+  background-color: $munsell !important;
+  color: #fff !important;
+}
+
+.btn-persian-green {
+  background-color: $persian-green !important;
+  color: #fff !important;
 }
 
 .oleo-title {

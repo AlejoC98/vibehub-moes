@@ -28,7 +28,7 @@ const DrawerMenu = ({ openDrawer, toggleDrawer }: { openDrawer: boolean, toggleD
         {
             id: 2,
             title: "Inventory",
-            to: "/inventory",
+            to: "#",
             icon: <HugeiconsIcon icon={WarehouseIcon} />
         },
         {
