@@ -89,9 +89,8 @@ const Navbar = ({ open, setOpen, menuOpen, setMenuOpen }: { open: boolean, setOp
 
     const handleOpenNoti = async(noti: NotificationContent) => {
         setAnchorNoti(null);
-
+        setMenuOpen(null);
         await supabase.from('notifications').update({'status': 'Opened'}).eq('id', noti.id);
-
         router.push(noti.redirect_to);
     }
 

@@ -48,8 +48,6 @@ const UsersForms = ({ defaultData, setOpenModal }: { defaultData?: AccountConten
             }).then((res) => {
                 if (res.data.status) {
                     toast.success(res.data.message);
-                    setIsLoading(false);
-                    setOpenModal!(false);
                 } else {
                     Swal.fire({
                         icon: 'info',
@@ -72,6 +70,8 @@ const UsersForms = ({ defaultData, setOpenModal }: { defaultData?: AccountConten
                         }
                     });
                 }
+                setIsLoading(false);
+                setOpenModal!(false);
             }).catch((err) => {
                 throw new Error(err.message);
             });
@@ -99,7 +99,7 @@ const UsersForms = ({ defaultData, setOpenModal }: { defaultData?: AccountConten
         <Box sx={{ flexGrow: 1, padding: 5 }}>
             <form onSubmit={handleSubmit(handleCreateUser)}>
                 <Grid container spacing={2}>
-                    <Grid size={6}>
+                    <Grid size={{ xl: 6, lg: 6, md: 6, sm: 12, xs: 12}}>
                         <TextField
                             fullWidth
                             required
@@ -109,7 +109,7 @@ const UsersForms = ({ defaultData, setOpenModal }: { defaultData?: AccountConten
                             helperText={errors.email?.message || 'Used for password resets'}
                         />
                     </Grid>
-                    <Grid size={6}>
+                    <Grid size={{ xl: 6, lg: 6, md: 6, sm: 12, xs: 12}}>
                         <TextField
                             label="First Name"
                             required
@@ -119,7 +119,7 @@ const UsersForms = ({ defaultData, setOpenModal }: { defaultData?: AccountConten
                             helperText={errors.first_name?.message}
                         />
                     </Grid>
-                    <Grid size={6}>
+                    <Grid size={{ xl: 6, lg: 6, md: 6, sm: 12, xs: 12}}>
                         <TextField
                             label="Last Name"
                             required
@@ -129,7 +129,7 @@ const UsersForms = ({ defaultData, setOpenModal }: { defaultData?: AccountConten
                             helperText={errors.last_name?.message}
                         />
                     </Grid>
-                    <Grid size={6}>
+                    <Grid size={{ xl: 6, lg: 6, md: 6, sm: 12, xs: 12}}>
                         <TextField
                             label="username"
                             required
