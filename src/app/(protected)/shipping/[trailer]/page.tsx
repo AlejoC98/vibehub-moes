@@ -29,6 +29,10 @@ const OrderDetails = () => {
   ];
 
   useEffect(() => {
+    setIsLaunching(false);
+  }, [params])
+
+  useEffect(() => {
     var currentShipping = shippings?.find(s => s.trailer_number == params?.trailer!);
     if (currentShipping != null) {
       const totalProducts = currentShipping?.shippings_pick_list
@@ -42,8 +46,7 @@ const OrderDetails = () => {
         text: 'We couldn\'t find this information'
       });
     }
-    setIsLaunching(false);
-  }, [params])
+  }, [shippings])
 
   return (
     <Box>

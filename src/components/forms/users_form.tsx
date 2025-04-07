@@ -9,6 +9,8 @@ import { toast } from 'react-toastify';
 import { createClient } from '@/utils/supabase/client';
 import { signup } from '@/app/(public)/auth/login/actions';
 import MultipleSelectChip from '@/components/multi_select_chip';
+import axios from 'axios';
+import Swal from 'sweetalert2';
 
 
 const UsersForms = ({ defaultData, setOpenModal }: { defaultData?: AccountContent, setOpenModal?: (status: boolean) => void }) => {
@@ -28,7 +30,7 @@ const UsersForms = ({ defaultData, setOpenModal }: { defaultData?: AccountConten
             ...defaultData,
         }
     });
-    
+
     const [selectedRoles, setSelectedRoles] = useState<number[]>([]);
 
     const canSeeManager = userAccount?.accounts_roles?.some(role => role.id === 1 || role.id === 2);
@@ -39,52 +41,47 @@ const UsersForms = ({ defaultData, setOpenModal }: { defaultData?: AccountConten
     const handleCreateUser: SubmitHandler<AccountContent> = async (data) => {
         try {
             setIsLoading(true);
-
-            var userId = undefined;
-            
-            if (Object.keys(defaultData!).length == 0) {
-                const userData = await signup(data['email']!, process.env.DEFAULT_PASSWORD || 'v1b3h0b2025', false);
-
-                userId =  userData?.user?.id;
-            } else {
-                userId =  defaultData?.user_id;
-            }
-
-            if (userId != undefined) {
-                const { data: newAccount, error } = await supabase.from('accounts').upsert({
-                    'first_name': data['first_name'],
-                    'last_name': data['last_name'],
-                    'user_id': userId,
-                    'location_id': 1,
-                    'email': data['email'],
-                    'username': data['username']
-                }, { onConflict: 'email' }).select().single();
-
-                if (error) {
-                    throw new Error(error.message);
+            await axios.post('/api/users', {
+                'defaultData': defaultData,
+                'selectedRoles': selectedRoles,
+                'newData': data
+            }).then((res) => {
+                if (res.data.status) {
+                    toast.success(res.data.message);
+                    setIsLoading(false);
+                    setOpenModal!(false);
+                } else {
+                    Swal.fire({
+                        icon: 'info',
+                        title: "User Limit Reached",
+                        text: res.data.message,
+                        confirmButtonColor: '#549F93',
+                        showClass: {
+                            popup: `
+                                animate__animated
+                                animate__fadeInUp
+                                animate__faster
+                            `
+                        },
+                        hideClass: {
+                            popup: `
+                                animate__animated
+                                animate__fadeOutDown
+                                animate__faster
+                            `
+                        }
+                    });
                 }
-                
-                await supabase.from('accounts_roles').delete().eq('account_id', newAccount.id);
-                // Assing Roles
-                for (var role of selectedRoles) {
-                    const { data, error } = await supabase.from('accounts_roles').insert({ account_id: newAccount.id, role_id: role });
-
-                    if (error) {
-                        throw new Error(error.message);
-                    }
-                }
-
-                toast.success(`User ${Object.keys(defaultData!).length > 0 ? 'updated' : 'created'}!`);
-                setIsLoading(false);
-                setOpenModal!(false);
-            }
+            }).catch((err) => {
+                throw new Error(err.message);
+            });
         } catch (error: any) {
             setIsLoading(false);
             toast.error(error.message)
         }
     }
 
-    const loadUserRoles = async() => {
+    const loadUserRoles = async () => {
         var editedUser = users?.find(u => u.id == defaultData?.id!);
         if (editedUser != null) {
             const roleIds = editedUser!.accounts_roles!.map(role => role.role_id);

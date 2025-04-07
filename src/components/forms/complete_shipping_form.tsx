@@ -30,6 +30,7 @@ const CompleteOrderForm = ({ defaultData, setOpenModal }: { defaultData?: Shippi
                 setOpenModal!(false);
 
                 toast.success('Order Completed!');
+                window.location.reload();
             }, 2000);
 
         } catch (error: any) {

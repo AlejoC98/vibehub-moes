@@ -61,7 +61,7 @@ const ShippingForm = ({ defaultData, setOpenModal }: { defaultData?: ShippingCon
             }
 
             setTimeout(() => {
-                setIsLoading(false);
+                // setIsLoading(false);
                 router.push(`shipping/${formData.trailer_number}`);
             }, 1500);
 

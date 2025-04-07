@@ -4,8 +4,8 @@ import { updateSession } from '@/utils/supabase/middleware';
 
 export async function middleware(request: NextRequest) {
 
-    const supabase = createClient();
-    const { data: { session } } = await (await supabase).auth.getSession();
+    const supabase = await createClient();
+    const { data: { session } } = await supabase.auth.getSession();
 
     const isAuthPage = request.nextUrl.pathname.startsWith('/auth/login')
 
