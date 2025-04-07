@@ -13,7 +13,13 @@ export async function POST(req: Request) {
   };
 
   try {
-    const { data: currentUsers, error } = await supabase.from('accounts').select().not('deleted', 'eq', true);
+    const { data: currentUsers, error } = await supabase.from('accounts').select('*, accounts_roles(*)').not('deleted', 'eq', true);
+
+    const filteredUsers = (currentUsers ?? []).filter(account => {
+      const roles = account.accounts_roles ?? []
+      const hasRole1 = roles.some((role: any) => role.role_id === 1)
+      return !hasRole1 // keep only accounts without role_id 1
+    })
 
     if (error) {
       return NextResponse.json(
@@ -22,7 +28,7 @@ export async function POST(req: Request) {
       );
     }
 
-  if (currentUsers?.length! < 5) {
+  if (filteredUsers.length < 5) {
     var userId = undefined;
 
     if (Object.keys(defaultData!).length == 0) {
