@@ -17,10 +17,10 @@ const Shipping = () => {
       { field: 'carrier', headerName: 'Carrier' },
       { field: 'trailer_number', headerName: 'Trailer #' },
       { field: 'created_at', headerName: 'Created At', renderCell: (params) => {
-        return dayjs(params.row.created_at).format('ddd MMM DD YYYY');
+        return dayjs(params.row.created_at).format('ddd MMM DD YYYY hh:mm A');
       }},
       { field: 'shipped_out_at', headerName: 'Shipped Out', renderCell: (params) => {
-        return dayjs(params.row.shipped_out_at).format('ddd MMM DD YYYY');
+        return dayjs(params.row.shipped_out_at).format('ddd MMM DD YYYY hh:mm A');
       }},
       { field: 'status', headerName: 'Status', renderCell: (params) => {
         switch (params.row.status) {

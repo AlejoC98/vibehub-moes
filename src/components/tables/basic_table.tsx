@@ -15,12 +15,14 @@ import { deepSearch } from '@/utils/functions/main';
 import Swal from 'sweetalert2';
 import { toast } from 'react-toastify';
 import { GlobalContext } from '@/utils/context/global_provider';
+import { createClient } from '@/utils/supabase/client';
 
 const BasicTable = ({
   title,
   data,
   columns,
   created_column = false,
+  source,
   createForm,
   createFormTitle,
 } : { 
@@ -28,14 +30,16 @@ const BasicTable = ({
   data: Array<any>,
   columns: GridColDef[],
   created_column?: boolean,
+  source?: string,
   createForm?: ReactElement<any>,
   createFormTitle?: string,
 }) => {
   
-  const { setIsLaunching, users } = useContext(GlobalContext);
-
   const router = useRouter();
   const pathname = usePathname();
+  const supabase = createClient();
+  const { setIsLaunching, users } = useContext(GlobalContext);
+
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const menuId = 'primary-search-account-menu';
   const isMenuOpen = Boolean(anchorEl);
@@ -165,18 +169,26 @@ const BasicTable = ({
   }
 
   const handleDelete = () => {
-    Swal.fire({
-      title: 'Warning',
-      text: 'Are you sure you want to delete this user?',
-      icon: 'question',
-      confirmButtonText: 'Procceed',
-      showCancelButton: true,
-    }).then((result) => {
-      if (result.isConfirmed) {
-        toast.warning('Product Deleted');
-        console.log('Needs work');
-      }
-    })
+    try {
+      Swal.fire({
+        title: 'Warning',
+        text: 'Are you sure you want to delete this user?',
+        icon: 'question',
+        confirmButtonText: 'Procceed',
+        confirmButtonColor: '#f9564f',
+        showCancelButton: true,
+      }).then(async(result) => {
+        if (result.isConfirmed) {
+          const { error } = await supabase.from(source!).delete().eq('id', selectedRow); 
+          if (error) {
+            throw new Error(error.message);
+          }
+          toast.success('Record Deleted');
+        }
+      });
+    } catch (error) {
+      toast.warning('Error deleting record!');
+    }
   }
 
   const hanldeSelectRow = (rowSelectionModel: GridRowSelectionModel, details: GridCallbackDetails) => {
