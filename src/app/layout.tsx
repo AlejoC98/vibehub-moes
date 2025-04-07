@@ -3,6 +3,7 @@ import { Geist, Geist_Mono } from "next/font/google";
 import { Inter } from 'next/font/google'
 import "./globals.scss";
 import LayoutWrapper from "./layout_wrapper";
+import RightClickBlocker from "./right_click_blocker";
 
 const inter = Inter({
   variable: "--font-inter-sans",
@@ -33,9 +34,11 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={`${geistSans.variable} ${geistMono.variable} ${inter.variable}`}>
-        <LayoutWrapper>
-          {children}
-        </LayoutWrapper>
+        <RightClickBlocker>
+          <LayoutWrapper>
+            {children}
+          </LayoutWrapper>
+        </RightClickBlocker>
       </body>
     </html>
   );
