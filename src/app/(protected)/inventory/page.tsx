@@ -1,21 +1,19 @@
 'use client'
 import { Box, Skeleton } from '@mui/material'
 import Grid from '@mui/material/Grid2'
-import { Block } from '../../../../style/global'
-import BasicTable from '../../../../components/tables/basic_table'
-import ProductsForm from '../../../../components/forms/products_form'
+import { Block } from '@/style/global'
+import BasicTable from '@/components/tables/basic_table'
+import ProductsForm from '@/components/forms/products_form'
 import { GridColDef } from '@mui/x-data-grid'
-import RacksForm from '../../../../components/forms/racks_form'
+import RacksForm from '@/components/forms/racks_form'
 import { useContext, useEffect, useState } from 'react'
-import { GlobalContext } from '../../../../utils/context/global_provider'
-import { ProductContent, RackLocationContent } from '../../../../utils/interfaces'
+import { GlobalContext } from '@/utils/context/global_provider'
+import { ProductContent, RackLocationContent } from '@/utils/interfaces'
 
 const Inventory = () => {
     const { products, racks, setIsLaunching } = useContext(GlobalContext);
     const [isLoading, setIsLoading] = useState<boolean>(true);
     const [locationData, setLocationData] = useState<RackLocationContent[]>([]);
-
-    // const products:Array<ProductContent> = [];
 
     const productsColumns: GridColDef[] = [
         { field: 'id', headerName: 'ID'},

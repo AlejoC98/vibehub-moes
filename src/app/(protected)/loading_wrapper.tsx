@@ -1,6 +1,6 @@
 'use client'
 import React, { ReactNode, useContext, useEffect } from 'react'
-import { GlobalContext } from '../../../utils/context/global_provider'
+import { GlobalContext } from '@/utils/context/global_provider'
 import { Box } from '@mui/material';
 import { HashLoader } from 'react-spinners';
 

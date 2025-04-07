@@ -1,12 +1,11 @@
 'use client'
 import React, { useContext, useEffect } from 'react'
-import { GlobalContext } from '../../../../utils/context/global_provider'
-import { Accordion, AccordionActions, AccordionDetails, AccordionSummary, Box, Button, TextField, Typography } from '@mui/material';
+import { GlobalContext } from '@/utils/context/global_provider'
+import { Box, Typography } from '@mui/material';
 import Grid from '@mui/material/Grid2'
-import { Block } from '../../../../style/global';
-import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import TicketForm from '../../../../components/forms/ticket_forms';
-import CustomAccordionSummary from '../../../../components/custom_accordion_summary';
+import { Block } from '@/style/global';
+import TicketForm from '@/components/forms/ticket_forms';
+import CustomAccordionSummary from '@/components/custom_accordion_summary';
 
 const HelpCenter = () => {
 

@@ -1,15 +1,15 @@
 'use client'
 import { useParams } from 'next/navigation';
 import React, { useContext, useEffect, useState } from 'react'
-import { GlobalContext } from '../../../../../../utils/context/global_provider';
-import { PickListContent } from '../../../../../../utils/interfaces';
+import { GlobalContext } from '@/utils/context/global_provider';
+import { PickListContent } from '@/utils/interfaces';
 import Swal from 'sweetalert2';
 import { Box, Typography } from '@mui/material';
 import Grid from '@mui/material/Grid2'
-import { Block } from '../../../../../../style/global';
-import BasicTable from '../../../../../../components/tables/basic_table';
+import { Block } from '@/style/global';
+import BasicTable from '@/components/tables/basic_table';
 import { GridColDef } from '@mui/x-data-grid';
-import Details from '../../../../../../components/details';
+import Details from '@/components/details';
 
 const PickListDetails = () => {
 

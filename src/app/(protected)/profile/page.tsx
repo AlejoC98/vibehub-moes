@@ -1,15 +1,15 @@
 'use client'
 import { Avatar, Box, Chip, List, ListItem, ListItemText, Typography } from '@mui/material'
 import React, { useContext, useEffect, useState } from 'react'
-import { GlobalContext } from '../../../../utils/context/global_provider';
+import { GlobalContext } from '@/utils/context/global_provider';
 import Grid from '@mui/material/Grid2'
-import { Block } from '../../../../style/global';
+import { Block } from '@/style/global';
 import { HugeiconsIcon } from '@hugeicons/react';
 import { Building03Icon, Location01Icon } from '@hugeicons/core-free-icons';
-import UpgradePlan from '../../../../components/upgrade_plan';
-import { createClient } from '../../../../utils/supabase/client';
+import UpgradePlan from '@/components/upgrade_plan';
+import { createClient } from '@/utils/supabase/client';
 import { toast } from 'react-toastify';
-import SubmitButton from '../../../../components/submit_button';
+import SubmitButton from '@/components/submit_button';
 
 const Profile = () => {
 

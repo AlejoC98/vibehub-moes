@@ -1,10 +1,10 @@
 'use client'
 import React, { useContext, useEffect, useState } from 'react'
-import { calculateRevenue } from '../../../../utils/functions/main'
-import { GlobalContext } from '../../../../utils/context/global_provider'
+import { calculateRevenue } from '@/utils/functions/main'
+import { GlobalContext } from '@/utils/context/global_provider'
 import { Box } from '@mui/material'
 import Grid from '@mui/material/Grid2';
-import Metrics from '../../../../components/dashboard/metrics';
+import Metrics from '@/components/dashboard/metrics';
 import DiscountIcon from '@mui/icons-material/Discount';
 import AttachMoneyIcon from '@mui/icons-material/AttachMoney';
 import LocalShippingIcon from '@mui/icons-material/LocalShipping';

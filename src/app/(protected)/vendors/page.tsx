@@ -2,11 +2,11 @@
 import { Box } from '@mui/material'
 import React, { useContext, useEffect } from 'react'
 import Grid from '@mui/material/Grid2'
-import { Block } from '../../../../style/global'
-import BasicTable from '../../../../components/tables/basic_table'
-import { GlobalContext } from '../../../../utils/context/global_provider'
+import { Block } from '@/style/global'
+import BasicTable from '@/components/tables/basic_table'
+import { GlobalContext } from '@/utils/context/global_provider'
 import { GridColDef } from '@mui/x-data-grid'
-import VendorsForm from '../../../../components/forms/vendors_form'
+import VendorsForm from '@/components/forms/vendors_form'
 
 const Vendors = () => {
 

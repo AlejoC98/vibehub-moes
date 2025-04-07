@@ -1,13 +1,13 @@
 'use client'
 import { Box, Typography } from '@mui/material'
 import { useContext, useEffect, useState } from 'react'
-import { GlobalContext } from '../../../../../utils/context/global_provider'
-import ReceivingTask from '../../../../../components/tasks/receiving_task'
+import { GlobalContext } from '@/utils/context/global_provider'
+import ReceivingTask from '@/components/tasks/receiving_task'
 import { useParams } from 'next/navigation'
-import { ReceivingContent } from '../../../../../utils/interfaces'
-import PutAwayTask from '../../../../../components/tasks/put_away_task'
+import { ReceivingContent } from '@/utils/interfaces'
+import PutAwayTask from '@/components/tasks/put_away_task'
 import Grid from '@mui/material/Grid2'
-import { Block } from '../../../../../style/global'
+import { Block } from '@/style/global'
 
 const ReceivingDetails = () => {
 

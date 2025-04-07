@@ -2,12 +2,12 @@
 import { Box, Typography } from '@mui/material'
 import React, { useContext, useEffect } from 'react'
 import Grid from '@mui/material/Grid2';
-import { Block } from '../../../../style/global';
-import BasicTable from '../../../../components/tables/basic_table';
-import { GlobalContext } from '../../../../utils/context/global_provider';
+import { Block } from '@/style/global';
+import BasicTable from '@/components/tables/basic_table';
+import { GlobalContext } from '@/utils/context/global_provider';
 import { GridColDef } from '@mui/x-data-grid';
 import dayjs from 'dayjs';
-import ShippingForm from '../../../../components/forms/shipping_form';
+import ShippingForm from '@/components/forms/shipping_form';
 
 const Shipping = () => {
 

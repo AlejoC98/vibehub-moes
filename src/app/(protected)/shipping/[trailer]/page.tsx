@@ -2,16 +2,16 @@
 import { Box, Typography } from '@mui/material'
 import React, { useContext, useEffect, useState } from 'react'
 import Grid from '@mui/material/Grid2'
-import Details from '../../../../../components/details'
-import PickListForm from '../../../../../components/forms/pick_list_form'
-import { Block } from '../../../../../style/global'
+import Details from '@/components/details'
+import PickListForm from '@/components/forms/pick_list_form'
+import { Block } from '@/style/global'
 import { useParams } from 'next/navigation'
-import { GlobalContext } from '../../../../../utils/context/global_provider'
-import { ShippingContent } from '../../../../../utils/interfaces'
+import { GlobalContext } from '@/utils/context/global_provider'
+import { ShippingContent } from '@/utils/interfaces'
 import Swal from 'sweetalert2'
-import BasicTable from '../../../../../components/tables/basic_table'
+import BasicTable from '@/components/tables/basic_table'
 import { GridColDef } from '@mui/x-data-grid'
-import CompleteOrderForm from '../../../../../components/forms/complete_shipping_form'
+import CompleteOrderForm from '@/components/forms/complete_shipping_form'
 
 const OrderDetails = () => {
 

@@ -1,11 +1,9 @@
 'use client'
 import React, { useEffect, useState } from 'react'
 import Grid from '@mui/material/Grid2';
-// import Paper from '@mui/material/Paper';
-// import { styled, useTheme } from '@mui/material/styles';
 import Image from 'next/image';
 import { Box, useMediaQuery, useTheme } from '@mui/material';
-import LoginForm from '../../../../../components/forms/login_form';
+import LoginForm from '@/components/forms/login_form';
 
 const Login = () => {
 
