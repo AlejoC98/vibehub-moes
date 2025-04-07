@@ -1,18 +1,20 @@
 'use client'
 import { Box, useMediaQuery, useTheme } from '@mui/material'
-import React, { ReactNode, useContext, useEffect, useState } from 'react'
-import GlobalProvider, { GlobalContext } from '../../../utils/context/global_provider'
+import React, { ReactNode, useEffect, useState } from 'react'
+import GlobalProvider from '../../../utils/context/global_provider'
 import SideBar from '../../../components/layout/sidebar'
 import Navbar from '../../../components/layout/navbar'
 import { ToastContainer } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css';
 import DrawerMenu from '../../../components/layout/drawer_menu'
 import LoadingWrapper from './loading_wrapper'
+import { createClient } from '../../../utils/supabase/client'
+import { useRouter } from 'next/navigation'
 
 const layout = ({ children }: { children: ReactNode }) => {
 
-  const { isLaunching } = useContext(GlobalContext);
-
+  const supabase = createClient();
+  const router = useRouter();
   const [openMenu, setOpenMenu] = useState<boolean>(false);
   const [openDrawer, setOpenDrawer] = useState<boolean>(false);
 
@@ -23,6 +25,17 @@ const layout = ({ children }: { children: ReactNode }) => {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
 
+  const handleUserSession = async() => {
+    const { data: { user } } = await supabase.auth.getUser();
+
+    if (!user) {
+      router.replace('/auth/login');
+    }
+  }
+
+  useEffect(() => {
+    handleUserSession();
+  }, [])
 
   return (
     <GlobalProvider>
