@@ -50,7 +50,7 @@ const GlobalProvider = ({ children }: { children: ReactNode }) => {
             setTimeout(async () => {
                 var currentUserSession = await supabase.auth.getUser();
 
-                var { data: userData, error } = await supabase.from('accounts').select().eq('user_id', currentUserSession?.data!.user!.id).single();
+                var { data: userData } = await supabase.from('accounts').select().eq('user_id', currentUserSession?.data!.user!.id).single();
 
                 getNotifications(userData.accounts_roles);
             }, 1000);

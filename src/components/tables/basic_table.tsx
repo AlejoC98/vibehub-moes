@@ -101,7 +101,7 @@ const BasicTable = ({
 
   const handleCreateXlsxFile = () => {
     try {
-      exportToExcel(data, defaultColumns);
+      exportToExcel(data, [...columns, ...defaultColumns]);
     } catch (error: any) {
       toast.warning(error.message);
     }
