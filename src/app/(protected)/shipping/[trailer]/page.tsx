@@ -34,17 +34,19 @@ const OrderDetails = () => {
 
   useEffect(() => {
     var currentShipping = shippings?.find(s => s.trailer_number == params?.trailer!);
-    if (currentShipping != null) {
-      const totalProducts = currentShipping?.shippings_pick_list
-        ?.reduce((sum, item) => sum + item.total_products, 0) ?? 0;
-      setTotalOrderShipped(totalProducts);
-      setData(currentShipping);
-    } else {
-      Swal.fire({
-        icon: 'info',
-        title: 'Opsss!',
-        text: 'We couldn\'t find this information'
-      });
+    if (shippings != undefined) {
+      if (currentShipping != null) {
+        const totalProducts = currentShipping?.shippings_pick_list
+          ?.reduce((sum, item) => sum + item.total_products, 0) ?? 0;
+        setTotalOrderShipped(totalProducts);
+        setData(currentShipping);
+      } else {
+        Swal.fire({
+          icon: 'info',
+          title: 'Opsss!',
+          text: 'We couldn\'t find this information'
+        });
+      }
     }
   }, [shippings])
 

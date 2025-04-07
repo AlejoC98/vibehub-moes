@@ -18,7 +18,11 @@ const ShippingForm = ({ defaultData, setOpenModal }: { defaultData?: ShippingCon
         getValues,
         handleSubmit,
         formState: { errors },
-    } = useForm<ShippingInput>({});
+    } = useForm<ShippingInput>({
+        defaultValues: {
+            ...defaultData
+        }
+    });
 
     const router = useRouter();
     const supabase = createClient();
