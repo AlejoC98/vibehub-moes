@@ -17,6 +17,7 @@ const layout = ({ children }: { children: ReactNode }) => {
   const router = useRouter();
   const [openMenu, setOpenMenu] = useState<boolean>(false);
   const [openDrawer, setOpenDrawer] = useState<boolean>(false);
+  const [menuOpen, setMenuOpen] = useState<number | null>(1);
 
   const toggleDrawer = (newOpen: boolean) => {
     setOpenDrawer(newOpen);
@@ -38,7 +39,7 @@ const layout = ({ children }: { children: ReactNode }) => {
       />
       <Box className='bg-dash'>
         <LoadingWrapper>
-          {isMobile ? (<DrawerMenu openDrawer={openDrawer} toggleDrawer={toggleDrawer} />) : (<SideBar open={openMenu} setOpen={setOpenMenu} />)}
+          {isMobile ? (<DrawerMenu openDrawer={openDrawer} toggleDrawer={toggleDrawer} />) : (<SideBar open={openMenu} setOpen={setOpenMenu} menuOpen={menuOpen} setMenuOpen={setMenuOpen} />)}
           <Box
             sx={{
               display: 'flex',
@@ -48,7 +49,7 @@ const layout = ({ children }: { children: ReactNode }) => {
               width: isMobile ? '100%' : `calc(100% - ${openMenu ? 250 : 50}px)`,
             }}
           >
-            <Navbar open={openMenu} setOpen={isMobile ? setOpenDrawer : setOpenMenu} />
+            <Navbar open={openMenu} setOpen={isMobile ? setOpenDrawer : setOpenMenu} menuOpen={menuOpen} setMenuOpen={setMenuOpen} />
             <Box sx={{ height: '100%', padding: '10px 25px' }}>
               {children}
             </Box>

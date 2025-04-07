@@ -12,14 +12,14 @@ import { DashboardSquare02Icon, WarehouseIcon, FlowIcon, Trolley02Icon, LiftTruc
 import Swal from 'sweetalert2';
 import 'animate.css';
 
-const SideBar = ({ open, setOpen }: { open: boolean, setOpen: (status: boolean) => void }) => {
+const SideBar = ({ open, setOpen, menuOpen, setMenuOpen }: { open: boolean, setOpen: (status: boolean) => void, menuOpen: number | null, setMenuOpen: (status: number | null) => void}) => {
 
     const { userAccount, setIsLaunching } = useContext(GlobalContext);
 
     const router = useRouter();
     const pathname = usePathname();
 
-    const [menuOpen, setMenuOpen] = useState<number | null>(1);
+    
     const [sideWidth, setSideWidth] = useState<number>(250);
 
     const MenuList: MenuItem[] = [

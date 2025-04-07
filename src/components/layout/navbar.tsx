@@ -17,7 +17,7 @@ import { useRouter } from 'next/navigation'
 import { NotificationContent } from '@/utils/interfaces'
 import { createClient } from '@/utils/supabase/client'
 
-const Navbar = ({ open, setOpen }: { open: boolean, setOpen: (status: boolean) => void }) => {
+const Navbar = ({ open, setOpen, menuOpen, setMenuOpen }: { open: boolean, setOpen: (status: boolean) => void, menuOpen: number | null, setMenuOpen: (status: number | null) => void}) => {
 
     const router = useRouter();
     const supabase = createClient();
@@ -57,6 +57,7 @@ const Navbar = ({ open, setOpen }: { open: boolean, setOpen: (status: boolean) =
     };
 
     const handleOpenSettMenu = (redirectTo: string) => {
+        setMenuOpen(null);
         handleSettingsClose();
         setIsLaunching(true);
         router.push(redirectTo);
