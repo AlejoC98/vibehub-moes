@@ -13,7 +13,6 @@ const Receiving = () => {
   const { receivings, setIsLaunching } = useContext(GlobalContext);
 
   const receivingColumns: GridColDef[] = [
-    { field: 'id', headerName: 'ID' },
     { field: 'po_number', headerName: 'PO #' },
     { field: 'arrived_at', headerName: 'Arrived At' },
     { field: 'trailer_number', headerName: 'Trailer #' },

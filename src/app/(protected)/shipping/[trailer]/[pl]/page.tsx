@@ -19,7 +19,6 @@ const PickListDetails = () => {
   const [data, setData] = useState<PickListContent>();
 
   const shippingProductsColumns: GridColDef[] = [
-      { field: 'id', headerName: 'ID' },
       { field: 'product_sku', headerName: 'Sku' },
       { field: 'product_quantity', headerName: 'Quantity' },
     ];

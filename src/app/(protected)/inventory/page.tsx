@@ -16,7 +16,6 @@ const Inventory = () => {
     const [locationData, setLocationData] = useState<RackLocationContent[]>([]);
 
     const productsColumns: GridColDef[] = [
-        { field: 'id', headerName: 'ID'},
         { field: 'name', headerName: 'Name'},
         // { field: 'quantity', headerName: 'Quantity', valueGetter: (params) => {
         //   return products?.reduce((total, product) => {
@@ -31,7 +30,6 @@ const Inventory = () => {
       ];
       
       const racksColumns: GridColDef[] = [
-        { field: 'id', headerName: 'ID'},
         { field: 'sku', headerName: 'Sku'},
         { field: 'name', headerName: 'Name'},
         { field: 'products', headerName: 'Product', renderCell: (params) => {

@@ -13,7 +13,6 @@ const Picking = () => {
     const { setIsLaunching } = useContext(GlobalContext);
 
       const pickingColumns: GridColDef[] = [
-        { field: 'id', headerName: 'ID' },
         { field: 'order_number', headerName: 'Order #' },
         { field: 'due_at', headerName: 'Due Day' },
         { field: 'priority', headerName: 'Priority' },
