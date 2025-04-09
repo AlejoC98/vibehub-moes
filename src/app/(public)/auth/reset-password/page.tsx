@@ -7,20 +7,25 @@ import React, { Suspense, useEffect } from 'react'
 
 const ResetPassword = () => {
 
-  const searchParams = useSearchParams();
-  const code = searchParams.get('code');
+  function Search() {
+    const searchParams = useSearchParams();
+    const code = searchParams.get('code');
+
+    return <Box sx={{ display: 'flex', justifyContent: 'center', placeItems: 'center', minHeight: '100vh' }}>
+      <Box sx={{ background: 'rgba(29, 38, 51, .7)', borderRadius: 5, maxWidth: 500 }}>
+        {code == null ? (
+          <ResetPasswordForm />
+        ) : (
+          <UpdatePasswordForm />
+        )}
+      </Box>
+    </Box>
+  }
+
 
   return (
-    <Suspense fallback={<div>Loading...</div>}>
-      <Box sx={{ display: 'flex', justifyContent: 'center', placeItems: 'center', minHeight: '100vh'}}>
-        <Box sx={{ background: 'rgba(29, 38, 51, .7)', borderRadius: 5, maxWidth: 500}}>
-          { code == null ? (
-            <ResetPasswordForm />
-          ) : (
-            <UpdatePasswordForm />
-          ) }
-        </Box>
-      </Box>
+    <Suspense>
+      <Search />
     </Suspense>
   )
 }
