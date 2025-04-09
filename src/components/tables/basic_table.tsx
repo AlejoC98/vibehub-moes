@@ -57,9 +57,9 @@ const BasicTable = ({
         if (params.row.created_by == 1) {
           userName = {username: 'Alejoc98'}
         } else {
-          userName = users?.find(u => u.id == params.row.created_by);
+          userName = users?.find(u => u.user_id == params.row.created_by);
         }
-        return userName!.username || params.row.created_by;
+        return userName?.username || params.row.created_by;
       }},]
       : []),
     {

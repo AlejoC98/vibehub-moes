@@ -36,7 +36,7 @@ const VendorsForm = ({ defaultData, setOpenModal }: { defaultData?: VendorsConte
 
             const { data, error } = await supabase.from('vendors').insert({
                 'name': formData['name'],
-                'created_by': userAccount?.id
+                'created_by': userAccount?.user_id
             }).select();
 
             if (error) {

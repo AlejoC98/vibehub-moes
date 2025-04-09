@@ -36,7 +36,7 @@ const RacksForm = ({ defaultData, setOpenModal }: { defaultData?: RackContent, s
           "name": formData['name'],
           "columns": formData['columns'],
           "rows": formData['rows'],
-          "created_by": userAccount?.id
+          "created_by": userAccount?.user_id
         }).select().maybeSingle();
 
         if (newRack != null) {
@@ -47,6 +47,7 @@ const RacksForm = ({ defaultData, setOpenModal }: { defaultData?: RackContent, s
               'rack_id': newRack['id'],
               'name': location,
               'sku': generateRandomNumberString(15),
+              'created_by': userAccount?.user_id
             });
 
             if (error) {

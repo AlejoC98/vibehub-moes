@@ -17,7 +17,7 @@ const steps = [
 
 const ReplenishmentTask = () => {
 
-    const { racks } = useContext(GlobalContext);
+    const { racks, userAccount } = useContext(GlobalContext);
     const supabase = createClient();
     const route = useRouter()
 
@@ -152,9 +152,10 @@ const ReplenishmentTask = () => {
             const { error: insertDestinyError } = await supabase
                 .from('racks_locations_products')
                 .insert({
-                    rack_location_id: destinyRackId,
-                    quantity: originQuantity,
-                    product_id: currentQuery.product_id,
+                    'rack_location_id': destinyRackId,
+                    'quantity': originQuantity,
+                    'product_id': currentQuery.product_id,
+                    'created_by': userAccount?.user_id
                 });
         
             if (insertDestinyError) {

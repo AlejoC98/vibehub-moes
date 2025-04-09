@@ -26,7 +26,7 @@ const TicketForm = () => {
             setIsLoading(true);
             const { data, error } = await supabase.from('tickets').insert({
                 ...formData,
-                'created_by': userAccount?.id,
+                'created_by': userAccount?.user_id,
             });
 
             if (error) {

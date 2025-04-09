@@ -100,7 +100,7 @@ const ReceivingForm = ({ defaultData, setOpenModal }: { defaultData?: ReceivingC
                 'vendor_id': formData['vendor_id'],
                 'arrived_at': formData['arrived_at'],
                 'trailer_number': formData['trailer_number'],
-                'created_by': userAccount?.id
+                'created_by': userAccount?.user_id
             }).select().single();
 
             if (newReError) {
@@ -111,7 +111,8 @@ const ReceivingForm = ({ defaultData, setOpenModal }: { defaultData?: ReceivingC
                 const { data, error} = await supabase.from('receiving_products').insert({
                     'receiving_id': newReceiving.id,
                     'product_id': pro.product_id,
-                    'expected_quantity': pro.quantity
+                    'expected_quantity': pro.quantity,
+                    'created_by': userAccount?.user_id
                 });
             }
 

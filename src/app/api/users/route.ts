@@ -1,15 +1,12 @@
 import { signup } from "@/app/(public)/auth/login/actions";
-import { GlobalContext } from "@/utils/context/global_provider";
 import { createClient } from "@/utils/supabase/server"
 import { NextResponse } from "next/server"
-import { useContext } from "react";
 
 export async function POST(req: Request) {
   const { defaultData, newData, selectedRoles } = await req.json()
 
   const supabase = await createClient();
-
-  const { userAccount } = useContext(GlobalContext);
+  const { data: userData } = await supabase.auth.getUser();
 
   var response = {
     status: false,
@@ -51,7 +48,7 @@ export async function POST(req: Request) {
         'location_id': 1,
         'email': newData['email'],
         'username': newData['username'],
-        'created_by': userAccount?.id
+        'created_by': userData.user?.id
       }, { onConflict: 'email' }).select().single();
 
       if (error) {

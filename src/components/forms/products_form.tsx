@@ -42,7 +42,7 @@ const ProductsForm = ({ defaultData, setOpenModal }: { defaultData?: ProductCont
           "name": formData["name"],
           "unit_price": formData["unit_price"],
           "total_price": formData["total_price"],
-          'created_by': userAccount?.id
+          'created_by': userAccount?.user_id
         });
         if (error) {
           throw new Error(error.message);

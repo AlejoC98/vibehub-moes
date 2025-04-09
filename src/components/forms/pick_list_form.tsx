@@ -95,7 +95,7 @@ const PickListForm = ({ defaultData, setOpenModal }: { defaultData?: CustomPickL
                 'shipping_order_id': orderId,
                 'total_products': totalQuantity,
                 'bol_number': `MOES${formData['bol_number']}`,
-                'created_by': userAccount?.id,
+                'created_by': userAccount?.user_id,
             }).select().single();
 
             if (newStatus.error != null) {
@@ -107,7 +107,7 @@ const PickListForm = ({ defaultData, setOpenModal }: { defaultData?: CustomPickL
                     'shipping_pick_list_id': newStatus.data['id'],
                     'product_sku': product['sku'],
                     'product_quantity': product['quantity'],
-                    'created_by': userAccount?.id,
+                    'created_by': userAccount?.user_id,
                 });
 
                 if (newSPStatus.error != null) {

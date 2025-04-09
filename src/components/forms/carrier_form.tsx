@@ -36,7 +36,7 @@ const CarrierForm = ({ defaultData, setOpenModal }: { defaultData?: CarriersCont
 
             const { data, error } = await supabase.from('carriers').insert({
                 'name': formData['name'],
-                'created_by': userAccount?.id
+                'created_by': userAccount?.user_id
             }).select();
 
             if (error) {

@@ -1,6 +1,6 @@
 'use client'
 import { Box, Button, List, ListItem, ListItemIcon, ListItemText, Step, StepLabel, Stepper, TextField, Typography } from '@mui/material'
-import React, { ReactElement, useState } from 'react'
+import React, { ReactElement, useContext, useState } from 'react'
 import Grid from '@mui/material/Grid2';
 import { Block, NumberField } from '@/style/global';
 import { SubmitHandler, useForm } from 'react-hook-form';
@@ -10,6 +10,7 @@ import { createClient } from '@/utils/supabase/client';
 import CheckIcon from '@mui/icons-material/Check';
 import Swal from 'sweetalert2';
 import { useRouter } from 'next/navigation';
+import { GlobalContext } from '@/utils/context/global_provider';
 
 const steps = [
     'Verify Information',
@@ -19,15 +20,15 @@ const steps = [
 
 const ReceivingTask = ({ data, updateData } : { data: ReceivingContent, updateData: (data: ReceivingContent) => void}) => {
 
-    const supabase = createClient();
     const router = useRouter();
+    const supabase = createClient();
+    const { userAccount } = useContext(GlobalContext);
 
     const [poNumber, setPoNumber] = useState<string>();
     const [activeStep, setActiveStep] = useState<number>(0);
     const [trailerNumber, setTrailerNumber] = useState<string>();
     const [isCompleted, setIsCompleted] = useState<boolean>(false);
     const [receProducts, setReceProducts] = useState<ReceivingProductsInput[]>([]);
-
 
     const {
         reset,
@@ -97,7 +98,8 @@ const ReceivingTask = ({ data, updateData } : { data: ReceivingContent, updateDa
                 await supabase.from('racks_locations_products').insert({
                     'rack_location_id': 1,
                     'product_id': pro.product_id,
-                    'quantity': pro.received_quantity
+                    'quantity': pro.received_quantity,
+                    'created_by': userAccount?.user_id
                 });
 
                 if (error) {

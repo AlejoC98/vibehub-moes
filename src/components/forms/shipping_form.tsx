@@ -38,7 +38,7 @@ const ShippingForm = ({ defaultData, setOpenModal }: { defaultData?: ShippingCon
         try {
             setIsLoading(true);
 
-            const { data: newOrder, error: orderError } = await supabase.from('shippings_orders').insert({ ...formData, 'created_by': userAccount?.id, }).select().single();
+            const { data: newOrder, error: orderError } = await supabase.from('shippings_orders').insert({ ...formData, 'created_by': userAccount?.user_id, }).select().single();
 
             if (orderError) {
                 throw new Error(orderError.message);
@@ -50,7 +50,6 @@ const ShippingForm = ({ defaultData, setOpenModal }: { defaultData?: ShippingCon
                 'type': 'Shipping',
                 'status': 'New',
                 'redirect_to': `/shipping/${newOrder['trailer_number']}`,
-                'created_by': userAccount?.id,
             }).select().single();
 
             if (error) {
