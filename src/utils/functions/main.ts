@@ -133,13 +133,13 @@ export const startCountdown = (
 ) => {
   let count = startValue
   if (ref.current) {
-    ref.current.textContent = `${count}`
+    ref.current.textContent = `${text} ${count}`
   }
 
   const interval = setInterval(() => {
     count--
     if (ref.current) {
-      ref.current.textContent = `${count}`
+      ref.current.textContent = `${text} ${count}`
     }
 
     if (count <= 0) {

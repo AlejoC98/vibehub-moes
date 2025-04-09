@@ -1,5 +1,5 @@
 'use client'
-import { Box, Typography } from '@mui/material'
+import { Box, Button, Link, Typography } from '@mui/material'
 import React, { useState } from 'react'
 import Grid from '@mui/material/Grid2'
 import { WhiteTextField } from '@/style/global'
@@ -46,7 +46,7 @@ const ResetPasswordForm = () => {
                 <Grid container spacing={5}>
                     <Grid size={12} sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
                         <Typography variant='h4' sx={{ color: '#FFF' }}>Reset your Password</Typography>
-                        <Typography sx={{ color: '#FFF' }}>
+                        <Typography sx={{ color: '#FFF', fontSize: 14}} fontStyle='italic'>
                             The verification email will be sent to the mailbox. Please check it.
                         </Typography>
                     </Grid>
@@ -57,14 +57,17 @@ const ResetPasswordForm = () => {
                             {...register('email', { required: 'The email is required' })}
                         />
                     </Grid>
-                    <Grid size={12}>
+                    <Grid size={12} sx={{ display: 'grid', placeItems: 'center', gap: 1}}>
                         <SubmitButton
                             fullWidth={true}
                             btnText='Send Link'
                             isLoading={isLoading}
                             className='btn-bittersweet'
                         />
+                        <Button sx={{ color: '#ffffff'}} LinkComponent={Link} href='/auth/login'>Go Back</Button>
                     </Grid>
+                    {/* <Grid size={12} sx={{ display: 'grid', placeItems: 'center'}}>
+                    </Grid> */}
                 </Grid>
             </form>
         </Box>
