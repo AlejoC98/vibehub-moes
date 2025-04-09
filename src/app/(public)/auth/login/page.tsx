@@ -2,7 +2,7 @@
 import React, { useEffect, useState } from 'react'
 import Grid from '@mui/material/Grid2';
 import Image from 'next/image';
-import { Box, useMediaQuery, useTheme } from '@mui/material';
+import { Box, Button, useMediaQuery, useTheme } from '@mui/material';
 import LoginForm from '@/components/forms/login_form';
 
 const Login = () => {

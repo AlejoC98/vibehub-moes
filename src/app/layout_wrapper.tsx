@@ -8,7 +8,7 @@ export default function LayoutWrapper({ children }: { children: ReactNode }) {
 
   useEffect(() => {
     const body = document.body
-    const isLoginPage = pathname === '/auth/login'
+    const isLoginPage = pathname === '/auth/login' || pathname === '/auth/reset-password'
 
     if (isLoginPage) {
       body.classList.add('login-bg')

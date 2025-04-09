@@ -10,6 +10,7 @@ import UpgradePlan from '@/components/upgrade_plan';
 import { createClient } from '@/utils/supabase/client';
 import { toast } from 'react-toastify';
 import SubmitButton from '@/components/submit_button';
+import { resetPassword } from '@/utils/functions/server';
 
 const Profile = () => {
 
@@ -21,19 +22,15 @@ const Profile = () => {
   const handleSendResetPasswordRequest = async () => {
     try {
       setIsLoading(true);
-      const { data, error } = await supabase.auth.resetPasswordForEmail(userAccount?.email!, {
-        redirectTo: process.env.NEXT_PUBLIC_RESET_PASSWORD_URL!,
-      });
+      const resetStatus = await resetPassword(userAccount?.email!);
 
-      if (error) {
-        throw new Error(error.message);
+      setIsLoading(false);
+      if (resetStatus) {
+        toast.success('Email send, Please check your email.');
       }
-
-      toast.success('Email send, Please check your email.');
     } catch (error: any) {
       toast.warning(error.message);
     }
-    setIsLoading(false);
   }
 
   useEffect(() => {

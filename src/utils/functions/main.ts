@@ -3,6 +3,9 @@ import { saveAs } from 'file-saver';
 import { toast } from "react-toastify";
 import { OrderContent } from "@/utils/interfaces";
 import { GridColDef } from '@mui/x-data-grid';
+import { createClient } from '../supabase/client';
+import { headers } from 'next/headers';
+import { RefObject } from 'react';
 
 export const calculateRevenue = (data: OrderContent[]) => {
   let totalReturn = 0;
@@ -120,4 +123,28 @@ export function exportToExcel(data: any[], columns: GridColDef[], fileName: stri
   })
 
   saveAs(blob, `${fileName}.xlsx`)
+}
+
+export const startCountdown = (
+  ref: RefObject<HTMLElement | null>,
+  onComplete: () => void,
+  startValue = 3,
+  text?: string,
+) => {
+  let count = startValue
+  if (ref.current) {
+    ref.current.textContent = `${count}`
+  }
+
+  const interval = setInterval(() => {
+    count--
+    if (ref.current) {
+      ref.current.textContent = `${count}`
+    }
+
+    if (count <= 0) {
+      clearInterval(interval)
+      onComplete()
+    }
+  }, 1000)
 }

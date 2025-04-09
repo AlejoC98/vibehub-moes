@@ -5,13 +5,20 @@ import { updateSession } from '@/utils/supabase/middleware';
 export async function middleware(request: NextRequest) {
 
     const supabase = await createClient();
+
+    const publicUrls = ['/', '/auth/reset-password', '/auth/login'];
+
+    if (publicUrls.includes(request.nextUrl.pathname)) {
+      return await updateSession(request);
+    }
+
     const { data: { session } } = await supabase.auth.getSession();
 
-    const isAuthPage = request.nextUrl.pathname.startsWith('/auth/login')
+    const isAuthPage = request.nextUrl.pathname.startsWith('/auth/login');
 
     if (!isAuthPage) {
       if (!session) {
-        return NextResponse.redirect(new URL('/auth/login', request.url))
+        return NextResponse.redirect(new URL('/auth/login', request.url));
       }
     } else {
       if (session) {
