@@ -187,7 +187,10 @@ const BasicTable = ({
         showCancelButton: true,
       }).then(async(result) => {
         if (result.isConfirmed) {
-          const { error } = await supabase.from(source!).delete().eq('id', selectedRow); 
+          const { error } = await supabase.from(source!).update({
+            'deleted': true
+          }).eq('id', selectedRow); 
+          // const { error } = await supabase.from(source!).delete().eq('id', selectedRow); 
           if (error) {
             throw new Error(error.message);
           }
