@@ -14,7 +14,7 @@ const LoadingWrapper = ({ children }: { children: ReactNode }) => {
         className={`animate__animated ${isLaunching ? 'animate__fadeIn animate__faster' : 'animate__fadeOut'}`}
         sx={{
           position: 'absolute',
-          zIndex: 1000,
+          zIndex: 1100,
           top: 0,
           bottom: 0,
           left: 0,

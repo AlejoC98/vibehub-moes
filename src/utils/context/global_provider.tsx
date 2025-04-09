@@ -188,7 +188,7 @@ const GlobalProvider = ({ children }: { children: ReactNode }) => {
         const getUser = async () => {
             const { data: usersQuery, error: userError } = await supabase
                 .from('accounts')
-                .select('*, accounts_roles(*, roles(id, name))');
+                .select('*, accounts_roles(*, roles(id, name)), locations(*)');
 
             const filteredUsers = usersQuery?.filter(account =>
                 !account.accounts_roles?.some((ar: any) => ar.roles?.id === 1)

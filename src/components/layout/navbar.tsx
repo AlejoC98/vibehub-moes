@@ -82,6 +82,7 @@ const Navbar = ({ open, setOpen, menuOpen, setMenuOpen }: { open: boolean, setOp
             <MenuItem onClick={() => handleOpenSettMenu('/profile')}>Profile</MenuItem>
             <MenuItem onClick={() => {
                 setIsLaunching(true);
+                handleMenuClose();
                 signout();
             }}>Log Out</MenuItem>
         </Menu>

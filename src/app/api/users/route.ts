@@ -1,81 +1,43 @@
-import { signup } from "@/app/(public)/auth/login/actions";
-import { createClient } from "@/utils/supabase/server"
+import { createServerClient } from "@supabase/ssr";
+import { createClient } from "@supabase/supabase-js";
 import { NextResponse } from "next/server"
 
 export async function POST(req: Request) {
-  const { defaultData, newData, selectedRoles } = await req.json()
 
-  const supabase = await createClient();
-  const { data: userData } = await supabase.auth.getUser();
+  const { username } = await req.json();
+  const supabaseAdmin = createClient(process.env.SUPABASE_URL!, process.env.SERVICE_ROLE_KEY!, {
+    auth: {
+      persistSession: false,
+      autoRefreshToken: false,
+      detectSessionInUrl: false,
+    },
+  })
 
-  var response = {
-    status: false,
-    message: ''
-  };
+  var response = {};
 
   try {
-    const { data: currentUsers, error } = await supabase.from('accounts').select('*, accounts_roles(*)').not('deleted', 'eq', true);
+    const { data: userQuery, error: userError } = await supabaseAdmin.from('accounts').select().eq('username', username).maybeSingle();
 
-    const filteredUsers = (currentUsers ?? []).filter(account => {
-      const roles = account.accounts_roles ?? []
-      const hasRole1 = roles.some((role: any) => role.role_id === 1)
-      return !hasRole1 // keep only accounts without role_id 1
-    })
-
-    if (error) {
+    if (userQuery == null || userError) {
       return NextResponse.json(
-        { error: error.message || 'Something went wrong' },
+        { error: userError?.message || 'Something went wrong' },
         { status: 500 }
       );
     }
 
-  if (filteredUsers.length < 5) {
-    var userId = undefined;
+    const { data: { user }, error } = await supabaseAdmin.auth.admin.getUserById(userQuery.user_id);
 
-    if (Object.keys(defaultData!).length == 0) {
-      const userData = await signup(newData['email']!, process.env.DEFAULT_PASSWORD || 'v1b3h0b2025', false);
-
-      userId = userData?.user?.id;
-    } else {
-      userId = defaultData?.user_id;
+    if (error) {
+      throw new Error(error.message);
     }
 
-    if (userId != undefined) {
-      const { data: newAccount, error } = await supabase.from('accounts').upsert({
-        'first_name': newData['first_name'],
-        'last_name': newData['last_name'],
-        'user_id': userId,
-        'location_id': 1,
-        'email': newData['email'],
-        'username': newData['username'],
-        'created_by': userData.user?.id
-      }, { onConflict: 'email' }).select().single();
-
-      if (error) {
-        throw new Error(error.message);
-      }
-
-      await supabase.from('accounts_roles').delete().eq('account_id', newAccount.id);
-      // Assing Roles
-      for (var role of selectedRoles) {
-        const { error } = await supabase.from('accounts_roles').insert({ account_id: newAccount.id, role_id: role });
-
-        if (error) {
-          throw new Error(error.message);
-        }
-      }
-
-      response = {
-        status: true,
-        message: `User ${Object.keys(defaultData!).length > 0 ? 'updated' : 'created'}!`
-      } 
-    }
-  } else {
     response = {
-      status: false,
-      message: 'You\'ve reached the maximum number of users allowed for your current plan. To add more users, please upgrade your subscription.'
-    }  
-  }
+      status: true,
+      data: {
+        email_verified: user?.user_metadata.email_verified,
+        last_sign_in_at: user?.identities![0].last_sign_in_at
+      }
+    } 
   } catch (error: any) {
     return NextResponse.json(
       { error: error.message || 'Something went wrong' },
@@ -83,5 +45,5 @@ export async function POST(req: Request) {
     );
   }
 
-  return NextResponse.json(response)
+  return NextResponse.json(response);
 }

@@ -41,7 +41,7 @@ const UsersForms = ({ defaultData, setOpenModal }: { defaultData?: AccountConten
     const handleCreateUser: SubmitHandler<AccountContent> = async (data) => {
         try {
             setIsLoading(true);
-            await axios.post('/api/users', {
+            await axios.post('/api/users/create/', {
                 'defaultData': defaultData,
                 'selectedRoles': selectedRoles,
                 'newData': data

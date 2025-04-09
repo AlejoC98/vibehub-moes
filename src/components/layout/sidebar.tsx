@@ -53,7 +53,7 @@ const SideBar = ({ open, setOpen, menuOpen, setMenuOpen }: { open: boolean, setO
                     {
                         id: 2,
                         title: "Receiving",
-                        to: "/receiving",
+                        to: "#",
                         icon: <HugeiconsIcon icon={LiftTruckIcon} />
                     }
                 ] : []),
@@ -61,7 +61,7 @@ const SideBar = ({ open, setOpen, menuOpen, setMenuOpen }: { open: boolean, setO
                     {
                         id: 3,
                         title: "Replenishment",
-                        to: "/replenishment",
+                        to: "#",
                         icon: <HugeiconsIcon icon={PackageMovingIcon} />
                     },
                 ] : []),
@@ -69,7 +69,7 @@ const SideBar = ({ open, setOpen, menuOpen, setMenuOpen }: { open: boolean, setO
                     {
                         id: 4,
                         title: "Picking",
-                        to: "/picking",
+                        to: "#",
                         icon: <HugeiconsIcon icon={TaskDaily01Icon} />
                     }
                 ] : []),
@@ -79,7 +79,7 @@ const SideBar = ({ open, setOpen, menuOpen, setMenuOpen }: { open: boolean, setO
             {
                 id: 4,
                 title: "Orders",
-                to: "/orders",
+                to: "#",
                 icon: <HugeiconsIcon icon={ComputerDollarIcon} />
             }
         ] : []),
@@ -87,7 +87,7 @@ const SideBar = ({ open, setOpen, menuOpen, setMenuOpen }: { open: boolean, setO
             {
                 id: 5,
                 title: "Returns",
-                to: "/returns",
+                to: "#",
                 icon: <HugeiconsIcon icon={ReturnRequestIcon} />
             }
         ] : []),
@@ -103,7 +103,7 @@ const SideBar = ({ open, setOpen, menuOpen, setMenuOpen }: { open: boolean, setO
             {
                 id: 7,
                 title: "Vendors",
-                to: "/vendors",
+                to: "#",
                 icon: <HugeiconsIcon icon={Store02Icon} />
             }
         ] : []),
