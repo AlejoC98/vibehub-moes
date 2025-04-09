@@ -32,7 +32,7 @@ const SideBar = ({ open, setOpen, menuOpen, setMenuOpen }: { open: boolean, setO
         {
             id: 2,
             title: "Inventory",
-            to: "#",
+            to: "/inventory",
             icon: <HugeiconsIcon icon={WarehouseIcon} />
         },
         {
@@ -53,7 +53,7 @@ const SideBar = ({ open, setOpen, menuOpen, setMenuOpen }: { open: boolean, setO
                     {
                         id: 2,
                         title: "Receiving",
-                        to: "#",
+                        to: "/receiving",
                         icon: <HugeiconsIcon icon={LiftTruckIcon} />
                     }
                 ] : []),
@@ -61,7 +61,7 @@ const SideBar = ({ open, setOpen, menuOpen, setMenuOpen }: { open: boolean, setO
                     {
                         id: 3,
                         title: "Replenishment",
-                        to: "#",
+                        to: "/replenishment",
                         icon: <HugeiconsIcon icon={PackageMovingIcon} />
                     },
                 ] : []),
@@ -69,7 +69,7 @@ const SideBar = ({ open, setOpen, menuOpen, setMenuOpen }: { open: boolean, setO
                     {
                         id: 4,
                         title: "Picking",
-                        to: "#",
+                        to: "/picking",
                         icon: <HugeiconsIcon icon={TaskDaily01Icon} />
                     }
                 ] : []),
@@ -79,15 +79,15 @@ const SideBar = ({ open, setOpen, menuOpen, setMenuOpen }: { open: boolean, setO
             {
                 id: 4,
                 title: "Orders",
-                to: "#",
+                to: "/orders",
                 icon: <HugeiconsIcon icon={ComputerDollarIcon} />
             }
         ] : []),
         ...(userAccount?.accounts_roles?.some(role => role.role_id === 2 || role.role_id === 3) ? [
             {
                 id: 5,
-                title: "Return",
-                to: "#",
+                title: "Returns",
+                to: "/returns",
                 icon: <HugeiconsIcon icon={ReturnRequestIcon} />
             }
         ] : []),
@@ -103,7 +103,7 @@ const SideBar = ({ open, setOpen, menuOpen, setMenuOpen }: { open: boolean, setO
             {
                 id: 7,
                 title: "Vendors",
-                to: "#",
+                to: "/vendors",
                 icon: <HugeiconsIcon icon={Store02Icon} />
             }
         ] : []),
