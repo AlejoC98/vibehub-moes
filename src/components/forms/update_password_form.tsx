@@ -50,10 +50,10 @@ const UpdatePasswordForm = () => {
 
   const loadUserSession = async () => {
     const {
-      data: { session },
-    } = await supabase.auth.getSession();
+      data: { user },
+    } = await supabase.auth.getUser();
 
-    if (!session) {
+    if (!user) {
       setTimeout(() => {
         router.replace('/auth/login');
       }, 1000);

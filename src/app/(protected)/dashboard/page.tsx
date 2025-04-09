@@ -126,12 +126,14 @@ const { products, orders, shippings, setIsLaunching } = useContext(GlobalContext
   useEffect(() => {
     const total = calculateRevenue(orders!);
 
-    setIsLaunching(false);
-
     if (total) {
       setRevenue(total);
     }
   }, [orders])
+
+  useEffect(() => {
+    setIsLaunching(false);
+  }, [])
 
   return (
     <Box>
