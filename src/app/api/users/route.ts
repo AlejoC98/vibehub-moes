@@ -29,13 +29,13 @@ export async function POST(req: Request) {
       );
     }
 
-  if (filteredUsers.length < 5) {
+  if (filteredUsers.length < 25) {
     var userId = undefined;
 
     if (Object.keys(defaultData!).length == 0) {
-      const userData = await signup(newData['email']!, process.env.DEFAULT_PASSWORD || 'v1b3h0b2025', false);
+      const newUserData = await signup(newData['email']!, process.env.DEFAULT_PASSWORD || 'v1b3h0b2025', false);
 
-      userId = userData?.user?.id;
+      userId = newUserData?.user?.id;
     } else {
       userId = defaultData?.user_id;
     }
