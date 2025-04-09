@@ -25,10 +25,24 @@ const UserDetails = () => {
 
     const params = useParams();
     const supabase = createClient();
-    const { setIsLaunching, users, userAccount } = useContext(GlobalContext);
+    const { userAccount, setIsLaunching, users } = useContext(GlobalContext);
 
-    const [userData, setUserData] = useState<UserDetailsContent>();
     const [isLoading, setIsLoading] = useState<boolean>(false);
+    const [userData, setUserData] = useState<UserDetailsContent>();
+    const tables = [
+        'accounts',
+        'carriers',
+        'picking',
+        'picking_products',
+        'racks',
+        'racks_locations',
+        'racks_locations_products',
+        'receivings',
+        'receivings_products',
+        'shippings_orders',
+        'shippings_pick_list',
+        'shippings_products',
+    ];
 
     const loadUserData = async () => {
         try {
@@ -57,6 +71,27 @@ const UserDetails = () => {
         } catch (error: any) {
             console.log(error.message);
         }
+    }
+
+    const loadUserHistory = async () => {
+        // try {
+        //     const results: any = {};
+
+        //     for (const table of tables) {
+        //         const { data, error } = await supabase
+        //             .from(table)
+        //             .select('*')
+        //             .eq('created_by', userData?.user_id);
+
+        //         if (error) {
+        //             console.error(`Error fetching from ${table}:`, error.message);
+        //         }
+
+        //         results[table] = data || [];
+        //     }
+        // } catch (error: any) {
+        //     toast.warning(error.message):
+        // }
     }
 
     const sendResetEmailToUser = async () => {
