@@ -14,8 +14,7 @@ import Swal from 'sweetalert2';
 const UsersForms = ({ defaultData, setOpenModal }: { defaultData?: AccountContent, setOpenModal?: (status: boolean) => void }) => {
 
     const { roles, userAccount, users } = useContext(GlobalContext);
-    const [isLoading, setIsLoading] = useState<boolean>(false);
-
+    
     const {
         register,
         handleSubmit,
@@ -27,9 +26,10 @@ const UsersForms = ({ defaultData, setOpenModal }: { defaultData?: AccountConten
             ...defaultData,
         }
     });
-
-    const [selectedRoles, setSelectedRoles] = useState<number[]>([]);
+    
     const [userType, setUserType] = useState('');
+    const [isLoading, setIsLoading] = useState<boolean>(false);
+    const [selectedRoles, setSelectedRoles] = useState<number[]>([]);
 
     const canSeeManager = userAccount?.accounts_roles?.some(role => role.id === 1 || role.id === 2);
 
@@ -91,6 +91,7 @@ const UsersForms = ({ defaultData, setOpenModal }: { defaultData?: AccountConten
     useEffect(() => {
         if (defaultData != undefined && Object.keys(defaultData).length > 0) {
             loadUserRoles();
+            setUserType(defaultData.email?.includes('vibehubapp.com') ? 'warehouse' : 'manager');
         }
     }, [defaultData])
 
@@ -104,6 +105,7 @@ const UsersForms = ({ defaultData, setOpenModal }: { defaultData?: AccountConten
                             <Select
                                 labelId="demo-simple-select-label"
                                 id="demo-simple-select"
+                                disabled={defaultData?.email != undefined}
                                 value={userType}
                                 label="User Type"
                                 onChange={(event: SelectChangeEvent) => {
