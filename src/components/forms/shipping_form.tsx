@@ -54,8 +54,9 @@ const ShippingForm = () => {
 
       const { data: newOrder, error: orderError } = await supabase.from('shippings_orders').insert({
         ...formData,
-        'created_by': userAccount?.user_id,
+        'status': 'Incomplete',
         'closed_by': null,
+        'created_by': userAccount?.user_id,
         'created_at': convertTimeByTimeZone(userAccount?.sessionTimeZone!)
       }).select().single();
 
@@ -124,7 +125,7 @@ const ShippingForm = () => {
       </Grid>
     </Grid>,
     <Grid container spacing={2}>
-
+      
     </Grid>,
   ];
 
