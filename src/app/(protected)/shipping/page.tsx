@@ -14,19 +14,19 @@ const Shipping = () => {
   const { shippings, userAccount, setIsLaunching } = useContext(GlobalContext);
 
   const shippingColumns: GridColDef[] = [
-      { field: 'carrier', headerName: 'Carrier' },
+      { field: 'carrier', headerName: 'Carrier', width: 100},
       { field: 'trailer_number', headerName: 'Trailer #' },
+      { field: 'total_shipped', headerName: 'Total Shipped', width: 110},
       { field: 'created_at', headerName: 'Created At', renderCell: (params) => {
         return convertTimeByTimeZone(userAccount?.sessionTimeZone!, params.row.created_at);
-      }},
-      { field: 'total_shipped', headerName: 'Total Shipped'},
+      }, width: 180},
       { field: 'closed_at', headerName: 'Closed At', renderCell: (params) => {
         if (params.row.closed_at != null) {
           return convertTimeByTimeZone(userAccount?.sessionTimeZone!, params.row.closed_at);
         } else {
           return params.row.closed_at;
         }
-      }},
+      }, width: 180, editable: false},
       { field: 'status', headerName: 'Status', renderCell: (params) => {
         switch (params.row.status) {
           case 'Pending':
