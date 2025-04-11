@@ -99,17 +99,19 @@ export interface RoleContent {
     updatedAt?: Date;
 }
 
+export interface ProductInput {
+    id: number;
+    img: string;
+    sku: string;
+    name: string;
+    item_number: string;
+}
 export interface ProductContent {
     id?: number;
     img?: string;
     sku?: string;
     name?: string;
-    unit_price?: number;
-    total_price?: number;
-    quantity?: number;
-    // rackId: number;
-    // positions: PositionProductContent[];
-    // createdBy: number | UserContent;
+    item_number: string;
 }
 
 export interface RackInput {
