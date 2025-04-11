@@ -19,8 +19,13 @@ const Shipping = () => {
       { field: 'created_at', headerName: 'Created At', renderCell: (params) => {
         return convertTimeByTimeZone(userAccount?.sessionTimeZone!, params.row.created_at);
       }},
-      { field: 'closed_at', headerName: 'Shipped Out', renderCell: (params) => {
-        return convertTimeByTimeZone(userAccount?.sessionTimeZone!, params.row.closed_at);
+      { field: 'total_shipped', headerName: 'Total Shipped'},
+      { field: 'closed_at', headerName: 'Closed At', renderCell: (params) => {
+        if (params.row.closed_at != null) {
+          return convertTimeByTimeZone(userAccount?.sessionTimeZone!, params.row.closed_at);
+        } else {
+          return params.row.closed_at;
+        }
       }},
       { field: 'status', headerName: 'Status', renderCell: (params) => {
         switch (params.row.status) {
