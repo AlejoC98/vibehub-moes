@@ -47,7 +47,7 @@ export async function POST(req: Request) {
         'user_id': userId,
         'location_id': 1,
         'email': accountType == 'manager' ? newData['email'].toLowerCase() : `${newData['username'].toLowerCase()}@vibehubapp.com`,
-        'username': newData['username'].toLowerCase(),
+        'username': newData['username'].toUpperCase(),
         'created_by': userData.user?.id
       }, { onConflict: 'email' }).select().single();
 
