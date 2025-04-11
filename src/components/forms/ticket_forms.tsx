@@ -7,6 +7,7 @@ import { toast } from 'react-toastify';
 import SubmitButton from '@/components/submit_button'
 import { createClient } from '@/utils/supabase/client';
 import { GlobalContext } from '@/utils/context/global_provider';
+import { convertTimeByTimeZone } from '@/utils/functions/main';
 
 const TicketForm = () => {
 
@@ -27,6 +28,7 @@ const TicketForm = () => {
             const { data, error } = await supabase.from('tickets').insert({
                 ...formData,
                 'created_by': userAccount?.user_id,
+                'created_at': convertTimeByTimeZone(userAccount?.sessionTimeZone!)
             });
 
             if (error) {

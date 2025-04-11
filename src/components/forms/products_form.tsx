@@ -1,7 +1,7 @@
 'use client'
 import React, { useContext, useState } from 'react'
 import { ProductContent } from '@/utils/interfaces'
-import { generateRandomNumberString } from '@/utils/functions/main';
+import { convertTimeByTimeZone, generateRandomNumberString } from '@/utils/functions/main';
 import Grid from '@mui/material/Grid2';
 import { Box, Button, IconButton, TextField } from '@mui/material';
 import QrCodeIcon from '@mui/icons-material/QrCode';
@@ -42,7 +42,8 @@ const ProductsForm = ({ defaultData, setOpenModal }: { defaultData?: ProductCont
           "name": formData["name"],
           "unit_price": formData["unit_price"],
           "total_price": formData["total_price"],
-          'created_by': userAccount?.user_id
+          'created_by': userAccount?.user_id,
+          'created_at': convertTimeByTimeZone(userAccount?.sessionTimeZone!)
         });
         if (error) {
           throw new Error(error.message);

@@ -11,10 +11,10 @@ import { createClient } from '@/utils/supabase/client';
 import axios from 'axios';
 import { useParams } from 'next/navigation';
 import { AccountContent } from '@/utils/interfaces';
-import dayjs from 'dayjs';
 import SubmitButton from '@/components/submit_button';
 import { toast } from 'react-toastify';
 import { resetPassword } from '@/utils/functions/server';
+import { convertTimeByTimeZone } from '@/utils/functions/main';
 
 interface UserDetailsContent extends AccountContent {
     email_verified?: boolean;
@@ -119,7 +119,7 @@ const UserDetails = () => {
     return (
         <Box>
             {userData != null ? (
-                <Details title='User Information' editForm={<></>}>
+                <Details actionButtons={[]} title='User Information'>
                     <Grid size={{ xl: 4, lg: 12, md: 12, sm: 12, xs: 12 }}>
                         <Block>
                             <Box
@@ -231,7 +231,7 @@ const UserDetails = () => {
                                         <ListItem>
                                             <ListItemText
                                                 primary="Last Sign in"
-                                                secondary={dayjs(userData.last_sign_in_at).format('ddd MMM DD YYYY hh:mm A')}
+                                                secondary={convertTimeByTimeZone(userAccount?.sessionTimeZone!, userData.last_sign_in_at!)}
                                             />
                                         </ListItem>
                                         <ListItem>

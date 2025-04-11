@@ -3,7 +3,7 @@ import { Box, Button, IconButton, TextField } from '@mui/material'
 import React, { useContext, useState } from 'react'
 import Grid from '@mui/material/Grid2';
 import QrCodeIcon from '@mui/icons-material/QrCode';
-import { generateBarcodesWithSeparator, generateRandomNumberString } from '@/utils/functions/main';
+import { convertTimeByTimeZone, generateBarcodesWithSeparator, generateRandomNumberString } from '@/utils/functions/main';
 import { RackContent } from '@/utils/interfaces';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { toast } from 'react-toastify';
@@ -36,7 +36,8 @@ const RacksForm = ({ defaultData, setOpenModal }: { defaultData?: RackContent, s
           "name": formData['name'],
           "columns": formData['columns'],
           "rows": formData['rows'],
-          "created_by": userAccount?.user_id
+          "created_by": userAccount?.user_id,
+          'created_at': convertTimeByTimeZone(userAccount?.sessionTimeZone!)
         }).select().maybeSingle();
 
         if (newRack != null) {
@@ -47,7 +48,8 @@ const RacksForm = ({ defaultData, setOpenModal }: { defaultData?: RackContent, s
               'rack_id': newRack['id'],
               'name': location,
               'sku': generateRandomNumberString(15),
-              'created_by': userAccount?.user_id
+              'created_by': userAccount?.user_id,
+              'created_at': convertTimeByTimeZone(userAccount?.sessionTimeZone!)
             });
 
             if (error) {

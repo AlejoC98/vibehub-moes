@@ -63,6 +63,19 @@ const Navbar = ({ open, setOpen, menuOpen, setMenuOpen }: { open: boolean, setOp
         router.push(redirectTo);
     }
 
+    const handleOpenNoti = async(noti: NotificationContent) => {
+        setAnchorNoti(null);
+        setMenuOpen(null);
+        await supabase.from('notifications').update({'status': 'Opened'}).eq('id', noti.id);
+        router.push(noti.redirect_to);
+    }
+
+    const handleLogOut = () => {
+        setIsLaunching(true);
+        handleSettingsClose();
+        signout();
+    }
+
     const renderSettingMenu = (
         <Menu
             id="menu-appbar"
@@ -80,20 +93,9 @@ const Navbar = ({ open, setOpen, menuOpen, setMenuOpen }: { open: boolean, setOp
             onClose={handleSettingsClose}
         >
             <MenuItem onClick={() => handleOpenSettMenu('/profile')}>Profile</MenuItem>
-            <MenuItem onClick={() => {
-                setIsLaunching(true);
-                handleMenuClose();
-                signout();
-            }}>Log Out</MenuItem>
+            <MenuItem onClick={handleLogOut}>Log Out</MenuItem>
         </Menu>
     );
-
-    const handleOpenNoti = async(noti: NotificationContent) => {
-        setAnchorNoti(null);
-        setMenuOpen(null);
-        await supabase.from('notifications').update({'status': 'Opened'}).eq('id', noti.id);
-        router.push(noti.redirect_to);
-    }
 
     const renderNotiMenu = (
         <Menu

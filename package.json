@@ -22,9 +22,9 @@
     "@supabase/supabase-js": "^2.49.1",
     "animate.css": "^4.1.1",
     "axios": "^1.8.4",
-    "dayjs": "^1.11.13",
+    "date-fns-tz": "^3.2.0",
     "file-saver": "^2.0.5",
-    "next": "15.2.3",
+    "next": "^15.3.0",
     "react": "^19.0.0",
     "react-barcode": "^1.6.1",
     "react-dom": "^19.0.0",
@@ -34,7 +34,7 @@
     "react-to-print": "^3.0.5",
     "react-toastify": "^11.0.5",
     "sass": "^1.86.0",
-    "sweetalert2": "^11.17.2",
+    "sweetalert2": "^11.6.13",
     "xlsx": "^0.18.5"
   },
   "devDependencies": {

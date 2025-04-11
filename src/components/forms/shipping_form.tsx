@@ -9,6 +9,7 @@ import { toast } from 'react-toastify';
 import { createClient } from '@/utils/supabase/client';
 import { useRouter } from 'next/navigation';
 import { GlobalContext } from '@/utils/context/global_provider';
+import { convertTimeByTimeZone } from '@/utils/functions/main';
 
 const ShippingForm = ({ defaultData, setOpenModal }: { defaultData?: ShippingContent, setOpenModal?: (status: boolean) => void }) => {
 
@@ -38,7 +39,12 @@ const ShippingForm = ({ defaultData, setOpenModal }: { defaultData?: ShippingCon
         try {
             setIsLoading(true);
 
-            const { data: newOrder, error: orderError } = await supabase.from('shippings_orders').insert({ ...formData, 'created_by': userAccount?.user_id, }).select().single();
+            const { data: newOrder, error: orderError } = await supabase.from('shippings_orders').insert({
+                ...formData,
+                'created_by': userAccount?.user_id,
+                'closed_by': null,
+                'created_at': convertTimeByTimeZone(userAccount?.sessionTimeZone!)
+            }).select().single();
 
             if (orderError) {
                 throw new Error(orderError.message);

@@ -6,7 +6,7 @@ import { PickListContent } from '@/utils/interfaces';
 import SearchIcon from '@mui/icons-material/Search';
 import CloseIcon from '@mui/icons-material/Close';
 
-const SearchPickList = ({ data }: { data: PickListContent[]}) => {
+const SearchPickList = ({ data }: { data: PickListContent[] }) => {
 
     const [keyword, setKeyWord] = useState<string>('');
     const [activePick, setActivePick] = useState<number>();
@@ -18,10 +18,10 @@ const SearchPickList = ({ data }: { data: PickListContent[]}) => {
         } else {
             const matches = data.filter(item =>
                 Object.values(item).some(value =>
-                  String(value).toLowerCase().includes(keyword.toLowerCase())
+                    String(value).toLowerCase().includes(keyword.toLowerCase())
                 )
-              );
-            
+            );
+
             setDisplayData(matches);
         }
     }
@@ -36,7 +36,7 @@ const SearchPickList = ({ data }: { data: PickListContent[]}) => {
 
     return (
         <Box>
-            <Grid container spacing={5}>
+            <Grid container spacing={1}>
                 <Grid size={12}>
                     <TextField
                         fullWidth
@@ -48,26 +48,31 @@ const SearchPickList = ({ data }: { data: PickListContent[]}) => {
                         }}
                         slotProps={{
                             input: {
-                              startAdornment: (
-                                <InputAdornment position='start' className="text-white">
-                                  <SearchIcon />
-                                </InputAdornment>
-                              ),
-                              endAdornment: (
-                                <InputAdornment position='end'>
-                                    <IconButton
-                                        onClick={handleCleanSearch}
-                                    >
-                                        <CloseIcon fontSize='small' />
-                                    </IconButton>
-                                </InputAdornment>
-                              )
+                                startAdornment: (
+                                    <InputAdornment position='start' className="text-white">
+                                        <SearchIcon />
+                                    </InputAdornment>
+                                ),
+                                endAdornment: (
+                                    <InputAdornment position='end'>
+                                        <IconButton
+                                            onClick={handleCleanSearch}
+                                        >
+                                            <CloseIcon fontSize='small' />
+                                        </IconButton>
+                                    </InputAdornment>
+                                )
                             }
-                          }}
+                        }}
                     />
                 </Grid>
-                <Grid size={activePick != null ? 6 : 12}>
-                    <List>
+                <Grid size={12}>
+                    <Box padding={1}>
+                        <Typography variant='h6' fontWeight='bold'>Total Pick Lists: {data?.length}</Typography>
+                    </Box>
+                </Grid>
+                <Grid size={{ xl: activePick != null ? 6 : 12, lg: activePick != null ? 6 : 12, md: 12, sm: 12, xs: 12 }}>
+                    <List sx={{ maxHeight: 300, overflowY: 'auto' }}>
                         {displayData?.map((item, index) => (
                             <ListItemButton
                                 key={index}
@@ -85,38 +90,42 @@ const SearchPickList = ({ data }: { data: PickListContent[]}) => {
                         ))}
                     </List>
                 </Grid>
-                {activePick && (
-                    <Grid size={6}>
-                        <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2, maxHeight: 300, overflowY: 'auto', paddingRight: 1}}>
-                            <Box sx={{ display: 'flex', justifyContent: 'space-between', placeItems: 'center'}}>
-                                <Box>
-                                    <Typography fontWeight='bold'>PL #</Typography>
-                                    <Typography>{ data[activePick].pl_number}</Typography>
-                                </Box>
-                                <Box>
-                                    <Typography fontWeight='bold'>BOL #</Typography>
-                                    <Typography>{ data[activePick].bol_number}</Typography>
-                                </Box>
-                            </Box>
-                            <Box sx={{ display: 'flex', justifyContent: 'space-between', placeItems: 'center'}}>
-                                <Box>
-                                    <Typography fontWeight='bold'>Picker</Typography>
-                                    <Typography>{ data[activePick].picker_name}</Typography>
-                                </Box>
-                                <Box>
-                                    <Typography fontWeight='bold'>Verified By</Typography>
-                                    <Typography>{ data[activePick].verified_by}</Typography>
-                                </Box>
-                            </Box>
-                            <Typography fontWeight='bold'>Total Products: { data[activePick].total_products}</Typography>
-                            <List sx={{ background: '#eaeaea'}}>
-                                {data[activePick]?.shippings_products.map((p, index) => (
-                                    <ListItem key={index}>
-                                        <ListItemText primary={`Sku ${p.product_sku}`} secondary={`Quantity: ${p.product_quantity}`} />
-                                    </ListItem>
-                                ))}
-                            </List>
-                        </Box>
+                {activePick != undefined && (
+                    <Grid size={{ xl: 6, lg: 6, md: 12, sm: 12, xs: 12 }} sx={{ maxHeight: 300, overflowY: 'auto' }}>
+                        <Grid container spacing={2}>
+                            <Grid size={6}>
+                                <Typography fontWeight='bold'>PL #</Typography>
+                                <Typography>{data[activePick].pl_number}</Typography>
+                            </Grid>
+                            <Grid size={6}>
+                                <Typography fontWeight='bold'>BOL #</Typography>
+                                <Typography>{data[activePick].bol_number}</Typography>
+                            </Grid>
+                            <Grid size={6}>
+                                <Typography fontWeight='bold'>Picker</Typography>
+                                <Typography>{data[activePick].picker_name}</Typography>
+                            </Grid>
+                            <Grid size={6}>
+                                <Typography fontWeight='bold'>Verified By</Typography>
+                                <Typography>{data[activePick].verified_by}</Typography>
+                            </Grid>
+                            <Grid size={12}>
+                                <Typography variant='h6' fontWeight='bold'>Notes</Typography>
+                                <Typography>{data[activePick].notes}</Typography>
+                            </Grid>
+                            <Grid size={12}>
+                                <Typography fontWeight='bold'>Total Products: {data[activePick].total_products}</Typography>
+                            </Grid>
+                            <Grid size={12}>
+                                <List sx={{ background: '#eaeaea' }}>
+                                    {data[activePick]?.shippings_products.map((p, index) => (
+                                        <ListItem key={index}>
+                                            <ListItemText primary={`Sku ${p.product_sku}`} secondary={`Quantity: ${p.product_quantity}`} />
+                                        </ListItem>
+                                    ))}
+                                </List>
+                            </Grid>
+                        </Grid>
                     </Grid>
                 )}
             </Grid>

@@ -7,6 +7,7 @@ import { toast } from 'react-toastify';
 import { createClient } from '@/utils/supabase/client';
 import { VendorsContent } from '@/utils/interfaces';
 import { GlobalContext } from '@/utils/context/global_provider';
+import { convertTimeByTimeZone } from '@/utils/functions/main';
 
 const VendorsForm = ({ defaultData, setOpenModal }: { defaultData?: VendorsContent, setOpenModal?: (status: boolean) => void }) => {
 
@@ -36,7 +37,8 @@ const VendorsForm = ({ defaultData, setOpenModal }: { defaultData?: VendorsConte
 
             const { data, error } = await supabase.from('vendors').insert({
                 'name': formData['name'],
-                'created_by': userAccount?.user_id
+                'created_by': userAccount?.user_id,
+                'created_at': convertTimeByTimeZone(userAccount?.sessionTimeZone!)
             }).select();
 
             if (error) {

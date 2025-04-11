@@ -7,6 +7,7 @@ import { createClient } from '@/utils/supabase/client'
 import { CarriersContent } from '@/utils/interfaces'
 import { toast } from 'react-toastify'
 import { GlobalContext } from '@/utils/context/global_provider'
+import { convertTimeByTimeZone } from '@/utils/functions/main'
 
 const CarrierForm = ({ defaultData, setOpenModal }: { defaultData?: CarriersContent, setOpenModal?: (status: boolean) => void }) => {
 
@@ -36,7 +37,8 @@ const CarrierForm = ({ defaultData, setOpenModal }: { defaultData?: CarriersCont
 
             const { data, error } = await supabase.from('carriers').insert({
                 'name': formData['name'],
-                'created_by': userAccount?.user_id
+                'created_by': userAccount?.user_id,
+                'created_at': convertTimeByTimeZone(userAccount?.sessionTimeZone!)
             }).select();
 
             if (error) {

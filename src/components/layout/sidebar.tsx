@@ -29,12 +29,14 @@ const SideBar = ({ open, setOpen, menuOpen, setMenuOpen }: { open: boolean, setO
             to: "/dashboard",
             icon: <HugeiconsIcon icon={DashboardSquare02Icon} />
         },
-        {
-            id: 2,
-            title: "Inventory",
-            to: "/inventory",
-            icon: <HugeiconsIcon icon={WarehouseIcon} />
-        },
+        ...(userAccount?.accounts_roles?.some(role => role.role_id === 1 || role.role_id === 2 || role.role_id === 3 || role.role_id === 4) ? [
+            {
+                id: 2,
+                title: "Inventory",
+                to: "/inventory",
+                icon: <HugeiconsIcon icon={WarehouseIcon} />
+            }
+        ] : []),
         {
             id: 3,
             title: "Logistics",

@@ -3,15 +3,9 @@ import { saveAs } from 'file-saver';
 import { toast } from "react-toastify";
 import { AccountContent, OrderContent } from "@/utils/interfaces";
 import { GridColDef } from '@mui/x-data-grid';
-import { createClient } from '../supabase/client';
-import { headers } from 'next/headers';
-import { RefObject } from 'react';
-import dayjs from 'dayjs';
-import utc from 'dayjs/plugin/utc';
-import timezone from 'dayjs/plugin/timezone';
-
-dayjs.extend(utc);
-dayjs.extend(timezone);
+import { RefObject, useContext } from 'react';
+import { formatInTimeZone } from 'date-fns-tz';
+import { GlobalContext } from '../context/global_provider';
 
 export const calculateRevenue = (data: OrderContent[]) => {
   let totalReturn = 0;
@@ -172,9 +166,18 @@ export const findUserByUUID = (users: AccountContent[], match: string) => {
   }
 }
 
-export const convertTimeByTimeZone = (utcDate: string) => {
-  const userTimeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
-  const formatted = dayjs.utc(utcDate).tz(userTimeZone).format('MMMM D, YYYY h:mm A');
+export const convertTimeByTimeZone = (sessionTimeZone: string, utcDate?: string) => {
+  // const utcFormatted = formatInTimeZone(utcDate, 'UTC', 'MMMM d, yyyy h:mm a');
+  try {
 
-  return formatted;
+    var formatted;
+    if (utcDate != undefined) {
+      formatted = formatInTimeZone(utcDate, sessionTimeZone, 'MMMM d, yyyy h:mm a');
+    } else {
+      formatted = formatInTimeZone(new Date(), sessionTimeZone, 'MMMM d, yyyy h:mm a');
+    }
+    return formatted; 
+  } catch (error) {
+    console.log(error);
+  }
 }

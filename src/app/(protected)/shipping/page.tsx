@@ -6,21 +6,21 @@ import { Block } from '@/style/global';
 import BasicTable from '@/components/tables/basic_table';
 import { GlobalContext } from '@/utils/context/global_provider';
 import { GridColDef } from '@mui/x-data-grid';
-import dayjs from 'dayjs';
 import ShippingForm from '@/components/forms/shipping_form';
+import { convertTimeByTimeZone } from '@/utils/functions/main';
 
 const Shipping = () => {
 
-  const { shippings, setIsLaunching } = useContext(GlobalContext);
+  const { shippings, userAccount, setIsLaunching } = useContext(GlobalContext);
 
   const shippingColumns: GridColDef[] = [
       { field: 'carrier', headerName: 'Carrier' },
       { field: 'trailer_number', headerName: 'Trailer #' },
       { field: 'created_at', headerName: 'Created At', renderCell: (params) => {
-        return dayjs(params.row.created_at).format('ddd MMM DD YYYY hh:mm A');
+        return convertTimeByTimeZone(userAccount?.sessionTimeZone!, params.row.created_at);
       }},
-      { field: 'shipped_out_at', headerName: 'Shipped Out', renderCell: (params) => {
-        return dayjs(params.row.shipped_out_at).format('ddd MMM DD YYYY hh:mm A');
+      { field: 'closed_at', headerName: 'Shipped Out', renderCell: (params) => {
+        return convertTimeByTimeZone(userAccount?.sessionTimeZone!, params.row.closed_at);
       }},
       { field: 'status', headerName: 'Status', renderCell: (params) => {
         switch (params.row.status) {

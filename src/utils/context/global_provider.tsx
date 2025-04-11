@@ -170,7 +170,9 @@ const GlobalProvider = ({ children }: { children: ReactNode }) => {
                 .eq('user_id', userData.user!.id)
                 .single();
 
-            setUserAccount(account);
+            const userTZ = Intl.DateTimeFormat().resolvedOptions().timeZone;
+
+            setUserAccount({...account, 'sessionTimeZone': userTZ});
 
             getNotifications(account.accounts_roles);
         }

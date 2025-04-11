@@ -11,6 +11,7 @@ import { toast } from 'react-toastify'
 import { NumberField } from '@/style/global'
 import { createClient } from '@/utils/supabase/client'
 import CustomDatePicker from '@/components/date_picker'
+import { convertTimeByTimeZone } from '@/utils/functions/main'
 
 const ReceivingForm = ({ defaultData, setOpenModal }: { defaultData?: ReceivingContent, setOpenModal?: (status: boolean) => void }) => {
 
@@ -100,7 +101,8 @@ const ReceivingForm = ({ defaultData, setOpenModal }: { defaultData?: ReceivingC
                 'vendor_id': formData['vendor_id'],
                 'arrived_at': formData['arrived_at'],
                 'trailer_number': formData['trailer_number'],
-                'created_by': userAccount?.user_id
+                'created_by': userAccount?.user_id,
+                'created_at': convertTimeByTimeZone(userAccount?.sessionTimeZone!)
             }).select().single();
 
             if (newReError) {
@@ -112,7 +114,8 @@ const ReceivingForm = ({ defaultData, setOpenModal }: { defaultData?: ReceivingC
                     'receiving_id': newReceiving.id,
                     'product_id': pro.product_id,
                     'expected_quantity': pro.quantity,
-                    'created_by': userAccount?.user_id
+                    'created_by': userAccount?.user_id,
+                    'created_at': convertTimeByTimeZone(userAccount?.sessionTimeZone!)
                 });
             }
 

@@ -12,6 +12,7 @@ import { toast } from 'react-toastify';
 import { createClient } from '@/utils/supabase/client';
 import { GlobalContext } from '@/utils/context/global_provider';
 import { useParams } from 'next/navigation';
+import { convertTimeByTimeZone } from '@/utils/functions/main';
 
 interface CustomPickList extends ShippingContent, PickListContent {}
 
@@ -96,6 +97,7 @@ const PickListForm = ({ defaultData, setOpenModal }: { defaultData?: CustomPickL
                 'total_products': totalQuantity,
                 'bol_number': `MOES${formData['bol_number']}`,
                 'created_by': userAccount?.user_id,
+                'created_at': convertTimeByTimeZone(userAccount?.sessionTimeZone!)
             }).select().single();
 
             if (newStatus.error != null) {
@@ -108,6 +110,7 @@ const PickListForm = ({ defaultData, setOpenModal }: { defaultData?: CustomPickL
                     'product_sku': product['sku'],
                     'product_quantity': product['quantity'],
                     'created_by': userAccount?.user_id,
+                    'created_at': convertTimeByTimeZone(userAccount?.sessionTimeZone!)
                 });
 
                 if (newSPStatus.error != null) {

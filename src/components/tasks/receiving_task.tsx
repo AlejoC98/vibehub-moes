@@ -11,6 +11,7 @@ import CheckIcon from '@mui/icons-material/Check';
 import Swal from 'sweetalert2';
 import { useRouter } from 'next/navigation';
 import { GlobalContext } from '@/utils/context/global_provider';
+import { convertTimeByTimeZone } from '@/utils/functions/main';
 
 const steps = [
     'Verify Information',
@@ -99,7 +100,8 @@ const ReceivingTask = ({ data, updateData } : { data: ReceivingContent, updateDa
                     'rack_location_id': 1,
                     'product_id': pro.product_id,
                     'quantity': pro.received_quantity,
-                    'created_by': userAccount?.user_id
+                    'created_by': userAccount?.user_id,
+                    'created_at': convertTimeByTimeZone(userAccount?.sessionTimeZone!)
                 });
 
                 if (error) {

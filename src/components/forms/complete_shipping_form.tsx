@@ -4,7 +4,6 @@ import { toast } from 'react-toastify';
 import { Box, Button, LinearProgress, Typography } from '@mui/material';
 import { ShippingContent } from '@/utils/interfaces';
 import { createClient } from '@/utils/supabase/client';
-import dayjs from 'dayjs';
 import { GlobalContext } from '@/utils/context/global_provider';
 
 const CompleteOrderForm = ({ defaultData, setOpenModal }: { defaultData?: ShippingContent, setOpenModal?: (status: boolean) => void }) => {
@@ -22,8 +21,7 @@ const CompleteOrderForm = ({ defaultData, setOpenModal }: { defaultData?: Shippi
             setTimeout(async () => {
                 const { data, error } = await supabase.from('shippings_orders').update({
                     'status': 'Shipped',
-                    'shipped_at': dayjs().toDate(),
-                    'closed_at': new Date().toLocaleString(),
+                    'closed_at': new Date(),
                     'closed_by': userAccount?.user_id,
                 }).eq('id', defaultData?.id);
 

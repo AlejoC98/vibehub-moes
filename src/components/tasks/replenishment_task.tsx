@@ -3,7 +3,7 @@ import { Box, Button, Step, StepLabel, Stepper, TextField, Typography } from '@m
 import React, { ReactElement, useContext, useState } from 'react'
 import Grid from '@mui/material/Grid2';
 import { GlobalContext } from '@/utils/context/global_provider';
-import { deepSearch } from '@/utils/functions/main';
+import { convertTimeByTimeZone, deepSearch } from '@/utils/functions/main';
 import { toast } from 'react-toastify';
 import { createClient } from '@/utils/supabase/client';
 import { useRouter } from 'next/navigation';
@@ -155,7 +155,8 @@ const ReplenishmentTask = () => {
                     'rack_location_id': destinyRackId,
                     'quantity': originQuantity,
                     'product_id': currentQuery.product_id,
-                    'created_by': userAccount?.user_id
+                    'created_by': userAccount?.user_id,
+                    'created_at': convertTimeByTimeZone(userAccount?.sessionTimeZone!)
                 });
         
             if (insertDestinyError) {

@@ -5,21 +5,19 @@ import Grid from '@mui/material/Grid2'
 import Details from '@/components/details'
 import PickListForm from '@/components/forms/pick_list_form'
 import { Block } from '@/style/global'
-import { useParams } from 'next/navigation'
+import { useParams, useRouter } from 'next/navigation'
 import { GlobalContext } from '@/utils/context/global_provider'
 import { ShippingContent } from '@/utils/interfaces'
 import Swal from 'sweetalert2'
-import BasicTable from '@/components/tables/basic_table'
-import { GridColDef } from '@mui/x-data-grid'
 import CompleteOrderForm from '@/components/forms/complete_shipping_form'
 import SearchList from '@/components/search_pick_list'
-import dayjs from 'dayjs'
 import { convertTimeByTimeZone, findUserByUUID } from '@/utils/functions/main'
 
 const OrderDetails = () => {
 
   const params = useParams();
-  const { shippings, users, setIsLaunching } = useContext(GlobalContext);
+  const router = useRouter();
+  const { shippings, users, userAccount, setIsLaunching } = useContext(GlobalContext);
 
   const [data, setData] = useState<ShippingContent>();
   const [createdBy, setCreatedBy] = useState<string>();
@@ -28,7 +26,7 @@ const OrderDetails = () => {
 
   const actionButtons = [
     {
-      'text': data?.status != 'Shipped' ? 'Complete' : undefined,
+      'text': data?.status && 'Complete',
       'color': '#64B6AC',
       'form': <CompleteOrderForm />,
       'data': data
@@ -57,70 +55,71 @@ const OrderDetails = () => {
           ?.reduce((sum, item) => sum + item.total_products, 0) ?? 0;
         setTotalOrderShipped(totalProducts);
         setData(currentShipping);
-      } else {
-        Swal.fire({
-          icon: 'info',
-          title: 'Opsss!',
-          text: 'We couldn\'t find this information'
-        });
       }
+      // else {
+      //   Swal.fire({
+      //     icon: 'info',
+      //     title: 'Opsss!',
+      //     text: 'We couldn\'t find this information'
+      //   }).then((result) => {
+      //     if (result.isConfirmed) {
+      //       router.back();
+      //     }
+      //   })
+      // }
     }
   }, [shippings])
 
   return (
     <Box>
       <Details
-        actionButtons={actionButtons}
+        actionButtons={data?.status != 'Shipped' ? actionButtons : []}
         title='Shipping Order'
         modalTitle='Complete Shipping Order?'
       >
         <Grid size={{ xl: 3, lg: 3, md: 12, sm: 12, xs: 12 }} sx={{ marginBottom: 5 }}>
           <Block>
             <Grid container spacing={5}>
-              <Grid size={6}>
                 {createdBy != undefined && (
-                  <Box>
+                  <Grid size={6}>
                     <Typography variant='h6' fontWeight='bold'>Created By</Typography>
                     <Typography>{ }</Typography>
-                  </Box>
+                  </Grid>
                 )}
-                <Box>
+                <Grid size={6}>
                   <Typography variant='h6' fontWeight='bold'>Carrier</Typography>
                   <Typography>{data?.carrier}</Typography>
-                </Box>
-                <Box>
+                </Grid>
+                <Grid size={6}>
                   <Typography variant='h6' fontWeight='bold'>Trailer Number</Typography>
                   <Typography>{data?.trailer_number}</Typography>
-                </Box>
-                {data?.closed_by != null && (
-                  <Box>
-                    <Typography variant='h6' fontWeight='bold'>Close By</Typography>
+                </Grid>
+                {closedBy != null && (
+                  <Grid size={6}>
+                    <Typography variant='h6' fontWeight='bold'>Closed By</Typography>
                     <Typography>{ closedBy }</Typography>
-                  </Box>
+                  </Grid>
                 )}
                 {data?.closed_at != null && (
-                  <Box>
-                    <Typography variant='h6' fontWeight='bold'>Close By</Typography>
-                    <Typography>{convertTimeByTimeZone(data?.closed_at)}</Typography>
-                  </Box>
+                  <Grid size={6}>
+                    <Typography variant='h6' fontWeight='bold'>Closed At</Typography>
+                    <Typography>{convertTimeByTimeZone(userAccount?.sessionTimeZone!, data?.closed_at)}</Typography>
+                  </Grid>
                 )}
-              </Grid>
-              <Grid size={6}>
                 {data?.created_at != undefined && (
-                  <Box>
+                  <Grid size={6}>
                     <Typography variant='h6' fontWeight='bold'>Created At</Typography>
-                    <Typography>{dayjs(data?.created_at).format('ddd MMM DD YYYY hh:mm A')}</Typography>
-                  </Box>
+                    <Typography>{ convertTimeByTimeZone(userAccount?.sessionTimeZone!, data?.created_at) }</Typography>
+                  </Grid>
                 )}
-                <Box>
+                <Grid size={6}>
                   <Typography variant='h6' fontWeight='bold'>Dock Door</Typography>
                   <Typography>{data?.dock_door}</Typography>
-                </Box>
-                <Box>
+                </Grid>
+                <Grid size={6}>
                   <Typography variant='h6' fontWeight='bold'>Total Shipped</Typography>
                   <Typography>{totalOrderShipped}</Typography>
-                </Box>
-              </Grid>
+                </Grid>
             </Grid>
           </Block>
         </Grid>

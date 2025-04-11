@@ -1,4 +1,3 @@
-import { Dayjs } from "dayjs";
 import { ReactNode } from "react";
 
 export interface Role {
@@ -29,9 +28,11 @@ export interface AccountContent {
     last_name?: string;
     email?: string;
     username?: string;
+    password?: string;
     phone: number;
     locations: LocationContent;
     accounts_roles?: AccountRolesContent[];
+    sessionTimeZone: string;
 }
 
 export interface TabContentProps {
@@ -205,7 +206,7 @@ export interface ShippingContent {
 
 export interface PickListContent {
     pl_number: number;
-    shipped_out_at: Dayjs;
+    closed_at?: string;
     picker_name: string;
     verified_by: string;
     bol_number: string;

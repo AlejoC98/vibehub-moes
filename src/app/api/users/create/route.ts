@@ -3,7 +3,7 @@ import { createClient } from "@/utils/supabase/server"
 import { NextResponse } from "next/server"
 
 export async function POST(req: Request) {
-  const { defaultData, newData, selectedRoles } = await req.json()
+  const { accountType, defaultData, newData, selectedRoles } = await req.json()
 
   const supabase = await createClient();
   const { data: userData } = await supabase.auth.getUser();
@@ -19,7 +19,7 @@ export async function POST(req: Request) {
     const filteredUsers = (currentUsers ?? []).filter(account => {
       const roles = account.accounts_roles ?? []
       const hasRole1 = roles.some((role: any) => role.role_id === 1)
-      return !hasRole1 // keep only accounts without role_id 1
+      return !hasRole1
     })
 
     if (error) {
@@ -29,11 +29,11 @@ export async function POST(req: Request) {
       );
     }
 
-  if (filteredUsers.length < 5) {
+  if (filteredUsers.length < 25) {
     var userId = undefined;
 
     if (Object.keys(defaultData!).length == 0) {
-      const userData = await signup(newData['email']!, process.env.DEFAULT_PASSWORD || 'v1b3h0b2025', false);
+      const userData = await signup(accountType == 'manager' ? newData['email'].toLowerCase() : `${newData['username'].toLowerCase()}@vibehubapp.com`, accountType == 'manager' ? process.env.DEFAULT_PASSWORD! : newData['password'], false);
 
       userId = userData?.user?.id;
     } else {
@@ -46,7 +46,7 @@ export async function POST(req: Request) {
         'last_name': newData['last_name'],
         'user_id': userId,
         'location_id': 1,
-        'email': newData['email'].toLowerCase(),
+        'email': accountType == 'manager' ? newData['email'].toLowerCase() : `${newData['username'].toLowerCase()}@vibehubapp.com`,
         'username': newData['username'].toLowerCase(),
         'created_by': userData.user?.id
       }, { onConflict: 'email' }).select().single();
@@ -58,7 +58,10 @@ export async function POST(req: Request) {
       await supabase.from('accounts_roles').delete().eq('account_id', newAccount.id);
       // Assing Roles
       for (var role of selectedRoles) {
-        const { error } = await supabase.from('accounts_roles').insert({ account_id: newAccount.id, role_id: role });
+        const { error } = await supabase.from('accounts_roles').insert({
+          account_id: newAccount.id,
+          role_id: role
+        });
 
         if (error) {
           throw new Error(error.message);
