@@ -45,16 +45,14 @@ const OrderDetails = () => {
 
   useEffect(() => {
     var currentShipping = shippings?.find(s => s.trailer_number == params?.trailer!);
-
-    setCreatedBy(findUserByUUID(users!, data?.created_by!));
-    setCloseddBy(findUserByUUID(users!, data?.created_by!));
-
     if (shippings != undefined) {
       if (currentShipping != null) {
         const totalProducts = currentShipping?.shippings_pick_list
           ?.reduce((sum, item) => sum + item.total_products, 0) ?? 0;
         setTotalOrderShipped(totalProducts);
         setData(currentShipping);
+        setCreatedBy(findUserByUUID(users!, currentShipping.created_by!));
+        setCloseddBy(findUserByUUID(users!, currentShipping.closed_by!));
       }
       // else {
       //   Swal.fire({
@@ -68,7 +66,7 @@ const OrderDetails = () => {
       //   })
       // }
     }
-  }, [shippings])
+  }, [shippings]);
 
   return (
     <Box>
@@ -80,46 +78,46 @@ const OrderDetails = () => {
         <Grid size={{ xl: 3, lg: 3, md: 12, sm: 12, xs: 12 }} sx={{ marginBottom: 5 }}>
           <Block>
             <Grid container spacing={5}>
-                {createdBy != undefined && (
-                  <Grid size={6}>
-                    <Typography variant='h6' fontWeight='bold'>Created By</Typography>
-                    <Typography>{ }</Typography>
-                  </Grid>
-                )}
+              {createdBy != undefined && (
                 <Grid size={6}>
-                  <Typography variant='h6' fontWeight='bold'>Carrier</Typography>
-                  <Typography>{data?.carrier}</Typography>
+                  <Typography variant='h6' fontWeight='bold'>Created By</Typography>
+                  <Typography>{ }</Typography>
                 </Grid>
+              )}
+              {data?.created_at != undefined && (
+                <Grid size={createdBy != undefined ? 6 : 12}>
+                  <Typography variant='h6' fontWeight='bold'>Created At</Typography>
+                  <Typography>{convertTimeByTimeZone(userAccount?.sessionTimeZone!, data?.created_at)}</Typography>
+                </Grid>
+              )}
+              <Grid size={6}>
+                <Typography variant='h6' fontWeight='bold'>Carrier</Typography>
+                <Typography>{data?.carrier}</Typography>
+              </Grid>
+              <Grid size={6}>
+                <Typography variant='h6' fontWeight='bold'>Trailer Number</Typography>
+                <Typography>{data?.trailer_number}</Typography>
+              </Grid>
+              {closedBy != undefined && (
                 <Grid size={6}>
-                  <Typography variant='h6' fontWeight='bold'>Trailer Number</Typography>
-                  <Typography>{data?.trailer_number}</Typography>
+                  <Typography variant='h6' fontWeight='bold'>Closed By</Typography>
+                  <Typography>{closedBy}</Typography>
                 </Grid>
-                {closedBy != null && (
-                  <Grid size={6}>
-                    <Typography variant='h6' fontWeight='bold'>Closed By</Typography>
-                    <Typography>{ closedBy }</Typography>
-                  </Grid>
-                )}
-                {data?.closed_at != null && (
-                  <Grid size={6}>
-                    <Typography variant='h6' fontWeight='bold'>Closed At</Typography>
-                    <Typography>{convertTimeByTimeZone(userAccount?.sessionTimeZone!, data?.closed_at)}</Typography>
-                  </Grid>
-                )}
-                {data?.created_at != undefined && (
-                  <Grid size={6}>
-                    <Typography variant='h6' fontWeight='bold'>Created At</Typography>
-                    <Typography>{ convertTimeByTimeZone(userAccount?.sessionTimeZone!, data?.created_at) }</Typography>
-                  </Grid>
-                )}
+              )}
+              {data?.closed_at != null && (
                 <Grid size={6}>
-                  <Typography variant='h6' fontWeight='bold'>Dock Door</Typography>
-                  <Typography>{data?.dock_door}</Typography>
+                  <Typography variant='h6' fontWeight='bold'>Closed At</Typography>
+                  <Typography>{convertTimeByTimeZone(userAccount?.sessionTimeZone!, data?.closed_at)}</Typography>
                 </Grid>
-                <Grid size={6}>
-                  <Typography variant='h6' fontWeight='bold'>Total Shipped</Typography>
-                  <Typography>{totalOrderShipped}</Typography>
-                </Grid>
+              )}
+              <Grid size={6}>
+                <Typography variant='h6' fontWeight='bold'>Dock Door</Typography>
+                <Typography>{data?.dock_door}</Typography>
+              </Grid>
+              <Grid size={6}>
+                <Typography variant='h6' fontWeight='bold'>Total Shipped</Typography>
+                <Typography>{totalOrderShipped}</Typography>
+              </Grid>
             </Grid>
           </Block>
         </Grid>
