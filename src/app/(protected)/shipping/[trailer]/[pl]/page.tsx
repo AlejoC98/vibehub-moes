@@ -41,7 +41,7 @@ const PickListDetails = () => {
 
   return (
     <Box>
-      <Details title='Pick List' editForm={<></>}>
+      <Details title='Pick List' actionButtons={[]}>
       <Grid size={{ xl: 3, lg: 3, md: 12, sm: 12, xs: 12}} sx={{ marginBottom: 5}}>
           <Block>
             <Grid container spacing={5}>
