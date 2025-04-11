@@ -45,7 +45,7 @@ const SideBar = ({ open, setOpen, menuOpen, setMenuOpen }: { open: boolean, setO
             submenu: [
                 ...(userAccount?.accounts_roles?.some(role => role.role_id === 7) ? [
                     {
-                        id: 1,
+                        id: 4,
                         title: "Shipping",
                         to: "/shipping",
                         icon: <HugeiconsIcon icon={Trolley02Icon} />
@@ -53,7 +53,7 @@ const SideBar = ({ open, setOpen, menuOpen, setMenuOpen }: { open: boolean, setO
                 ] : []),
                 ...(userAccount?.accounts_roles?.some(role => role.role_id === 8) ? [
                     {
-                        id: 2,
+                        id: 5,
                         title: "Receiving",
                         to: "#",
                         icon: <HugeiconsIcon icon={LiftTruckIcon} />
@@ -61,7 +61,7 @@ const SideBar = ({ open, setOpen, menuOpen, setMenuOpen }: { open: boolean, setO
                 ] : []),
                 ...(userAccount?.accounts_roles?.some(role => role.role_id === 9) ? [
                     {
-                        id: 3,
+                        id: 6,
                         title: "Replenishment",
                         to: "#",
                         icon: <HugeiconsIcon icon={PackageMovingIcon} />
@@ -69,7 +69,7 @@ const SideBar = ({ open, setOpen, menuOpen, setMenuOpen }: { open: boolean, setO
                 ] : []),
                 ...(userAccount?.accounts_roles?.some(role => role.role_id === 5) ? [
                     {
-                        id: 4,
+                        id: 7,
                         title: "Picking",
                         to: "#",
                         icon: <HugeiconsIcon icon={TaskDaily01Icon} />
@@ -79,7 +79,7 @@ const SideBar = ({ open, setOpen, menuOpen, setMenuOpen }: { open: boolean, setO
         },
         ...(userAccount?.accounts_roles?.some(role => role.role_id === 2 || role.role_id === 3) ? [
             {
-                id: 4,
+                id: 8,
                 title: "Orders",
                 to: "#",
                 icon: <HugeiconsIcon icon={ComputerDollarIcon} />
@@ -87,7 +87,7 @@ const SideBar = ({ open, setOpen, menuOpen, setMenuOpen }: { open: boolean, setO
         ] : []),
         ...(userAccount?.accounts_roles?.some(role => role.role_id === 2 || role.role_id === 3) ? [
             {
-                id: 5,
+                id: 9,
                 title: "Returns",
                 to: "#",
                 icon: <HugeiconsIcon icon={ReturnRequestIcon} />
@@ -95,7 +95,7 @@ const SideBar = ({ open, setOpen, menuOpen, setMenuOpen }: { open: boolean, setO
         ] : []),
         ...(userAccount?.accounts_roles?.some(role => role.role_id === 2 || role.role_id === 3) ? [
             {
-                id: 6,
+                id: 10,
                 title: "Carriers",
                 to: "/carriers",
                 icon: <HugeiconsIcon icon={TruckDeliveryIcon} />
@@ -103,7 +103,7 @@ const SideBar = ({ open, setOpen, menuOpen, setMenuOpen }: { open: boolean, setO
         ] : []),
         ...(userAccount?.accounts_roles?.some(role => role.role_id === 2 || role.role_id === 3) ? [
             {
-                id: 7,
+                id: 11,
                 title: "Vendors",
                 to: "#",
                 icon: <HugeiconsIcon icon={Store02Icon} />
@@ -111,7 +111,7 @@ const SideBar = ({ open, setOpen, menuOpen, setMenuOpen }: { open: boolean, setO
         ] : []),
         ...(userAccount?.accounts_roles?.some(role => role.role_id === 2 || role.role_id === 3) ? [
             {
-                id: 8,
+                id: 12,
                 title: "Users",
                 to: "/users",
                 icon: <HugeiconsIcon icon={UserGroupIcon} />
