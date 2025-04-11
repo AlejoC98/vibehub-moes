@@ -226,7 +226,7 @@ const PickListForm = ({ defaultData, setOpenModal }: { defaultData?: CustomPickL
                                 <Typography>Qty</Typography>
                             </Box>
                             <Divider />
-                            <Box sx={{ display: 'flex', flexDirection: 'column', maxHeight: 300, overflowY: 'scroll' }}>
+                            <Box sx={{ display: 'flex', flexDirection: 'column', maxHeight: 300, overflowY: 'auto' }}>
                                 <Box sx={{ display: 'flex', justifyContent: 'space-between', m: 1, flexDirection: isMobile ? 'column' : 'row', gap: isMobile ? 1 : 0 }}>
                                     <TextField
                                         size='small'

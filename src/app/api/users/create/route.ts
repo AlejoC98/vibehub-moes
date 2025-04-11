@@ -46,8 +46,8 @@ export async function POST(req: Request) {
         'last_name': newData['last_name'],
         'user_id': userId,
         'location_id': 1,
-        'email': newData['email'],
-        'username': newData['username'],
+        'email': newData['email'].toLowerCase(),
+        'username': newData['username'].toLowerCase(),
         'created_by': userData.user?.id
       }, { onConflict: 'email' }).select().single();
 

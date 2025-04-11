@@ -1,11 +1,17 @@
 import * as XLSX from 'xlsx'
 import { saveAs } from 'file-saver';
 import { toast } from "react-toastify";
-import { OrderContent } from "@/utils/interfaces";
+import { AccountContent, OrderContent } from "@/utils/interfaces";
 import { GridColDef } from '@mui/x-data-grid';
 import { createClient } from '../supabase/client';
 import { headers } from 'next/headers';
 import { RefObject } from 'react';
+import dayjs from 'dayjs';
+import utc from 'dayjs/plugin/utc';
+import timezone from 'dayjs/plugin/timezone';
+
+dayjs.extend(utc);
+dayjs.extend(timezone);
 
 export const calculateRevenue = (data: OrderContent[]) => {
   let totalReturn = 0;
@@ -147,4 +153,28 @@ export const startCountdown = (
       onComplete()
     }
   }, 1000)
+}
+
+export const findUserByUUID = (users: AccountContent[], match: string) => {
+
+  try {
+    const userFound = users.find(u => u.user_id == match);
+
+  if (userFound == undefined) {
+    throw new Error('User not found!');
+  }
+
+  return userFound.username;
+
+  } catch (error: any) {
+   console.log(error.message);
+   return undefined;
+  }
+}
+
+export const convertTimeByTimeZone = (utcDate: string) => {
+  const userTimeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+  const formatted = dayjs.utc(utcDate).tz(userTimeZone).format('MMMM D, YYYY h:mm A');
+
+  return formatted;
 }

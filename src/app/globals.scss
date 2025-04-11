@@ -1,3 +1,32 @@
+
+div {
+  --sb-track-color: #60676b;
+  --sb-thumb-color: #3e3e3e;
+  --sb-size: 10px;
+}
+
+div::-webkit-scrollbar {
+  width: var(--sb-size)
+}
+
+div::-webkit-scrollbar-track {
+  background: var(--sb-track-color);
+  border-radius: 10px;
+}
+
+div::-webkit-scrollbar-thumb {
+  background: var(--sb-thumb-color);
+  border-radius: 10px;
+  
+}
+
+@supports not selector(::-webkit-scrollbar) {
+  div {
+    scrollbar-color: var(--sb-thumb-color)
+                     var(--sb-track-color);
+  }
+}
+
 @font-face {
   font-family: 'CinemaScript';
   src: url('/static/fonts/CinemaScript.otf') format('truetype');

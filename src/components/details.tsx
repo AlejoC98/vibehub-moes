@@ -5,10 +5,44 @@ import React, { cloneElement, ReactElement, ReactNode, useState } from 'react'
 import ArrowBackTwoToneIcon from '@mui/icons-material/ArrowBackTwoTone';
 import { useRouter } from 'next/navigation';
 
-const Details = ({ children, title, editForm, data, actionButton, actionButtonColor, modalTitle }: { children: ReactNode, title: string, editForm: ReactElement<any>, data?: any, actionButton?: string, actionButtonColor?: string, modalTitle?: string }) => {
+interface ActionButtonsContent {
+    text?: string,
+    color?: string,
+    form: ReactElement<any>,
+    data?: any,
+}
 
-    const [openModal, setOpenModal] = useState<boolean>(false);
+const Details = ({ 
+    children,
+    title,
+    actionButtons,
+    // editForm,
+    // actionButton,
+    // actionButtonColor,
+    modalTitle
+}: { 
+    children: ReactNode,
+    title: string,
+    actionButtons: ActionButtonsContent[]
+    // actionButton?: string,
+    // actionButtonColor?: string,
+    // editForm: ReactElement<any>,
+    modalTitle?: string
+}) => {
+
     const router = useRouter();
+    const [openModal, setOpenModal] = useState<boolean>(false);
+    const [activeFrom, setActiveForm] = useState<ReactElement<any>>(<></>);
+    const [activeDefaultData, setActiveDefaultData] = useState<ReactElement<any>>();
+
+    const handleOpen = (option: string) => {
+        const modalForm = actionButtons.find(b => b.text == option);
+        if (modalForm != null) {
+            setActiveForm(modalForm.form);
+            setActiveDefaultData(modalForm.data);
+            setOpenModal(true);
+        }
+    }
 
     const handleClose = () => {
         setOpenModal(false);
@@ -28,9 +62,11 @@ const Details = ({ children, title, editForm, data, actionButton, actionButtonCo
                     </Box>
                 </Grid>
                 <Grid size={{ xl: 3, lg: 3, md: 4, sm: 4, xs: 4}}>
-                    {actionButton != undefined && (
-                        <Button sx={{ background: actionButtonColor }} variant='contained' onClick={() => setOpenModal(true)}>{actionButton}</Button>
-                    )}
+                    <Box sx={{ display: 'flex', gap: 1, justifyContent: 'end'}}>
+                    { actionButtons.map((button, index) => (
+                        <Button key={index} sx={{ background: button.color }} variant='contained' onClick={() => handleOpen(button.text!)}>{ button.text }</Button>
+                    ))}        
+                    </Box>
                 </Grid>
                 {children}
             </Grid>
@@ -38,7 +74,7 @@ const Details = ({ children, title, editForm, data, actionButton, actionButtonCo
                 <DialogTitle>
                     <Typography sx={{ fontSize: 25 }} fontWeight='bold'>{modalTitle}</Typography>
                 </DialogTitle>
-                {cloneElement(editForm, { defaultData: data, setOpenModal: setOpenModal })}
+                {cloneElement(activeFrom, { defaultData: activeDefaultData || [], setOpenModal: setOpenModal })}
             </Dialog>
         </Box>
     )

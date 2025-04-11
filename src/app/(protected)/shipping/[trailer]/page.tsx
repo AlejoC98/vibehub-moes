@@ -12,21 +12,34 @@ import Swal from 'sweetalert2'
 import BasicTable from '@/components/tables/basic_table'
 import { GridColDef } from '@mui/x-data-grid'
 import CompleteOrderForm from '@/components/forms/complete_shipping_form'
+import SearchList from '@/components/search_pick_list'
+import dayjs from 'dayjs'
+import { convertTimeByTimeZone, findUserByUUID } from '@/utils/functions/main'
 
 const OrderDetails = () => {
 
   const params = useParams();
-  const { shippings, setIsLaunching } = useContext(GlobalContext);
+  const { shippings, users, setIsLaunching } = useContext(GlobalContext);
+
   const [data, setData] = useState<ShippingContent>();
+  const [createdBy, setCreatedBy] = useState<string>();
+  const [closedBy, setCloseddBy] = useState<string>();
   const [totalOrderShipped, setTotalOrderShipped] = useState<number>();
 
-  const PickListColumns: GridColDef[] = [
-    { field: 'pl_number', headerName: 'PL #', pinnable: true },
-    { field: 'bol_number', headerName: 'BOL #' },
-    { field: 'picker_name', headerName: 'Picker' },
-    { field: 'verified_by', headerName: 'Verified By' },
-    { field: 'total_products', headerName: 'Total Products' },
-  ];
+  const actionButtons = [
+    {
+      'text': data?.status != 'Shipped' ? 'Complete' : undefined,
+      'color': '#64B6AC',
+      'form': <CompleteOrderForm />,
+      'data': data
+    },
+    {
+      'text': 'Add Pick',
+      'color': '#333',
+      'form': <PickListForm />,
+      'data': {}
+    },
+  ]
 
   useEffect(() => {
     setIsLaunching(false);
@@ -34,6 +47,10 @@ const OrderDetails = () => {
 
   useEffect(() => {
     var currentShipping = shippings?.find(s => s.trailer_number == params?.trailer!);
+
+    setCreatedBy(findUserByUUID(users!, data?.created_by!));
+    setCloseddBy(findUserByUUID(users!, data?.created_by!));
+
     if (shippings != undefined) {
       if (currentShipping != null) {
         const totalProducts = currentShipping?.shippings_pick_list
@@ -53,42 +70,65 @@ const OrderDetails = () => {
   return (
     <Box>
       <Details
-        editForm={<CompleteOrderForm />}
-        actionButton={ data?.status != 'Shipped' ? 'Complete' : undefined}
-        actionButtonColor='#64B6AC'
+        actionButtons={actionButtons}
         title='Shipping Order'
         modalTitle='Complete Shipping Order?'
-        data={data}
       >
-        <Grid size={{ xl: 2, lg: 2, md: 12, sm: 12, xs: 12}} sx={{ marginBottom: 5}}>
+        <Grid size={{ xl: 3, lg: 3, md: 12, sm: 12, xs: 12 }} sx={{ marginBottom: 5 }}>
           <Block>
-            <Grid container spacing={2}>
-              <Grid size={12}>
-                <Typography variant='h6' fontWeight='bold'>Carrier</Typography>
-                <Typography>{data?.carrier}</Typography>
+            <Grid container spacing={5}>
+              <Grid size={6}>
+                {createdBy != undefined && (
+                  <Box>
+                    <Typography variant='h6' fontWeight='bold'>Created By</Typography>
+                    <Typography>{ }</Typography>
+                  </Box>
+                )}
+                <Box>
+                  <Typography variant='h6' fontWeight='bold'>Carrier</Typography>
+                  <Typography>{data?.carrier}</Typography>
+                </Box>
+                <Box>
+                  <Typography variant='h6' fontWeight='bold'>Trailer Number</Typography>
+                  <Typography>{data?.trailer_number}</Typography>
+                </Box>
+                {data?.closed_by != null && (
+                  <Box>
+                    <Typography variant='h6' fontWeight='bold'>Close By</Typography>
+                    <Typography>{ closedBy }</Typography>
+                  </Box>
+                )}
+                {data?.closed_at != null && (
+                  <Box>
+                    <Typography variant='h6' fontWeight='bold'>Close By</Typography>
+                    <Typography>{convertTimeByTimeZone(data?.closed_at)}</Typography>
+                  </Box>
+                )}
               </Grid>
-              <Grid size={12}>
-                <Typography variant='h6' fontWeight='bold'>Dock Door</Typography>
-                <Typography>{data?.dock_door}</Typography>
-              </Grid>
-              <Grid size={12}>
-                <Typography variant='h6' fontWeight='bold'>Trailer Number</Typography>
-                <Typography>{data?.trailer_number}</Typography>
-              </Grid>
-              <Grid size={12}>
-                <Typography variant='h6' fontWeight='bold'>Total Shipped</Typography>
-                <Typography>{totalOrderShipped}</Typography>
-              </Grid>
-              <Grid size={12}>
-                <Typography variant='h6' fontWeight='bold'>Shipped</Typography>
-                <Typography>{totalOrderShipped}</Typography>
+              <Grid size={6}>
+                {data?.created_at != undefined && (
+                  <Box>
+                    <Typography variant='h6' fontWeight='bold'>Created At</Typography>
+                    <Typography>{dayjs(data?.created_at).format('ddd MMM DD YYYY hh:mm A')}</Typography>
+                  </Box>
+                )}
+                <Box>
+                  <Typography variant='h6' fontWeight='bold'>Dock Door</Typography>
+                  <Typography>{data?.dock_door}</Typography>
+                </Box>
+                <Box>
+                  <Typography variant='h6' fontWeight='bold'>Total Shipped</Typography>
+                  <Typography>{totalOrderShipped}</Typography>
+                </Box>
               </Grid>
             </Grid>
           </Block>
         </Grid>
-        <Grid size={{ xl: 10, lg: 10, md: 12, sm: 12, xs: 12}} sx={{ marginBottom: 5}}>
+        <Grid size={{ xl: 9, lg: 9, md: 12, sm: 12, xs: 12 }} sx={{ marginBottom: 5 }}>
           <Block>
-            <BasicTable title='Pick Lists' data={data?.shippings_pick_list || []} columns={PickListColumns} createForm={data?.status != 'Shipped' ? <PickListForm /> : undefined} createFormTitle={data?.status != 'Shipped' ?'Add Pick List' : undefined} created_column={true} />
+            <SearchList
+              data={data?.shippings_pick_list!}
+            />
           </Block>
         </Grid>
       </Details>

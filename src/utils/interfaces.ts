@@ -196,7 +196,9 @@ export interface ShippingContent {
     created_at: string;
     status: string;
     shipped_at: string;
-    created_by: number;
+    created_by: string;
+    closed_at?: string;
+    closed_by?: string;
     total_shipped: number;
     shippings_pick_list: PickListContent[];
 }
@@ -210,7 +212,7 @@ export interface PickListContent {
     total_products: number,
     notes: string;
     created_at: string;
-    created_by: number;
+    created_by: string;
     shippings_products:
     { id: number, created_at: string, product_sku: string, shipping_id: number, product_quantity: number }[];
 }
@@ -279,7 +281,7 @@ export interface NotificationContent {
     type: string;
     status: string;
     redirect_to: string;
-    created_by: number;
+    created_by: string;
     usernotificationstatus: RoleNotificationsContent[];
 }
 

@@ -248,7 +248,7 @@ const ReceivingForm = ({ defaultData, setOpenModal }: { defaultData?: ReceivingC
                         </Box>
                     </Grid>
                     <Grid size={12}>
-                        <Box sx={{ maxHeight: 300, overflowY: 'scroll', background: '#F4F4F4' }}>
+                        <Box sx={{ maxHeight: 300, overflowY: 'auto', background: '#F4F4F4' }}>
                             <List>
                                 {searchData?.map(item => {
                                     const labelId = `checkbox-list-label-${item.id}`;

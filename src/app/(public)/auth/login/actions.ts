@@ -20,7 +20,7 @@ export async function login(username: string, password: string) {
     }
 
   } else {
-    const { data: userQuery, error: userError } = await supabase.from('accounts').select().eq('username', username).maybeSingle();
+    const { data: userQuery, error: userError } = await supabase.from('accounts').select().eq('username', username.toLowerCase()).maybeSingle();
 
     if (userError) {
       return userError.message;

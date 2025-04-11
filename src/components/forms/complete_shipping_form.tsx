@@ -1,17 +1,19 @@
 'use client'
-import React, { useEffect, useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import { toast } from 'react-toastify';
 import { Box, Button, LinearProgress, Typography } from '@mui/material';
 import { ShippingContent } from '@/utils/interfaces';
 import { createClient } from '@/utils/supabase/client';
 import dayjs from 'dayjs';
+import { GlobalContext } from '@/utils/context/global_provider';
 
 const CompleteOrderForm = ({ defaultData, setOpenModal }: { defaultData?: ShippingContent, setOpenModal?: (status: boolean) => void }) => {
 
     const supabase = createClient();
+    const { userAccount } = useContext(GlobalContext);
 
-    const [allowComplete, setAllowComplete] = useState<boolean>(false);
     const [isShipping, setIsShipping] = useState<boolean>(false);
+    const [allowComplete, setAllowComplete] = useState<boolean>(false);
 
     const handleCompleteOrder = () => {
         try {
@@ -21,21 +23,22 @@ const CompleteOrderForm = ({ defaultData, setOpenModal }: { defaultData?: Shippi
                 const { data, error } = await supabase.from('shippings_orders').update({
                     'status': 'Shipped',
                     'shipped_at': dayjs().toDate(),
+                    'closed_at': new Date().toLocaleString(),
+                    'closed_by': userAccount?.user_id,
                 }).eq('id', defaultData?.id);
 
                 if (error) {
                     throw new Error(error.message);
                 }
 
-                setOpenModal!(false);
-
                 toast.success('Order Completed!');
                 window.location.reload();
             }, 2000);
-
+            
         } catch (error: any) {
             toast.warning(error.message);
         }
+        setOpenModal!(false);
     }
 
     useEffect(() => {

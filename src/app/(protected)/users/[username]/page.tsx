@@ -73,26 +73,26 @@ const UserDetails = () => {
         }
     }
 
-    const loadUserHistory = async () => {
-        // try {
-        //     const results: any = {};
+    // const loadUserHistory = async () => {
+    //     try {
+    //         const results: any = {};
 
-        //     for (const table of tables) {
-        //         const { data, error } = await supabase
-        //             .from(table)
-        //             .select('*')
-        //             .eq('created_by', userData?.user_id);
+    //         for (const table of tables) {
+    //             const { data, error } = await supabase
+    //                 .from(table)
+    //                 .select('*')
+    //                 .eq('created_by', userData?.user_id);
 
-        //         if (error) {
-        //             console.error(`Error fetching from ${table}:`, error.message);
-        //         }
+    //             if (error) {
+    //                 console.error(`Error fetching from ${table}:`, error.message);
+    //             }
 
-        //         results[table] = data || [];
-        //     }
-        // } catch (error: any) {
-        //     toast.warning(error.message):
-        // }
-    }
+    //             results[table] = data || [];
+    //         }
+    //     } catch (error: any) {
+    //         toast.warning(error.message):
+    //     }
+    // }
 
     const sendResetEmailToUser = async () => {
         try {

@@ -44,7 +44,7 @@ const layout = ({ children }: { children: ReactNode }) => {
             sx={{
               display: 'flex',
               overflowX: 'hidden',
-              overflowY: 'scroll',
+              overflowY: 'auto',
               flexDirection: 'column',
               width: isMobile ? '100%' : `calc(100% - ${openMenu ? 250 : 50}px)`,
             }}
