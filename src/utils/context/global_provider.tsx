@@ -2,6 +2,7 @@
 import { createContext, ReactNode, useEffect, useState } from "react";
 import { AccountContent, AccountRolesContent, CarriersContent, CustomerContent, GlobalContent, LocationContent, NotificationContent, OrderContent, ProductContent, RackContent, ReceivingContent, RoleContent, RoleNotificationContent, ShippingContent, VendorsContent } from "@/utils/interfaces";
 import { createClient } from "@/utils/supabase/client";
+import { createNotification } from "../functions/main";
 
 export const GlobalContext = createContext<GlobalContent>({
     isLaunching: true,
@@ -33,6 +34,9 @@ const GlobalProvider = ({ children }: { children: ReactNode }) => {
         .on('postgres_changes', {
             event: '*', schema: 'public', table: 'shippings_orders'
         }, (payload) => {
+            if (payload.eventType === 'INSERT') {
+                createNotification([1, 2, 3], `/shipping/${payload.new['trailer_number']}`);
+            }
             setTimeout(() => {
                 getShippingsOrders();
             }, 1000);

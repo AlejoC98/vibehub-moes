@@ -6,6 +6,7 @@ import { GridColDef } from '@mui/x-data-grid';
 import { RefObject, useContext } from 'react';
 import { formatInTimeZone } from 'date-fns-tz';
 import { GlobalContext } from '../context/global_provider';
+import { createClient } from '../supabase/client';
 
 export const calculateRevenue = (data: OrderContent[]) => {
   let totalReturn = 0;
@@ -179,5 +180,35 @@ export const convertTimeByTimeZone = (sessionTimeZone: string, utcDate?: string)
     return formatted; 
   } catch (error) {
     console.log(error);
+  }
+}
+
+export const createNotification = async(roles: number[], redirect_to: string) => {
+
+  const supabase = await createClient();
+
+  try {
+    const { data: newNoti, error } = await supabase.from('notifications').insert({
+      'title': 'Shipping Order Created',
+      'text': 'Someone has cerate a new shipping order.',
+      'type': 'Shipping',
+      'status': 'New',
+      'redirect_to': redirect_to,
+      // 'redirect_to': `/shipping/${newOrder['trailer_number']}`,
+  }).select().single();
+
+  if (error) {
+      throw new Error(error.message);
+  }
+
+  for (var role of roles) {
+      await supabase.from('roles_notifications').insert({
+          'notification_id': newNoti!['id'],
+          'role_id': role,
+      });
+  }
+  } catch (error: any) {
+    toast.warning(error.message);
+    console.log(error.message); 
   }
 }

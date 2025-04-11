@@ -50,25 +50,6 @@ const OldShippingForm = ({ defaultData, setOpenModal }: { defaultData?: Shipping
                 throw new Error(orderError.message);
             }
 
-            const { data: newNoti, error } = await supabase.from('notifications').insert({
-                'title': 'Shipping Order Created',
-                'text': 'Someone has cerate a new shipping order.',
-                'type': 'Shipping',
-                'status': 'New',
-                'redirect_to': `/shipping/${newOrder['trailer_number']}`,
-            }).select().single();
-
-            if (error) {
-                throw new Error(error.message);
-            }
-
-            for (var role of [1, 3]) {
-                await supabase.from('roles_notifications').insert({
-                    'notification_id': newNoti!['id'],
-                    'role_id': role,
-                });
-            }
-
             setTimeout(() => {
                 // setIsLoading(false);
                 router.push(`shipping/${formData.trailer_number}`);

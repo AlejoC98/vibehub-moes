@@ -7,7 +7,7 @@ import BasicTable from '@/components/tables/basic_table';
 import { GlobalContext } from '@/utils/context/global_provider';
 import { GridColDef } from '@mui/x-data-grid';
 import { convertTimeByTimeZone } from '@/utils/functions/main';
-import OldShippingForm from '@/components/forms/old_shipping_form';
+import ShippingForm from '@/components/forms/shipping_form';
 
 const Shipping = () => {
 
@@ -61,7 +61,7 @@ const Shipping = () => {
         <Grid container spacing={5}>
             <Grid size={12}>
                 <Block>
-                    <BasicTable title='Shipping Orders' data={shippings || []} columns={shippingColumns} createForm={<OldShippingForm />} createFormTitle='Create Shipping Order' created_column={true} source='shippings_orders' />
+                    <BasicTable title='Shipping Orders' data={shippings || []} columns={shippingColumns} createForm={<ShippingForm />} createFormTitle='Create Shipping Order' created_column={true} source='shippings_orders' />
                 </Block>
             </Grid>
         </Grid>

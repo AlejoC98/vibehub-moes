@@ -200,6 +200,7 @@ export interface ShippingContent {
     created_by: string;
     closed_at?: string;
     closed_by?: string;
+    assign_to?: string;
     total_shipped: number;
     shippings_pick_list: PickListContent[];
 }
