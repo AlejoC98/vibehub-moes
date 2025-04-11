@@ -13,7 +13,6 @@ export async function login(username: string, password: string) {
   }
 
   if (username.includes('@')) {
-
     data = {
       email: username,
       password: password,
