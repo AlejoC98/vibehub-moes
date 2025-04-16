@@ -1,4 +1,3 @@
-
 div {
   --sb-track-color: #60676b;
   --sb-thumb-color: #3e3e3e;
@@ -23,7 +22,7 @@ div::-webkit-scrollbar-thumb {
 @supports not selector(::-webkit-scrollbar) {
   div {
     scrollbar-color: var(--sb-thumb-color)
-                     var(--sb-track-color);
+    var(--sb-track-color);
   }
 }
 

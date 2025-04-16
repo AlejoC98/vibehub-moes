@@ -7,7 +7,7 @@ import BasicTable from '@/components/tables/basic_table';
 import { GlobalContext } from '@/utils/context/global_provider';
 import { GridColDef } from '@mui/x-data-grid';
 import { convertTimeByTimeZone } from '@/utils/functions/main';
-import ShippingForm from '@/components/forms/shipping_form';
+import ShippingForm from '@/components/forms/shipping/shipping_form';
 
 const Shipping = () => {
 

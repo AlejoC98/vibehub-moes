@@ -14,31 +14,6 @@ const CompleteOrderForm = ({ defaultData, setOpenModal }: { defaultData?: Shippi
     const [isShipping, setIsShipping] = useState<boolean>(false);
     const [allowComplete, setAllowComplete] = useState<boolean>(false);
 
-    const handleCompleteOrder = () => {
-        try {
-            setIsShipping(true);
-
-            setTimeout(async () => {
-                const { data, error } = await supabase.from('shippings_orders').update({
-                    'status': 'Shipped',
-                    'closed_at': new Date(),
-                    'closed_by': userAccount?.user_id,
-                }).eq('id', defaultData?.id);
-
-                if (error) {
-                    throw new Error(error.message);
-                }
-
-                toast.success('Order Completed!');
-                window.location.reload();
-            }, 2000);
-            
-        } catch (error: any) {
-            toast.warning(error.message);
-        }
-        setOpenModal!(false);
-    }
-
     useEffect(() => {
         setAllowComplete(defaultData!.shippings_pick_list.length > 0);
     }, [defaultData])

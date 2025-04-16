@@ -155,15 +155,14 @@ export const findUserByUUID = (users: AccountContent[], match: string) => {
   try {
     const userFound = users.find(u => u.user_id == match);
 
-  if (userFound == undefined) {
-    throw new Error('User not found!');
-  }
+    if (userFound == undefined) {
+      throw new Error('User not found!');
+    }
 
-  return userFound.username;
+    return userFound.username;
 
   } catch (error: any) {
-   console.log(error.message);
-   return undefined;
+    return undefined;
   }
 }
 
@@ -177,13 +176,13 @@ export const convertTimeByTimeZone = (sessionTimeZone: string, utcDate?: string)
     } else {
       formatted = formatInTimeZone(new Date(), sessionTimeZone, 'MMMM d, yyyy h:mm a');
     }
-    return formatted; 
+    return formatted;
   } catch (error) {
     console.log(error);
   }
 }
 
-export const createNotification = async(roles: number[], redirect_to: string) => {
+export const createNotification = async (roles: number[], redirect_to: string) => {
 
   const supabase = await createClient();
 
@@ -195,20 +194,48 @@ export const createNotification = async(roles: number[], redirect_to: string) =>
       'status': 'New',
       'redirect_to': redirect_to,
       // 'redirect_to': `/shipping/${newOrder['trailer_number']}`,
-  }).select().single();
+    }).select().single();
 
-  if (error) {
+    if (error) {
       throw new Error(error.message);
-  }
+    }
 
-  for (var role of roles) {
+    for (var role of roles) {
       await supabase.from('roles_notifications').insert({
-          'notification_id': newNoti!['id'],
-          'role_id': role,
+        'notification_id': newNoti!['id'],
+        'role_id': role,
       });
-  }
+    }
   } catch (error: any) {
     toast.warning(error.message);
-    console.log(error.message); 
+    console.log(error.message);
   }
+}
+
+export const hadleUploadToBucket = async (bucket: string, path: string, image: File) => {
+
+  const supabase = createClient();
+
+  const { error: imageError } = await supabase
+    .storage
+    .from(bucket)
+    .upload(path, image, {
+      cacheControl: '3600',
+      upsert: false
+    });
+
+  if (imageError) {
+    throw new Error(imageError.message);
+  }
+
+  const { data: signedURL, error: urlError } = await supabase
+    .storage
+    .from(bucket)
+    .createSignedUrl(path, 31_536_000);
+
+  if (urlError) {
+    throw new Error(urlError.message);
+  }
+
+  return signedURL;
 }

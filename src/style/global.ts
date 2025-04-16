@@ -1,5 +1,5 @@
 'use client'
-import { AppBar, Box, InputBase, Paper, TextField, alpha, styled } from "@mui/material";
+import { AppBar, Box, InputBase, Paper, StepConnector, TextField, alpha, stepConnectorClasses, styled } from "@mui/material";
 
 export const WhiteTextField = styled(TextField)({
     '& label.Mui-focused': {
@@ -103,4 +103,42 @@ export const Item = styled(Paper)(({ theme }) => ({
     padding: theme.spacing(1),
     textAlign: 'center',
     color: theme.palette.text.secondary,
+}));
+
+export const QontoConnector = styled(StepConnector)(({ theme }) => ({
+    [`&.${stepConnectorClasses.alternativeLabel}`]: {
+        top: 20,
+        left: 'calc(-45% + 16px)',
+        right: 'calc(55% + 16px)',
+    },
+    
+}));
+
+export const ColorlibStepIconRoot = styled('div')<{
+    ownerState: { completed?: boolean; active?: boolean };
+}>(({ theme, ownerState }) => ({
+    backgroundColor: '#ccc',
+    zIndex: 1,
+    color: '#fff',
+    width: 40,
+    height: 40,
+    display: 'flex',
+    borderRadius: '50%',
+    justifyContent: 'center',
+    alignItems: 'center',
+    variants: [
+        {
+          props: ({ ownerState }) => ownerState.active,
+          style: {
+            background: '#f9564f',
+            boxShadow: '0 4px 10px 0 rgba(0,0,0,.25)',
+          },
+        },
+        {
+          props: ({ ownerState }) => ownerState.completed,
+          style: {
+            background: '#42858C',
+          },
+        },
+      ],
 }));

@@ -101,17 +101,18 @@ export interface RoleContent {
 
 export interface ProductInput {
     id: number;
-    img: string;
     sku: string;
     name: string;
-    item_number: string;
+    item: string;
 }
 export interface ProductContent {
     id?: number;
-    img?: string;
+    img_url?: string;
     sku?: string;
     name?: string;
-    item_number: string;
+    item?: string;
+    created_at: string;
+    created_by: string;
 }
 
 export interface RackInput {
@@ -191,6 +192,22 @@ export interface ReceivingProductsContent {
     products: ProductContent;
 }
 
+export interface ShippingOrderProductInput {
+    is_ready: boolean;
+    product_quantity: number;
+    product_sku: string;
+    shipping_order_id: number;
+}
+
+export interface ShippingOrderProductContent {
+    is_ready: boolean;
+    product_quantity: number;
+    created_at: string;
+    created_by: string;
+    product_sku: string;
+    shipping_order_id: number;
+}
+
 export interface ShippingContent {
     id: number;
     carrier: string;
@@ -215,14 +232,16 @@ export interface PickListContent {
     bol_number: string;
     total_products: number,
     notes: string;
+    status: string;
     created_at: string;
     created_by: string;
-    shippings_products:
-    { id: number, created_at: string, product_sku: string, shipping_id: number, product_quantity: number }[];
+    shippings_products: ShippingOrderProductContent[] | any[];
 }
 
 export interface ShippingInput {
+    id?: number;
     carrier: string;
+    assign_to: string;
     dock_door: number;
     trailer_number: string;
 }
@@ -351,11 +370,6 @@ export interface AddressContent {
     updatedBy?: number;
     createdAt?: Date;
     updatedAt?: Date;
-}
-
-export interface OrderProductInput {
-    product: ProductContent,
-    quantity: number;
 }
 
 export interface OrderContent {
