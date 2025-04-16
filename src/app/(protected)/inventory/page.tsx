@@ -16,14 +16,14 @@ const Inventory = () => {
     const [locationData, setLocationData] = useState<RackLocationContent[]>([]);
 
     const productsColumns: GridColDef[] = [
+        { field: 'img_url', headerName: 'Image', renderCell: (params) => (
+          <Box sx={{ display: 'grid', placeItems: 'center'}}>
+            <img src={params.row.img_url} style={{ width: 45, height: 45}} alt="" />
+          </Box>
+        )},
+        { field: 'sku', headerName: 'Sku'},
+        { field: 'item', headerName: 'Item'},
         { field: 'name', headerName: 'Name'},
-        // { field: 'quantity', headerName: 'Quantity', valueGetter: (params) => {
-        //   return products?.reduce((total, product) => {
-        //     return total + product.positions.reduce((positionTotal, position) => positionTotal + position.quantity, 0);
-        //   }, 0);
-        // }},
-        { field: 'unit_price', headerName: 'Unit Price'},
-        { field: 'total_price', headerName: 'Total Price'},
         { field: 'deleted', headerName: 'Status', renderCell: (params) => (
           <Box className={`${params.row.deleted ? 'bg-red-800' : 'bg-green-800'} text-white px-2 py-1 rounded-lg`}>{params.row.deleted ? 'Inactive' : 'Active'}</Box>
         )}

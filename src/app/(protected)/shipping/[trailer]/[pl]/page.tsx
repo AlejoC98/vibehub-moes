@@ -4,7 +4,7 @@ import React, { useContext, useEffect, useState } from 'react'
 import { GlobalContext } from '@/utils/context/global_provider';
 import { PickListContent } from '@/utils/interfaces';
 import Swal from 'sweetalert2';
-import { Box, Typography } from '@mui/material';
+import { Box, Step, StepLabel, Stepper, Typography } from '@mui/material';
 import Grid from '@mui/material/Grid2'
 import { Block } from '@/style/global';
 import BasicTable from '@/components/tables/basic_table';
@@ -17,11 +17,12 @@ const PickListDetails = () => {
   const { shippings, setIsLaunching } = useContext(GlobalContext);
 
   const [data, setData] = useState<PickListContent>();
+  const [productsSteps, setProductsSteps] = useState<string[]>();
 
   const shippingProductsColumns: GridColDef[] = [
-      { field: 'product_sku', headerName: 'Sku' },
-      { field: 'product_quantity', headerName: 'Quantity' },
-    ];
+    { field: 'product_sku', headerName: 'Sku' },
+    { field: 'product_quantity', headerName: 'Quantity' },
+  ];
 
   useEffect(() => {
     const currentPL = shippings
@@ -29,6 +30,9 @@ const PickListDetails = () => {
       .find(spl => spl.pl_number === parseInt(params.pl as string));
     if (currentPL != null) {
       setData(currentPL);
+      const skuList = currentPL?.shippings_products?.map(product => product.product_sku
+      ) || [];
+      setProductsSteps(skuList);
     } else {
       Swal.fire({
         icon: 'info',
@@ -42,7 +46,7 @@ const PickListDetails = () => {
   return (
     <Box>
       <Details title='Pick List' actionButtons={[]}>
-      <Grid size={{ xl: 3, lg: 3, md: 12, sm: 12, xs: 12}} sx={{ marginBottom: 5}}>
+        <Grid size={{ xl: 3, lg: 3, md: 12, sm: 12, xs: 12 }} sx={{ marginBottom: 5 }}>
           <Block>
             <Grid container spacing={5}>
               <Grid size={{ lg: 6, md: 6, sm: 12, xs: 12 }}>
@@ -68,9 +72,22 @@ const PickListDetails = () => {
             </Grid>
           </Block>
         </Grid>
-        <Grid size={{ xl: 9, lg: 9, md: 12, sm: 12, xs: 12}} sx={{ marginBottom: 5}}>
+        <Grid size={{ xl: 9, lg: 9, md: 12, sm: 12, xs: 12 }} sx={{ marginBottom: 5 }}>
           <Block>
-          <BasicTable title='Product on order' data={data?.shippings_products || []} columns={shippingProductsColumns} created_column={true} />
+            <Stepper activeStep={1} alternativeLabel>
+              {productsSteps?.map((label) => (
+                <Step key={label}>
+                  <StepLabel>Product {label}</StepLabel>
+                </Step>
+              ))}
+            </Stepper>
+            <Box>
+              {productsSteps?.map((label) => (
+                <Grid container spacing={2}>
+
+                </Grid>
+              ))}
+            </Box>
           </Block>
         </Grid>
       </Details>

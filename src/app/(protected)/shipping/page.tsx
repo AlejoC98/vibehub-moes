@@ -6,8 +6,8 @@ import { Block } from '@/style/global';
 import BasicTable from '@/components/tables/basic_table';
 import { GlobalContext } from '@/utils/context/global_provider';
 import { GridColDef } from '@mui/x-data-grid';
-import ShippingForm from '@/components/forms/shipping_form';
 import { convertTimeByTimeZone } from '@/utils/functions/main';
+import ShippingForm from '@/components/forms/shipping/shipping_form';
 
 const Shipping = () => {
 

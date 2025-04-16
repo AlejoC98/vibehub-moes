@@ -2,6 +2,7 @@
 import { createContext, ReactNode, useEffect, useState } from "react";
 import { AccountContent, AccountRolesContent, CarriersContent, CustomerContent, GlobalContent, LocationContent, NotificationContent, OrderContent, ProductContent, RackContent, ReceivingContent, RoleContent, RoleNotificationContent, ShippingContent, VendorsContent } from "@/utils/interfaces";
 import { createClient } from "@/utils/supabase/client";
+import { createNotification } from "../functions/main";
 
 export const GlobalContext = createContext<GlobalContent>({
     isLaunching: true,
@@ -30,53 +31,62 @@ const GlobalProvider = ({ children }: { children: ReactNode }) => {
     useEffect(() => {
         // Realtime changes 
         const channel = supabase.channel('realtime changes')
-        .on('postgres_changes', {
-            event: '*', schema: 'public', table: 'shippings_orders'
-        }, (payload) => {
-            setTimeout(() => {
-                getShippingsOrders();
-            }, 1000);
-        })
-        .on('postgres_changes', {
-            event: '*', schema: 'public', table: 'shippings_pick_list'
-        }, (payload) => {
-            setTimeout(() => {
-                getShippingsOrders();
-            }, 1000);
-        })
-        .on('postgres_changes', {
-            event: '*', schema: 'public', table: 'notifications'
-        }, (payload) => {
-            setTimeout(async () => {
-                var currentUserSession = await supabase.auth.getUser();
+            .on('postgres_changes', {
+                event: '*', schema: 'public', table: 'shippings_orders'
+            }, (payload) => {
+                if (payload.eventType === 'INSERT') {
+                    createNotification([1, 2, 3], `/shipping/${payload.new['trailer_number']}`);
+                }
+                setTimeout(() => {
+                    getShippingsOrders();
+                }, 1000);
+            })
+            // .on('postgres_changes', {
+            //     event: '*', schema: 'public', table: 'shippings_pick_list'
+            // }, (payload) => {
+            //     setTimeout(() => {
+            //         getShippingsOrders();
+            //     }, 1000);
+            // })
+            // .on('postgres_changes', {
+            //     event: '*', schema: 'public', table: 'notifications'
+            // }, (payload) => {
+            //     setTimeout(async () => {
+            //         var currentUserSession = await supabase.auth.getUser();
 
-                var { data: userData } = await supabase.from('accounts').select().eq('user_id', currentUserSession?.data!.user!.id).single();
+            //         var { data: userData } = await supabase.from('accounts').select().eq('user_id', currentUserSession?.data!.user!.id).single();
 
-                getNotifications(userData.accounts_roles);
-            }, 1000);
-        })
-        .on('postgres_changes', {
-            event: '*', schema: 'public', table: 'accounts'
-        }, (payload) => {
-            setTimeout(() => {
-                getUser();
-            }, 1000);
-        })
-        .on('postgres_changes', {
-            event: '*', schema: 'public', table: 'accounts_roles'
-        }, (payload) => {
-            setTimeout(() => {
-                getUser();
-            }, 1000);
-        })
-        .on('postgres_changes', {
-            event: 'INSERT', schema: 'public', table: 'carriers'
-        }, (payload) => {
-            setTimeout(() => {
-                getCarriers();
-            }, 1000);
-        })
-        .subscribe();
+            //         getNotifications(userData.accounts_roles);
+            //     }, 1000);
+            // })
+            // .on('postgres_changes', {
+            //     event: '*', schema: 'public', table: 'accounts'
+            // }, (payload) => {
+            //     setTimeout(() => {
+            //         getUser();
+            //     }, 1000);
+            // })
+            // .on('postgres_changes', {
+            //     event: '*', schema: 'public', table: 'accounts_roles'
+            // }, (payload) => {
+            //     setTimeout(() => {
+            //         getUser();
+            //     }, 1000);
+            // })
+            // .on('postgres_changes', {
+            //     event: 'INSERT', schema: 'public', table: 'carriers'
+            // }, (payload) => {
+            //     setTimeout(() => {
+            //         getCarriers();
+            //     }, 1000);
+            // }).on('postgres_changes', {
+            //     event: '*', schema: 'public', table: 'products'
+            // }, (payload) => {
+            //     setTimeout(() => {
+            //         getProducts();
+            //     }, 1000);
+            // })
+            .subscribe();
         // .on('postgres_changes', {
         //         event: '*', schema: 'public', table: 'racks'
         //     }, (payload) => {
@@ -95,13 +105,13 @@ const GlobalProvider = ({ children }: { children: ReactNode }) => {
         //         setTimeout(() => {
         //             getRacks();
         //         }, 1000);
-            // }).on('postgres_changes', {
-            //     event: '*', schema: 'public', table: 'accounts'
-            // }, (payload) => {
-            //     setTimeout(() => {
-            //         getUser();
-            //     }, 1000);
-            // }).on('postgres_changes', {
+        // }).on('postgres_changes', {
+        //     event: '*', schema: 'public', table: 'accounts'
+        // }, (payload) => {
+        //     setTimeout(() => {
+        //         getUser();
+        //     }, 1000);
+        // }).on('postgres_changes', {
         //         event: '*', schema: 'public', table: 'vendors'
         //     }, (payload) => {
         //         setTimeout(() => {
@@ -148,7 +158,7 @@ const GlobalProvider = ({ children }: { children: ReactNode }) => {
 
         const getNotifications = async (account_roles?: AccountRolesContent[]) => {
 
-            var roleIds:number[] = [];
+            var roleIds: number[] = [];
 
             if (roles?.length == 0) {
                 roleIds = userAccount?.accounts_roles?.map(item => item.role_id) || [];
@@ -172,7 +182,7 @@ const GlobalProvider = ({ children }: { children: ReactNode }) => {
 
             const userTZ = Intl.DateTimeFormat().resolvedOptions().timeZone;
 
-            setUserAccount({...account, 'sessionTimeZone': userTZ});
+            setUserAccount({ ...account, 'sessionTimeZone': userTZ });
 
             getNotifications(account.accounts_roles);
         }

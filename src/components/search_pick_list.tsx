@@ -1,13 +1,46 @@
 'use client'
 import React, { MouseEvent, useEffect, useState } from 'react'
-import { Box, IconButton, InputAdornment, List, ListItem, ListItemButton, ListItemText, TextField, Typography } from '@mui/material'
+import { Box, Button, IconButton, InputAdornment, List, ListItem, ListItemButton, ListItemText, TextField, Typography } from '@mui/material'
 import Grid from '@mui/material/Grid2'
 import { PickListContent } from '@/utils/interfaces';
 import SearchIcon from '@mui/icons-material/Search';
 import CloseIcon from '@mui/icons-material/Close';
+import Link from 'next/link';
+import { usePathname } from 'next/navigation';
+
+
+function renderStatusContainer(status: string) {
+    switch (status) {
+              case 'Pending':
+                return <Box sx={{color: "#FFFFFF", height: '100%', display: 'grid', placeItems: 'center'}}>
+                  <Typography sx={{ background: '#FFE082', padding: '.5px 2px', borderRadius: 1 }}>{status}</Typography>
+                </Box>;
+              case 'Processing':
+                return <Box sx={{color: "#FFFFFF", height: '100%', display: 'grid', placeItems: 'center'}}>
+                  <Typography sx={{ background: '#64B5F6', padding: '.5px 2px', borderRadius: 1 }}>{status}</Typography>
+                </Box>;
+              case 'Shipped':
+                return <Box sx={{color: "#FFFFFF", height: '100%', display: 'grid', placeItems: 'center'}}>
+                  <Typography sx={{ background: '#242f40', padding: '.5px 2px', borderRadius: 1 }}>{status}</Typography>
+                </Box>;
+              case 'Delivered':
+                return <Box sx={{color: "#FFFFFF", height: '100%', display: 'grid', placeItems: 'center'}}>
+                  <Typography sx={{ background: '#81C784', padding: '.5px 2px', borderRadius: 1 }}>{status}</Typography>
+                </Box>;
+              case 'Cancelled':
+                return <Box sx={{color: "#FFFFFF", height: '100%', display: 'grid', placeItems: 'center'}}>
+                  <Typography sx={{ background: '#E57373', padding: '.5px 2px', borderRadius: 1 }}>{status}</Typography>
+                </Box>;
+              default:
+                return <Box sx={{or: "#FFFFFF", height: '100%', display: 'grid', placeItems: 'center'}}>
+                  <Typography sx={{ background: '#EEE', padding: '.5px 2px', borderRadius: 1 }}>{status}</Typography>
+                </Box>;
+            }
+}
 
 const SearchPickList = ({ data }: { data: PickListContent[] }) => {
 
+    const pathname = usePathname();
     const [keyword, setKeyWord] = useState<string>('');
     const [activePick, setActivePick] = useState<number>();
     const [displayData, setDisplayData] = useState<PickListContent[]>();
@@ -86,6 +119,7 @@ const SearchPickList = ({ data }: { data: PickListContent[] }) => {
                                     },
                                 }} onClick={() => setActivePick(activePick != index ? index : undefined)}>
                                 <ListItemText primary={item.pl_number} secondary='PL Number' />
+                                {renderStatusContainer(item.status)}
                             </ListItemButton>
                         ))}
                     </List>
@@ -93,6 +127,9 @@ const SearchPickList = ({ data }: { data: PickListContent[] }) => {
                 {activePick != undefined && (
                     <Grid size={{ xl: 6, lg: 6, md: 12, sm: 12, xs: 12 }} sx={{ maxHeight: 300, overflowY: 'auto' }}>
                         <Grid container spacing={2}>
+                            <Grid size={12}>
+                                <Button LinkComponent={Link} href={`${pathname}/${data[activePick].pl_number}`} fullWidth className='btn-munsell'>Start Pick</Button>
+                            </Grid>
                             <Grid size={6}>
                                 <Typography fontWeight='bold'>PL #</Typography>
                                 <Typography>{data[activePick].pl_number}</Typography>

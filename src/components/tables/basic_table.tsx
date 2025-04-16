@@ -292,12 +292,14 @@ const BasicTable = ({
         </Grid>
       </Grid>
       { createForm !== undefined && (
-        <Dialog onClose={handleClose} open={openModal} fullWidth>
-          <DialogTitle>
-            <Typography align='center' fontWeight='bold' sx={{ fontSize: 25}}>{createFormTitle}</Typography>
-          </DialogTitle>
-          {cloneElement(createForm, { defaultData: formData, setOpenModal: setOpenModal })}
-        </Dialog>
+        <Box sx={{ background: 'red', width: 800}}>
+          <Dialog fullWidth maxWidth='lg' onClose={handleClose} open={openModal}>
+            <DialogTitle>
+              <Typography align='center' fontWeight='bold' sx={{ fontSize: 25}}>{createFormTitle}</Typography>
+            </DialogTitle>
+            {cloneElement(createForm, { defaultData: formData, setOpenModal: setOpenModal })}
+          </Dialog>
+        </Box>
       )}
     </Box>
   )

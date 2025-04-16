@@ -3,13 +3,13 @@ import { Box, Typography } from '@mui/material'
 import React, { useContext, useEffect, useState } from 'react'
 import Grid from '@mui/material/Grid2'
 import Details from '@/components/details'
-import PickListForm from '@/components/forms/pick_list_form'
+import PickListForm from '@/components/forms/shipping/pick_list_form'
 import { Block } from '@/style/global'
 import { useParams, useRouter } from 'next/navigation'
 import { GlobalContext } from '@/utils/context/global_provider'
 import { ShippingContent } from '@/utils/interfaces'
 import Swal from 'sweetalert2'
-import CompleteOrderForm from '@/components/forms/complete_shipping_form'
+import CompleteOrderForm from '@/components/forms/shipping/complete_shipping_form'
 import SearchList from '@/components/search_pick_list'
 import { convertTimeByTimeZone, findUserByUUID } from '@/utils/functions/main'
 
@@ -24,20 +24,20 @@ const OrderDetails = () => {
   const [closedBy, setCloseddBy] = useState<string>();
   const [totalOrderShipped, setTotalOrderShipped] = useState<number>();
 
-  const actionButtons = [
-    {
-      'text': data?.status && 'Complete',
-      'color': '#64B6AC',
-      'form': <CompleteOrderForm />,
-      'data': data
-    },
-    {
-      'text': 'Add Pick',
-      'color': '#333',
-      'form': <PickListForm />,
-      'data': {}
-    },
-  ]
+  // const actionButtons = [
+    // {
+    //   'text': 'Start',
+    //   'color': '#64B6AC',
+    //   'form': <CompleteOrderForm />,
+    //   'data': data
+    // },
+    // {
+    //   'text': data?.status && 'Complete',
+    //   'color': '#64B6AC',
+    //   'form': <CompleteOrderForm />,
+    //   'data': data
+    // },
+  // ]
 
   useEffect(() => {
     setIsLaunching(false);
@@ -71,7 +71,7 @@ const OrderDetails = () => {
   return (
     <Box>
       <Details
-        actionButtons={data?.status != 'Shipped' ? actionButtons : []}
+        actionButtons={[]}
         title='Shipping Order'
         modalTitle='Complete Shipping Order?'
       >
