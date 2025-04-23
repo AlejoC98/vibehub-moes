@@ -134,8 +134,9 @@ const GlobalProvider = ({ children }: { children: ReactNode }) => {
 
             if (productsQuery!.length > 0) {
                 for (var product of productsQuery!) {
-                    var locationsQuery = await supabase.from('racks_locations').select().eq('product_id', product.id).maybeSingle();
-                    if (locationsQuery != null) {
+                    var { data: locationsQuery, error } = await supabase.from('racks_locations').select().eq('product_id', product.id).maybeSingle();
+
+                    if (!error && locationsQuery != null) {
                         returnProducts.push({ ...product, 'locations': locationsQuery });
                     } else {
                         returnProducts.push(product);
