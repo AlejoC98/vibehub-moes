@@ -2,7 +2,7 @@
 import { Box, Button, List, ListItem, ListItemIcon, ListItemText, Step, StepLabel, Stepper, TextField, Typography } from '@mui/material'
 import React, { ReactElement, useContext, useState } from 'react'
 import Grid from '@mui/material/Grid2';
-import { Block, NumberField } from '@/style/global';
+import { NumberField } from '@/style/global';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { toast } from 'react-toastify';
 import { ReceivingProductsInput, ReceivingContent } from '@/utils/interfaces';
@@ -12,6 +12,7 @@ import Swal from 'sweetalert2';
 import { useRouter } from 'next/navigation';
 import { GlobalContext } from '@/utils/context/global_provider';
 import { convertTimeByTimeZone } from '@/utils/functions/main';
+import Block from '@/components/block';
 
 const steps = [
     'Verify Information',

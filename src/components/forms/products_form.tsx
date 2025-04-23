@@ -52,9 +52,6 @@ const ProductsForm = ({ defaultData, setOpenModal }: { defaultData?: ProductInpu
 
       const { error } = await supabase.from('products').upsert({
         ...formData,
-        // 'sku': formData["sku"],
-        // 'name': formData["name"],
-        // 'item': formData["item"],
         'img_url': productURL.signedUrl,
         'created_by': userAccount?.user_id,
         'created_at': convertTimeByTimeZone(userAccount?.sessionTimeZone!)
