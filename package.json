@@ -29,6 +29,7 @@
     "react": "^19.0.0",
     "react-barcode": "^1.6.1",
     "react-dom": "^19.0.0",
+    "react-dropzone": "^14.3.8",
     "react-hook-form": "^7.54.2",
     "react-imask": "^7.6.1",
     "react-number-format": "^5.4.3",

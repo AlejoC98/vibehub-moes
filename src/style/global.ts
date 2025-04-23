@@ -87,14 +87,14 @@ export const NumberField = styled(TextField)({
     },
   });
 
-export const Block = styled(Box)(({ theme }) => ({
-    background: '#F4F4F4',
-    padding: theme.spacing(2),
-    ...theme.typography.body1,
-    borderRadius: 10,
-    boxShadow: '5px 10px 10px 0px rgba(0,0,0,0.35)',
-    height: '100%',
-}));
+// export const Block = styled(Box)(({ theme }) => ({
+//     background: '#F4F4F4',
+//     padding: theme.spacing(2),
+//     ...theme.typography.body1,
+//     borderRadius: 10,
+//     boxShadow: '5px 10px 10px 0px rgba(0,0,0,0.35)',
+//     height: '100%',
+// }));
 
 export const Item = styled(Paper)(({ theme }) => ({
     backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : 'transparent',

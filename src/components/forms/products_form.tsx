@@ -2,7 +2,7 @@
 import Grid from '@mui/material/Grid2';
 import React, { forwardRef, useContext, useState } from 'react'
 import { ProductInput } from '@/utils/interfaces'
-import { convertTimeByTimeZone, generateRandomNumberString, hadleUploadToBucket } from '@/utils/functions/main';
+import { convertTimeByTimeZone, generateRandomNumberString, handleUploadToBucket } from '@/utils/functions/main';
 import { toast } from 'react-toastify';
 import { NumberFormatBase, NumericFormat, PatternFormat } from 'react-number-format';
 import QrCodeIcon from '@mui/icons-material/QrCode';
@@ -37,6 +37,7 @@ const ProductsForm = ({ defaultData, setOpenModal }: { defaultData?: ProductInpu
 
   const productSku = watch('sku');
   const [productIMG, setProductIMG] = useState<File | null>(null);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
 
   const handleCreateSku = () => {
     const sku = generateRandomNumberString(15);
@@ -46,9 +47,10 @@ const ProductsForm = ({ defaultData, setOpenModal }: { defaultData?: ProductInpu
   const hanldeNewProduct: SubmitHandler<any> = async (formData) => {
     try {
 
-      const productURL = await hadleUploadToBucket('products', 'products', productIMG!);
+      setIsLoading(true);
+      const productURL = await handleUploadToBucket('products', formData["sku"], productIMG!);
 
-      const { data, error } = await supabase.from('products').insert({
+      const { error } = await supabase.from('products').insert({
         'sku': formData["sku"],
         'name': formData["name"],
         'item': formData["item"],
@@ -60,12 +62,13 @@ const ProductsForm = ({ defaultData, setOpenModal }: { defaultData?: ProductInpu
       if (error) {
         throw new Error(error.message);
       }
+      setOpenModal!(false);
       toast.success('Product Created!');
     } catch (error: any) {
       console.error(error);
       toast.warning(error.message);
     }
-
+    setIsLoading(false);
   }
 
   const MaskedInput = forwardRef<HTMLInputElement, CustomMaskProps>(
@@ -95,7 +98,7 @@ const ProductsForm = ({ defaultData, setOpenModal }: { defaultData?: ProductInpu
     <Box sx={{ flexGrow: 1, padding: 5 }}>
       <form onSubmit={handleSubmit(hanldeNewProduct)}>
         <Grid container spacing={2}>
-          <Grid size={12} sx={{ display: 'grid', placeItems: 'center'}}>
+          <Grid size={12}>
             <UploadImageForm productIMG={productIMG} setProductIMG={setProductIMG} />
           </Grid>
           <Grid size={12}>
@@ -124,17 +127,18 @@ const ProductsForm = ({ defaultData, setOpenModal }: { defaultData?: ProductInpu
               fullWidth
               required
               disabled
+              placeholder='Click button to generate sku'
               label={productSku == undefined ? 'Sku' : ''}
               {...register('sku', { required: 'Sku is required' })}
               slotProps={{
                 input: {
-                  endAdornment: <IconButton disabled={defaultData!.sku !== undefined} className="bg-emerald-600 hover:bg-emerald-800 text-white" onClick={handleCreateSku}><QrCodeIcon /></IconButton>
+                  endAdornment: <IconButton sx={{ background: '#b2b2b2', color: '#FFFFFF'}} disabled={defaultData!.sku !== undefined} className="bg-emerald-600 hover:bg-emerald-800 text-white" onClick={handleCreateSku}><QrCodeIcon /></IconButton>
                 }
               }}
             />
           </Grid>
           <Grid size={12}>
-            <SubmitButton fullWidth={true} btnText='Create' className='btn-munsell' />
+            <SubmitButton fullWidth={true} isLoading={isLoading} btnText='Create' className='btn-munsell' />
           </Grid>
         </Grid>
       </form>

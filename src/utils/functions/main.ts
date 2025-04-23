@@ -212,14 +212,38 @@ export const createNotification = async (roles: number[], redirect_to: string) =
   }
 }
 
-export const hadleUploadToBucket = async (bucket: string, path: string, image: File) => {
-
+export const handleUploadToBucket = async (bucket: string, path: string, image: File) => {
   const supabase = createClient();
+
+  const extension = image.name.split('.').pop();
+  const fullPath = `${path}.${extension}`;
+
+  const { data: existingFile, error: statError } = await supabase
+    .storage
+    .from(bucket)
+    .list('', { search: fullPath });
+
+  if (statError) {
+    throw new Error(statError.message);
+  }
+
+  const fileExists = existingFile?.some(file => file.name === fullPath.split('/').pop());
+
+  if (fileExists) {
+    const { error: deleteError } = await supabase
+      .storage
+      .from(bucket)
+      .remove([fullPath]);
+
+    if (deleteError) {
+      throw new Error(deleteError.message);
+    }
+  }
 
   const { error: imageError } = await supabase
     .storage
     .from(bucket)
-    .upload(path, image, {
+    .upload(fullPath, image, {
       cacheControl: '3600',
       upsert: false
     });
@@ -228,14 +252,15 @@ export const hadleUploadToBucket = async (bucket: string, path: string, image: F
     throw new Error(imageError.message);
   }
 
+  // Create signed URL
   const { data: signedURL, error: urlError } = await supabase
     .storage
     .from(bucket)
-    .createSignedUrl(path, 31_536_000);
+    .createSignedUrl(fullPath, 31_536_000);
 
   if (urlError) {
     throw new Error(urlError.message);
   }
 
   return signedURL;
-}
+};

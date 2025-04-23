@@ -7,7 +7,7 @@ import { useParams } from 'next/navigation'
 import { ReceivingContent } from '@/utils/interfaces'
 import PutAwayTask from '@/components/tasks/put_away_task'
 import Grid from '@mui/material/Grid2'
-import { Block } from '@/style/global'
+import Block from '@/components/block';
 
 const ReceivingDetails = () => {
 

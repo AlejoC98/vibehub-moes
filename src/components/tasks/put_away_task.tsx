@@ -1,7 +1,7 @@
 'use client'
 import React, { useContext, useEffect, useState } from 'react';
 import Grid from '@mui/material/Grid2';
-import { Block } from '@/style/global';
+import Block from '@/components/block';
 import SearchIcon from '@mui/icons-material/Search';
 import { Button, IconButton, InputAdornment, List, ListItem, ListItemText, TextField } from '@mui/material';
 import { RackLocationContent, ReceivingProductsInput, ReceivingContent, ReceivingProductsContent } from '@/utils/interfaces';

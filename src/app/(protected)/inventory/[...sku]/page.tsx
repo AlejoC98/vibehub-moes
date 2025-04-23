@@ -4,7 +4,7 @@ import React, { useContext, useEffect, useRef, useState } from 'react'
 import { GlobalContext } from '@/utils/context/global_provider';
 import { Box, IconButton, Typography } from '@mui/material';
 import Grid from '@mui/material/Grid2'
-import { Block } from '@/style/global';
+import Block from '@/components/block';
 import PrintIcon from '@mui/icons-material/Print';
 import Barcode from 'react-barcode';
 import { useReactToPrint } from 'react-to-print';

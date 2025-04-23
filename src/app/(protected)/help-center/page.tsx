@@ -3,7 +3,7 @@ import React, { useContext, useEffect } from 'react'
 import { GlobalContext } from '@/utils/context/global_provider'
 import { Box, Typography } from '@mui/material';
 import Grid from '@mui/material/Grid2'
-import { Block } from '@/style/global';
+import Block from '@/components/block';
 import TicketForm from '@/components/forms/ticket_forms';
 import CustomAccordionSummary from '@/components/custom_accordion_summary';
 

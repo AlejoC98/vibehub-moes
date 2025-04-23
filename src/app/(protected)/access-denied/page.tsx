@@ -3,7 +3,7 @@ import { GlobalContext } from '@/utils/context/global_provider';
 import { Box, Typography } from '@mui/material';
 import React, { useContext, useEffect } from 'react'
 import Grid from '@mui/material/Grid2'
-import { Block } from '@/style/global';
+import Block from '@/components/block';
 
 const AccessDenied = () => {
 

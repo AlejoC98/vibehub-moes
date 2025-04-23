@@ -3,7 +3,7 @@ import { Avatar, Box, Chip, List, ListItem, ListItemText, Typography } from '@mu
 import React, { useContext, useEffect, useState } from 'react'
 import { GlobalContext } from '@/utils/context/global_provider';
 import Grid from '@mui/material/Grid2'
-import { Block } from '@/style/global';
+import Block from '@/components/block';
 import { HugeiconsIcon } from '@hugeicons/react';
 import { Building03Icon, Location01Icon } from '@hugeicons/core-free-icons';
 import UpgradePlan from '@/components/upgrade_plan';

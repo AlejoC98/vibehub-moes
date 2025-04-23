@@ -6,7 +6,7 @@ import { GlobalContext } from '@/utils/context/global_provider';
 import BasicTable from '@/components/tables/basic_table';
 import { GridColDef } from '@mui/x-data-grid';
 import ReceivingForm from '@/components/forms/receiving_form';
-import { Block } from '@/style/global';
+import Block from '@/components/block';
 
 const Receiving = () => {
   

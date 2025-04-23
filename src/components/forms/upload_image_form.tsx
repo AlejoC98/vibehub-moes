@@ -1,100 +1,105 @@
-import { Box, IconButton } from '@mui/material'
-import React, { useRef, useState } from 'react'
+import React, { useCallback, useState, useRef, useEffect } from 'react';
+import { useDropzone } from 'react-dropzone';
+import { Box, IconButton, Typography } from '@mui/material';
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import CloseIcon from '@mui/icons-material/Close';
 
-const UploadImageForm = ({ productIMG, setProductIMG } : { productIMG: File | null, setProductIMG: (img: File | null) => void }) => {
+type Props = {
+  productIMG: File | null;
+  setProductIMG: (img: File | null) => void;
+};
 
+const ImageDropzone: React.FC<Props> = ({ productIMG, setProductIMG }) => {
   const [preview, setPreview] = useState<string | null>(null);
   const imageRef = useRef<HTMLImageElement>(null);
 
-  const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const file = event.target.files?.[0];
+  const onDrop = useCallback((acceptedFiles: File[]) => {
+    const file = acceptedFiles[0];
     if (file && file.type.startsWith('image/')) {
       setProductIMG(file);
-
       const reader = new FileReader();
-      reader.onload = () => {
-        setPreview(reader.result as string);
-      };
+      reader.onload = () => setPreview(reader.result as string);
       reader.readAsDataURL(file);
     }
-  };
+  }, [setProductIMG]);
 
   const removeImage = () => {
     setPreview(null);
     setProductIMG(null);
-  }
+  };
+
+  useEffect(() => {
+    // Cleanup object URL when component unmounts
+    return () => {
+      if (preview) URL.revokeObjectURL(preview);
+    };
+  }, [preview]);
+
+  const { getRootProps, getInputProps, isDragActive } = useDropzone({
+    onDrop,
+    accept: { 'image/*': [] },
+    maxFiles: 1
+  });
 
   return (
-    <Box>
-
-      { productIMG == undefined ? (
-        <label htmlFor="file-upload">
-        <input
-          id="file-upload"
-          type="file"
-          accept="image/*"
-          hidden
-          onChange={handleFileChange}
-        />
-        <IconButton
-          component="span"
+    <Box sx={{ display: 'grid', placeItems: productIMG ? 'center' : 'inherit' }}>
+      {!productIMG ? (
+        <Box
+          {...getRootProps()}
           sx={{
-            background: '#f0f0f0',
-            display: 'flex',
-            justifyContent: 'center',
-            placeItems: 'center',
-            width: 100,
-            height: 100,
+            border: '2px dashed #ccc',
             borderRadius: 2,
-            WebkitBoxShadow: '0px 10px 15px -8px rgba(0,0,0,0.75)',
-            boxShadow: '0px 10px 15px -8px rgba(0,0,0,0.75)',
+            padding: 3,
+            textAlign: 'center',
+            cursor: 'pointer',
+            backgroundColor: isDragActive ? '#f0f8ff' : '#fafafa',
+            transition: '0.2s ease',
+            '&:hover': {
+              backgroundColor: '#f5f5f5'
+            }
           }}
         >
-          <CloudUploadIcon sx={{ color: "#42858C", fontSize: 60}} />
-        </IconButton>
-      </label>
+          <input {...getInputProps()} />
+          <CloudUploadIcon sx={{ fontSize: 40, color: '#42858C' }} />
+          <Typography variant="body1" mt={1}>
+            {isDragActive
+              ? "Drop the image here..."
+              : "Drag & drop or click to upload an image"}
+          </Typography>
+        </Box>
       ) : (
-        <Box mt={2} sx={{
-          position: 'relative',
-          '&:hover .hover-cover': {
-            opacity: 1,
-            pointerEvents: 'auto',
-          },
-          '&:hover .hover-close': {
-            background: '#fff'
-          },
-        }}>
-          <Box className='hover-cover'
-            sx={{
-              position: 'absolute',
-              top: 0,
-              left: 0,
-              bottom: 0,
-              right: 0,
-              background: 'rgba(0, 0, 0, 0.2)',
-              opacity: 0,
-              transition: '0.3s ease',
-              pointerEvents: 'none',
-              borderRadius: 2
-
-            }}
-          />
-          <IconButton className="hover-close" sx={{ position: 'absolute', top: 5, right: 5, width: 20, height: 20}} onClick={removeImage}>
-            <CloseIcon fontSize='small' />
-          </IconButton>
+        <Box mt={2} sx={{ position: 'relative', width: 'fit-content' }}>
           <img
             ref={imageRef}
             src={preview || undefined}
             alt="Preview"
-            onLoad={() => console.log('Image loaded!')}
-            style={{ maxWidth: '200px', borderRadius: '8px'}}
+            style={{
+              maxWidth: '200px',
+              borderRadius: '8px',
+              display: 'block'
+            }}
           />
+          <IconButton
+            onClick={removeImage}
+            sx={{
+              position: 'absolute',
+              top: 5,
+              right: 5,
+              backgroundColor: '#fff',
+              border: '1px solid #ccc',
+              width: 24,
+              height: 24,
+              '&:hover': {
+                backgroundColor: '#eee'
+              }
+            }}
+          >
+            <CloseIcon fontSize="small" />
+          </IconButton>
         </Box>
       )}
     </Box>
-  )
-}
+  );
+};
 
-export default UploadImageForm
+export default ImageDropzone;

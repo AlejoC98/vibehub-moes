@@ -79,13 +79,14 @@ const GlobalProvider = ({ children }: { children: ReactNode }) => {
             //     setTimeout(() => {
             //         getCarriers();
             //     }, 1000);
-            // }).on('postgres_changes', {
-            //     event: '*', schema: 'public', table: 'products'
-            // }, (payload) => {
-            //     setTimeout(() => {
-            //         getProducts();
-            //     }, 1000);
             // })
+            .on('postgres_changes', {
+                event: '*', schema: 'public', table: 'products'
+            }, (payload) => {
+                setTimeout(() => {
+                    getProducts();
+                }, 1000);
+            })
             .subscribe();
         // .on('postgres_changes', {
         //         event: '*', schema: 'public', table: 'racks'

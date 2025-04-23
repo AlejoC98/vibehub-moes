@@ -1,6 +1,6 @@
 import { Box, Typography, useMediaQuery } from '@mui/material'
 import React, { ReactNode, useContext } from 'react'
-import { Block } from '@/style/global';
+import Block from '@/components/block';
 
 const Metrics = ({ color = '#333', title, icon, content, footer } : { color?: string, title?: string, icon?: ReactNode, content?: any, footer?: string }) => {
 

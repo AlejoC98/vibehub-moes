@@ -4,7 +4,7 @@ import React, { useContext, useEffect, useState } from 'react'
 import Grid from '@mui/material/Grid2'
 import Details from '@/components/details'
 import PickListForm from '@/components/forms/shipping/pick_list_form'
-import { Block } from '@/style/global'
+import Block from '@/components/block';
 import { useParams, useRouter } from 'next/navigation'
 import { GlobalContext } from '@/utils/context/global_provider'
 import { ShippingContent } from '@/utils/interfaces'

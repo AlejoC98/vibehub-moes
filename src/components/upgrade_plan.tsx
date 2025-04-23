@@ -1,5 +1,5 @@
 import React from 'react'
-import { Block } from '@/style/global'
+import Block from '@/components/block';
 import { Typography } from '@mui/material'
 
 const UpgradePlan = () => {

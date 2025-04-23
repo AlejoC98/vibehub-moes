@@ -1,7 +1,7 @@
 'use client'
 import { Box, Skeleton } from '@mui/material'
 import Grid from '@mui/material/Grid2'
-import { Block } from '@/style/global'
+import Block from '@/components/block';
 import BasicTable from '@/components/tables/basic_table'
 import ProductsForm from '@/components/forms/products_form'
 import { GridColDef } from '@mui/x-data-grid'

@@ -6,7 +6,7 @@ import { PickListContent } from '@/utils/interfaces';
 import Swal from 'sweetalert2';
 import { Box, Step, StepLabel, Stepper, Typography } from '@mui/material';
 import Grid from '@mui/material/Grid2'
-import { Block } from '@/style/global';
+import Block from '@/components/block';
 import BasicTable from '@/components/tables/basic_table';
 import { GridColDef } from '@mui/x-data-grid';
 import Details from '@/components/details';
