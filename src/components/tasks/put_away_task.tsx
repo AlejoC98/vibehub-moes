@@ -12,7 +12,7 @@ import { createClient } from '@/utils/supabase/client';
 const PutAwayTask = ({ data, updateData } : { data: ReceivingContent, updateData: (data: ReceivingContent) => void}) => {
 
     const supabase = createClient();
-    const { racks } = useContext(GlobalContext);
+    const { racks, userAccount } = useContext(GlobalContext);
 
     const [findSku, setFindSku] = useState<string>();
     const [putAwayProduct, setPutAwayProduct] = useState<ReceivingProductsInput>();
@@ -31,7 +31,9 @@ const PutAwayTask = ({ data, updateData } : { data: ReceivingContent, updateData
                 name: product.products.name,
                 expected_quantity: product.expected_quantity,
                 received_quantity: product.received_quantity,
-                damaged_quantity: product.damage_quantity
+                damaged_quantity: product.damage_quantity,
+                created_at: new Date().toISOString(),
+                created_by: userAccount?.id!
             });
         }
     }

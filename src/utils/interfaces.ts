@@ -112,7 +112,7 @@ export interface ProductContent {
     name?: string;
     item?: string;
     created_at: string;
-    created_by: string;
+    created_by: string | number;
 }
 
 export interface RackInput {
@@ -174,8 +174,8 @@ export interface PickingProductContent {
 }
 
 export interface ReceivingProductsInput extends ProductContent {
-    product_id?: number;
     id?: number;
+    product_id?: number;
     sku: string;
     name?: string;
     expected_quantity: number;
