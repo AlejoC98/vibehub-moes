@@ -180,7 +180,7 @@ const PickListDetails = () => {
         <Grid size={{ xl: 3, lg: 3, md: 12, sm: 12, xs: 12 }} sx={{ marginBottom: 5 }}>
           <Block>
             <Grid container spacing={5}>
-              { data?.status == 'Completed' && data?.verified_by == null && (
+              { data?.status == 'Completed' && data?.verified_by == null && userAccount?.accounts_roles?.find((r) => r.role_id == 2 || r.role_id == 3) && (
                 <Grid size={12}>
                   <Button fullWidth variant='contained' className='btn-cerulean' onClick={handleVerifyPickList}>Verify</Button>
                 </Grid>

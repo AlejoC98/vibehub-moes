@@ -21,7 +21,7 @@ const OrderDetails = () => {
   const [isCompleted, setIsCompleted] = useState<boolean>(false);
   const [totalOrderShipped, setTotalOrderShipped] = useState<number>();
 
-  const actionButtons = isCompleted && data?.closed_by == null
+  const actionButtons = isCompleted && data?.closed_by == null && userAccount?.accounts_roles?.find((r) => r.role_id == 2 || r.role_id == 3)
   ? [
       {
         text: 'Complete',
