@@ -98,7 +98,7 @@ const Dashboard = () => {
             inAnimationDelay={'2.1s'}
           />
         </Grid>
-        <Grid size={8}>
+        <Grid size={12}>
           <Block>
             <Box sx={{ marginBottom: 2 }}>
               <Typography variant='h5' fontWeight='bold'>Shipped Products</Typography>

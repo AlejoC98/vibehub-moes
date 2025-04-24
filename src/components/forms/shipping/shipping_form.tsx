@@ -140,6 +140,7 @@ const ShippingForm = ({ defaultData, setOpenModal }: { defaultData?: ShippingCon
         carrier: formData.carrier,
         dock_door: formData.dock_door,
         trailer_number: formData.trailer_number,
+        assign_to: formData.assign_to,
         ...(Object.keys(defaultData!).length === 0 && {
           status: 'Incomplete',
           closed_by: null,
