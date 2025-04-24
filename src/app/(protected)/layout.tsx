@@ -10,6 +10,7 @@ import DrawerMenu from '@/components/layout/drawer_menu'
 import LoadingWrapper from './loading_wrapper'
 import { createClient } from '@/utils/supabase/client'
 import { useRouter } from 'next/navigation'
+import BarcodeListener from '@/components/barcode_listener'
 
 const layout = ({ children }: { children: ReactNode }) => {
 
@@ -38,6 +39,7 @@ const layout = ({ children }: { children: ReactNode }) => {
         theme="light"
       />
       <Box className='bg-dash'>
+      <BarcodeListener onScan={() => {}} />
         <LoadingWrapper>
           {isMobile ? (<DrawerMenu openDrawer={openDrawer} toggleDrawer={toggleDrawer} />) : (<SideBar open={openMenu} setOpen={setOpenMenu} menuOpen={menuOpen} setMenuOpen={setMenuOpen} />)}
           <Box
