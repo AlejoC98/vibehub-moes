@@ -3,41 +3,34 @@ import { Box, Typography } from '@mui/material'
 import React, { useContext, useEffect, useState } from 'react'
 import Grid from '@mui/material/Grid2'
 import Details from '@/components/details'
-import PickListForm from '@/components/forms/shipping/pick_list_form'
 import Block from '@/components/block';
 import { useParams, useRouter } from 'next/navigation'
 import { GlobalContext } from '@/utils/context/global_provider'
 import { ShippingContent } from '@/utils/interfaces'
-import Swal from 'sweetalert2'
-import CompleteOrderForm from '@/components/forms/shipping/complete_shipping_form'
 import SearchList from '@/components/search_pick_list'
-import { convertTimeByTimeZone, findUserByUUID } from '@/utils/functions/main'
+import { convertTimeByTimeZone, useFindUserByUUID } from '@/utils/functions/main'
+import CompleteOrderForm from '@/components/forms/shipping/complete_shipping_form'
 
 const OrderDetails = () => {
 
   const params = useParams();
-  const router = useRouter();
-  const { shippings, users, userAccount, setIsLaunching } = useContext(GlobalContext);
+  const findUserByUUID = useFindUserByUUID();
+  const { shippings, userAccount, setIsLaunching } = useContext(GlobalContext);
 
   const [data, setData] = useState<ShippingContent>();
-  const [createdBy, setCreatedBy] = useState<string>();
-  const [closedBy, setCloseddBy] = useState<string>();
+  const [isCompleted, setIsCompleted] = useState<boolean>(false);
   const [totalOrderShipped, setTotalOrderShipped] = useState<number>();
 
-  // const actionButtons = [
-    // {
-    //   'text': 'Start',
-    //   'color': '#64B6AC',
-    //   'form': <CompleteOrderForm />,
-    //   'data': data
-    // },
-    // {
-    //   'text': data?.status && 'Complete',
-    //   'color': '#64B6AC',
-    //   'form': <CompleteOrderForm />,
-    //   'data': data
-    // },
-  // ]
+  const actionButtons = isCompleted && data?.closed_by == null
+  ? [
+      {
+        text: 'Complete',
+        color: '#64B6AC',
+        form: <CompleteOrderForm />,
+        data: data
+      }
+    ]
+  : [];
 
   useEffect(() => {
     setIsLaunching(false);
@@ -51,41 +44,30 @@ const OrderDetails = () => {
           ?.reduce((sum, item) => sum + item.total_products, 0) ?? 0;
         setTotalOrderShipped(totalProducts);
         setData(currentShipping);
-        setCreatedBy(findUserByUUID(users!, currentShipping.created_by!));
-        setCloseddBy(findUserByUUID(users!, currentShipping.closed_by!));
+        var isCompleted = currentShipping.shippings_pick_list.filter((pick) => pick.verified_by == null)
+        setIsCompleted(isCompleted.length == 0);
       }
-      // else {
-      //   Swal.fire({
-      //     icon: 'info',
-      //     title: 'Opsss!',
-      //     text: 'We couldn\'t find this information'
-      //   }).then((result) => {
-      //     if (result.isConfirmed) {
-      //       router.back();
-      //     }
-      //   })
-      // }
     }
   }, [shippings]);
 
   return (
     <Box>
       <Details
-        actionButtons={[]}
+        actionButtons={actionButtons}
         title='Shipping Order'
         modalTitle='Complete Shipping Order?'
       >
         <Grid size={{ xl: 3, lg: 3, md: 12, sm: 12, xs: 12 }} sx={{ marginBottom: 5 }}>
           <Block>
             <Grid container spacing={5}>
-              {createdBy != undefined && (
+              {data?.created_by != undefined && (
                 <Grid size={6}>
                   <Typography variant='h6' fontWeight='bold'>Created By</Typography>
-                  <Typography>{ }</Typography>
+                  <Typography>{findUserByUUID(data?.created_by!)}</Typography>
                 </Grid>
               )}
               {data?.created_at != undefined && (
-                <Grid size={createdBy != undefined ? 6 : 12}>
+                <Grid size={data?.created_by != undefined ? 6 : 12}>
                   <Typography variant='h6' fontWeight='bold'>Created At</Typography>
                   <Typography>{convertTimeByTimeZone(userAccount?.sessionTimeZone!, data?.created_at)}</Typography>
                 </Grid>
@@ -98,10 +80,10 @@ const OrderDetails = () => {
                 <Typography variant='h6' fontWeight='bold'>Trailer Number</Typography>
                 <Typography>{data?.trailer_number}</Typography>
               </Grid>
-              {closedBy != undefined && (
+              {data?.closed_by != undefined && (
                 <Grid size={6}>
                   <Typography variant='h6' fontWeight='bold'>Closed By</Typography>
-                  <Typography>{closedBy}</Typography>
+                  <Typography>{findUserByUUID(data?.closed_by!)}</Typography>
                 </Grid>
               )}
               {data?.closed_at != null && (

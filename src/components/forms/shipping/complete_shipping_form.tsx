@@ -14,6 +14,25 @@ const CompleteOrderForm = ({ defaultData, setOpenModal }: { defaultData?: Shippi
     const [isShipping, setIsShipping] = useState<boolean>(false);
     const [allowComplete, setAllowComplete] = useState<boolean>(false);
 
+    const handleCompleteOrder = async() => {
+        try {
+            const { error } = await supabase.from('shippings_orders').update({
+                'closed_by': userAccount?.user_id,
+                'closed_at': new Date(),
+                'status': 'Shipped'
+            }).eq('id', defaultData?.id);
+            
+            if (error) {
+                throw new Error(error.message);
+            }
+
+            setOpenModal!(false);
+            toast.success('Order Shipped!');
+        } catch (error: any) {
+            toast.warning(error.message);
+        }
+    }
+
     useEffect(() => {
         setAllowComplete(defaultData!.shippings_pick_list.length > 0);
     }, [defaultData])
@@ -27,8 +46,8 @@ const CompleteOrderForm = ({ defaultData, setOpenModal }: { defaultData?: Shippi
                     <Box>
                         <Typography>Are you sure you want to mark this shipping order as complete? This action cannot be undone and all related data will be finalized.</Typography>
                         <Box sx={{ display: 'flex', justifyContent: 'space-between', placeItems: 'center', padding: '1rem 0' }}>
-                            {/* <Button color='success' variant='contained' onClick={handleCompleteOrder}>Shipped</Button>
-                            <Button sx={{ background: '#333' }} variant='contained' onClick={() => setOpenModal!(false)}>Cancel</Button> */}
+                            <Button className='btn-bittersweet' variant='contained' onClick={handleCompleteOrder}>Shipped</Button>
+                            <Button sx={{ background: '#333' }} variant='contained' onClick={() => setOpenModal!(false)}>Cancel</Button>
                         </Box>
                     </Box>
                 ) : (

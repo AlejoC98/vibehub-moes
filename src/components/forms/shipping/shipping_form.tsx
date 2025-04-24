@@ -9,7 +9,7 @@ import { PickListContent, PickListInput, ProductContent, ShippingContent, Shippi
 import { ShippingCenterIcon, AddToListIcon, UploadSquare02Icon } from '@hugeicons/core-free-icons';
 import { ColorlibStepIconRoot, QontoConnector } from '@/style/global';
 import { toast } from 'react-toastify';
-import { convertTimeByTimeZone, findUserByUUID } from '@/utils/functions/main';
+import { convertTimeByTimeZone, useFindUserByUUID } from '@/utils/functions/main';
 import SubmitButton from '@/components/submit_button';
 import CreateOrderForm from './create_order_form';
 import PickListForm from './pick_list_form';
@@ -38,6 +38,7 @@ const ColorlibStepIcon = (props: StepIconProps) => {
 const ShippingForm = ({ defaultData, setOpenModal }: { defaultData?: ShippingContent, setOpenModal?: (status: boolean) => void }) => {
 
   const supabase = createClient();
+  const findUserByUUID = useFindUserByUUID();
   const { userAccount, users } = useContext(GlobalContext);
 
   const [activeStep, setActiveStep] = useState<number>(0);
@@ -85,7 +86,7 @@ const ShippingForm = ({ defaultData, setOpenModal }: { defaultData?: ShippingCon
         </Grid>
         <Grid size={4}>
           <Typography fontWeight='bold'>Assign To</Typography>
-          <Typography>{ findUserByUUID(users!, shippingOrder?.assign_to!) }</Typography>
+          <Typography>{ findUserByUUID(shippingOrder?.assign_to!) }</Typography>
         </Grid>
         <Grid size={12}>
           <List>

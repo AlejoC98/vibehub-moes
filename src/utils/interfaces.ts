@@ -200,6 +200,7 @@ export interface ShippingOrderProductInput {
 }
 
 export interface ShippingOrderProductContent {
+    id?: number;
     is_ready: boolean;
     product_quantity: number;
     created_at: string;

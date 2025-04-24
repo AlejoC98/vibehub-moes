@@ -2,9 +2,9 @@
 import { useParams } from 'next/navigation';
 import React, { FormEvent, useContext, useEffect, useState } from 'react'
 import { GlobalContext } from '@/utils/context/global_provider';
-import { PickListContent } from '@/utils/interfaces';
+import { PickListContent, ShippingOrderProductContent } from '@/utils/interfaces';
 import Swal from 'sweetalert2';
-import { Box, Collapse, Divider, FormControlLabel, FormGroup, List, ListItem, ListItemButton, ListItemText, Typography } from '@mui/material';
+import { Box, Button, Collapse, Divider, FormControlLabel, FormGroup, List, ListItem, ListItemButton, ListItemText, Typography } from '@mui/material';
 import Grid from '@mui/material/Grid2'
 import Block from '@/components/block';
 import UploadImageForm from '@/components/forms/upload_image_form';
@@ -16,18 +16,19 @@ import ExpandMore from '@mui/icons-material/ExpandMore';
 import StatusBadge from '@/components/status_badge';
 import { toast } from 'react-toastify';
 import { createClient } from '@/utils/supabase/client';
-import { handleUploadToBucket } from '@/utils/functions/main';
+import { handleUploadToBucket, useFindUserByUUID } from '@/utils/functions/main';
 
 const PickListDetails = () => {
 
   const params = useParams();
   const supabase = createClient();
+  const findUserByUUID = useFindUserByUUID();
   const { shippings, setIsLaunching, userAccount } = useContext(GlobalContext);
 
   const [open, setOpen] = useState<number | null>(0);
   const [data, setData] = useState<PickListContent>();
   const [completedProducts, setCompletedProducts] = useState<number>(0);
-  const [productsSteps, setProductsSteps] = useState<string[]>();
+  const [productsSteps, setProductsSteps] = useState<ShippingOrderProductContent[]>();
   const [productIMG, setProductIMG] = useState<File | null>(null);
   const [verifiedSource, setVerifiedSource] = useState<boolean>(false);
   const [productSku, setProductSku] = useState<String>('');
@@ -44,10 +45,17 @@ const PickListDetails = () => {
       e.preventDefault();
       var productURL = null;
       var now = new Date().toLocaleString();
+      var error_message = '';
 
       var shipProduct;
 
-      if (productSkuError || productSku == '') {
+      if (productSkuError || productSku == '')
+        error_message = 'Product doesn\'t match!';
+
+      if (productQtyError || productQty == undefined)
+        error_message = 'Product quantity doesn\'t match!';
+
+      if (error_message != '')
         Swal.fire({
           icon: 'info',
           title: "Almost There!",
@@ -68,39 +76,15 @@ const PickListDetails = () => {
             `
           }
         });
-      }
 
-      if (productQtyError || productQty == undefined) {
-        Swal.fire({
-          icon: 'info',
-          title: "Almost There!",
-          text: 'Product quantity doesn\'t match!',
-          confirmButtonColor: '#549F93',
-          showClass: {
-            popup: `
-              animate__animated
-              animate__fadeInUp
-              animate__faster
-            `
-          },
-          hideClass: {
-            popup: `
-              animate__animated
-              animate__fadeOutDown
-              animate__faster
-            `
+        const updatedProducts = productsSteps?.map((product) => {
+          if (product.product_sku === productSku) {
+            shipProduct = product.id;
+            return { ...product, is_ready: true };
+          } else {
+            return product;
           }
         });
-      }
-
-      const updatedProducts = data!.shippings_products!.map((product) => {
-        if (product.product_sku === productSku) {
-          shipProduct = product.id;
-          return { ...product, is_ready: true }
-        } else {
-          return product
-        }
-      });
 
       if (productIMG) {
         productURL = await handleUploadToBucket(
@@ -121,14 +105,9 @@ const PickListDetails = () => {
 
       setCompletedProducts(completedProducts + 1);
 
-      if (completedProducts == productsSteps?.length) {
-        await supabase.from('shippings_pick_list').update({
-          statis: 'Completed',
-          picked_by: userAccount?.user_id
-        }).eq('id', data?.id);
-      }
-
       setOpen(null);
+      setProductSku('');
+      setProductQty('');
       toast.success('Product Loaded!');
       setProductsSteps(updatedProducts);
 
@@ -136,6 +115,40 @@ const PickListDetails = () => {
       toast.warning(error.message);
     }
   }
+
+  const handleVerifyPickList = async() => {
+    try {
+      const { error } = await supabase.from('shippings_pick_list').update({
+        verified_by: userAccount?.user_id
+      }).eq('id', data?.id);
+
+      if (error) {
+        throw new Error(error.message);
+      }
+
+      toast.success('Pick List verified!');
+
+    } catch (error: any) {
+      toast.warning(error.message);
+    }
+  }
+
+  useEffect(() => {
+    const completePick = async() => {
+      await supabase.from('shippings_pick_list').update({
+        status: 'Completed',
+        picked_by: userAccount?.user_id
+      }).eq('id', data?.id);
+
+      setData({
+        ...data!,
+        'status': 'Completed'
+      });
+    }
+    if (completedProducts == productsSteps?.length) {
+      completePick();
+    }
+  }, [completedProducts])
 
   useEffect(() => {
     const currentPL = shippings
@@ -145,6 +158,11 @@ const PickListDetails = () => {
       setData(currentPL);
       const skuList = currentPL?.shippings_products?.map(product => product
       ) || [];
+
+      const completed = skuList.filter((pick) => pick.is_ready == true);
+
+      setCompletedProducts(completed.length);
+
       setProductsSteps(skuList);
     } else {
       Swal.fire({
@@ -162,6 +180,11 @@ const PickListDetails = () => {
         <Grid size={{ xl: 3, lg: 3, md: 12, sm: 12, xs: 12 }} sx={{ marginBottom: 5 }}>
           <Block>
             <Grid container spacing={5}>
+              { data?.status == 'Completed' && data?.verified_by == null && (
+                <Grid size={12}>
+                  <Button fullWidth variant='contained' className='btn-cerulean' onClick={handleVerifyPickList}>Verify</Button>
+                </Grid>
+              ) }
               <Grid size={{ lg: 6, md: 6, sm: 12, xs: 12 }}>
                 <Typography align='center' fontWeight={'bold'}>PL Number</Typography>
                 <Typography align='center' >{data?.pl_number}</Typography>
@@ -172,11 +195,11 @@ const PickListDetails = () => {
               </Grid>
               <Grid size={{ lg: 6, md: 6, sm: 6, xs: 6 }}>
                 <Typography align='center' fontWeight={'bold'}>Picked By</Typography>
-                <Typography align='center' >{data?.picked_by}</Typography>
+                <Typography align='center' >{findUserByUUID(data?.picked_by!)}</Typography>
               </Grid>
               <Grid size={{ lg: 6, md: 6, sm: 6, xs: 6 }}>
                 <Typography align='center' fontWeight={'bold'}>Verified By</Typography>
-                <Typography align='center' >{data?.verified_by}</Typography>
+                <Typography align='center' >{findUserByUUID(data?.picked_by!)}</Typography>
               </Grid>
               <Grid size={12}>
                 <Typography align='center' fontWeight={'bold'}>Notes</Typography>
@@ -212,7 +235,7 @@ const PickListDetails = () => {
                   </ListItem>
                   <Collapse in={open == index} timeout="auto" unmountOnExit sx={{ width: '100%', background: '#e6e6e6'}}>
                     <Grid container spacing={2} sx={{ margin: 3}}>
-                      <Grid size={6}>
+                      <Grid size={{ xl: 6, lg: 6, md: 12, sm: 12, xs: 12 }}>
                         <FormGroup>
                           <FormControlLabel control={
                             <CustomSwicth
@@ -228,7 +251,7 @@ const PickListDetails = () => {
                           </Box>
                         )}
                       </Grid>
-                      <Grid size={6}>
+                      <Grid size={{ xl: 6, lg: 6, md: 12, sm: 12, xs: 12 }}>
                         <form onSubmit={handleLoadPickListProducts}>
                           <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
                             <NumberField

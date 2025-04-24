@@ -34,10 +34,9 @@ div::-webkit-scrollbar-thumb {
 $gunmetal: #242f40;
 $gunmetal-dark: #1d2633;
 $bittersweet: #f9564f;
-$cyan-dark: #42858C;
-$canary: #FFE900;
+$xanthous: #E3B23C;
 $munsell: #146c7f;
-$persian-green: #549F93;
+$cerulean: #457b9d;
 
 html, body {
   margin: 0;
@@ -72,14 +71,9 @@ main {
   color: #fff !important;
 }
 
-.btn-cyan-dark {
-  background-color: $cyan-dark !important;
+.btn-xanthous {
+  background-color: $xanthous !important;
   color: #fff !important;
-}
-
-.btn-canary {
-  background-color: $canary !important;
-  color: #000 !important;
 }
 
 .btn-munsell {
@@ -87,8 +81,8 @@ main {
   color: #fff !important;
 }
 
-.btn-persian-green {
-  background-color: $persian-green !important;
+.btn-cerulean {
+  background-color: $cerulean !important;
   color: #fff !important;
 }
 
@@ -107,14 +101,9 @@ main {
   color: #fff !important;
 }
 
-.bg-cyan-dark {
-  background-color: $cyan-dark !important;
+.bg-xanthous {
+  background-color: $xanthous !important;
   color: #fff !important;
-}
-
-.bg-canary {
-  background-color: $canary !important;
-  color: #000 !important;
 }
 
 .bg-munsell {
@@ -122,10 +111,10 @@ main {
   color: #fff !important;
 }
 
-.bg-persian-green {
-  background-color: $persian-green !important;
-  color: #fff !important;
-}
+// .bg-persian-green {
+//   background-color: $persian-green !important;
+//   color: #fff !important;
+// }
 
 .oleo-title {
   font-family: 'CinemaScript', sans-serif !important;

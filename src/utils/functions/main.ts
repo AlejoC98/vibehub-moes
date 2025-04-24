@@ -150,21 +150,14 @@ export const startCountdown = (
   }, 1000)
 }
 
-export const findUserByUUID = (users: AccountContent[], match: string) => {
+export const useFindUserByUUID = () => {
+  const { users } = useContext(GlobalContext);
 
-  try {
-    const userFound = users.find(u => u.user_id == match);
-
-    if (userFound == undefined) {
-      throw new Error('User not found!');
-    }
-
-    return userFound.username;
-
-  } catch (error: any) {
-    return undefined;
-  }
-}
+  return (uuid: string): string | undefined => {
+    const user = users?.find(u => u.user_id === uuid);
+    return user?.username;
+  };
+};
 
 export const convertTimeByTimeZone = (sessionTimeZone: string, utcDate?: string) => {
   // const utcFormatted = formatInTimeZone(utcDate, 'UTC', 'MMMM d, yyyy h:mm a');

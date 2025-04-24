@@ -8,13 +8,14 @@ import CloseIcon from '@mui/icons-material/Close';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import StatusBadge from './status_badge';
-import { findUserByUUID } from '@/utils/functions/main';
 import { GlobalContext } from '@/utils/context/global_provider';
+import { useFindUserByUUID } from '@/utils/functions/main';
 
 const SearchPickList = ({ data }: { data: PickListContent[] }) => {
 
     const pathname = usePathname();
     const { users } = useContext(GlobalContext);
+    const findUserByUUID = useFindUserByUUID();
     const [keyword, setKeyWord] = useState<string>('');
     const [activePick, setActivePick] = useState<number>();
     const [displayData, setDisplayData] = useState<PickListContent[]>();
@@ -114,7 +115,7 @@ const SearchPickList = ({ data }: { data: PickListContent[] }) => {
                             </Grid>
                             <Grid size={6}>
                                 <Typography fontWeight='bold'>Picker</Typography>
-                                <Typography>{findUserByUUID(users!, data[activePick].picked_by)}</Typography>
+                                <Typography>{findUserByUUID(data[activePick].picked_by)}</Typography>
                             </Grid>
                             <Grid size={6}>
                                 <Typography fontWeight='bold'>Verified By</Typography>
