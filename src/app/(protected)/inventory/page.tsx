@@ -2,13 +2,11 @@
 import { Box, Skeleton } from '@mui/material'
 import Grid from '@mui/material/Grid2'
 import Block from '@/components/block'
+import { GridColDef } from '@mui/x-data-grid'
+import { useContext, useEffect } from 'react';
 import BasicTable from '@/components/tables/basic_table'
 import ProductsForm from '@/components/forms/products_form'
-import { GridColDef } from '@mui/x-data-grid'
-import RacksForm from '@/components/forms/racks_form'
-import { useContext, useEffect, useState } from 'react'
 import { GlobalContext } from '@/utils/context/global_provider'
-import { ProductContent, RackLocationContent } from '@/utils/interfaces'
 
 const Inventory = () => {
   const { products, setIsLaunching } = useContext(GlobalContext);
@@ -17,7 +15,7 @@ const Inventory = () => {
     {
       field: 'img_url', headerName: 'Image', renderCell: (params) => (
         <Box sx={{ display: 'grid', placeItems: 'center' }}>
-          <img src={params.row.img_url} style={{ width: 45, height: 45 }} alt="" />
+          <img src={params.row.img_url} style={{ width: 45, height: 45, objectFit: 'contain'}} alt="" />
         </Box>
       )
     },

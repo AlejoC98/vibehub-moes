@@ -5,11 +5,12 @@ import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import CloseIcon from '@mui/icons-material/Close';
 
 type Props = {
+  maxWidth?: number,
   productIMG: File | null;
   setProductIMG: (img: File | null) => void;
 };
 
-const ImageDropzone: React.FC<Props> = ({ productIMG, setProductIMG }) => {
+const ImageDropzone: React.FC<Props> = ({ productIMG, setProductIMG, maxWidth = 400}) => {
   const [preview, setPreview] = useState<string | null>(null);
   const imageRef = useRef<HTMLImageElement>(null);
 
@@ -29,7 +30,6 @@ const ImageDropzone: React.FC<Props> = ({ productIMG, setProductIMG }) => {
   };
 
   useEffect(() => {
-    // Cleanup object URL when component unmounts
     return () => {
       if (preview) URL.revokeObjectURL(preview);
     };
@@ -74,7 +74,7 @@ const ImageDropzone: React.FC<Props> = ({ productIMG, setProductIMG }) => {
             src={preview || undefined}
             alt="Preview"
             style={{
-              maxWidth: '200px',
+              maxWidth: maxWidth,
               borderRadius: '8px',
               display: 'block'
             }}

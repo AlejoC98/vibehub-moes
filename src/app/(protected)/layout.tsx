@@ -43,14 +43,15 @@ const layout = ({ children }: { children: ReactNode }) => {
           <Box
             sx={{
               display: 'flex',
-              overflowX: 'hidden',
-              overflowY: 'auto',
+              position: 'relative',
               flexDirection: 'column',
               width: isMobile ? '100%' : `calc(100% - ${openMenu ? 250 : 50}px)`,
             }}
           >
-            <Navbar open={openMenu} setOpen={isMobile ? setOpenDrawer : setOpenMenu} menuOpen={menuOpen} setMenuOpen={setMenuOpen} />
-            <Box sx={{ height: '100%', padding: '10px 25px' }}>
+            <Box className='bg-gunmetal-dark' sx={{width: '100%', height: isMobile ? 150 : 225, position: 'absolute', zIndex: 0}}>
+              <Navbar open={openMenu} setOpen={isMobile ? setOpenDrawer : setOpenMenu} menuOpen={menuOpen} setMenuOpen={setMenuOpen} />
+            </Box>
+            <Box sx={{ position: 'relative', top: isMobile ? 90 : 130, overflowY: 'auto', height: '80%', padding: '0 25px 50px 25px'}} >
               {children}
             </Box>
           </Box>

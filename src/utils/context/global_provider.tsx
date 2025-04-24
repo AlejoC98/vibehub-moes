@@ -40,6 +40,18 @@ const GlobalProvider = ({ children }: { children: ReactNode }) => {
                 setTimeout(() => {
                     getShippingsOrders();
                 }, 1000);
+            }).on('postgres_changes', {
+                event: '*', schema: 'public', table: 'shippings_pick_list'
+            }, (payload) => {
+                setTimeout(() => {
+                    getShippingsOrders();
+                }, 1000);
+            }).on('postgres_changes', {
+                event: '*', schema: 'public', table: 'shippings_products'
+            }, (payload) => {
+                setTimeout(() => {
+                    getShippingsOrders();
+                }, 1000);
             })
             // .on('postgres_changes', {
             //     event: '*', schema: 'public', table: 'shippings_pick_list'

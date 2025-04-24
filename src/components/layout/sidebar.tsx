@@ -8,7 +8,7 @@ import Link from 'next/link';
 import { GlobalContext } from '@/utils/context/global_provider';
 import { usePathname, useRouter } from 'next/navigation';
 import { HugeiconsIcon } from '@hugeicons/react';
-import { DashboardSquare02Icon, WarehouseIcon, FlowIcon, Trolley02Icon, LiftTruckIcon, PackageMovingIcon, TaskDaily01Icon, ComputerDollarIcon, ReturnRequestIcon, TruckDeliveryIcon, Store02Icon, UserGroupIcon, CustomerService01Icon } from '@hugeicons/core-free-icons';
+import { DashboardSquare02Icon, WarehouseIcon, FlowIcon, Trolley02Icon, LiftTruckIcon, PackageMovingIcon, TaskDaily01Icon, ComputerDollarIcon, ReturnRequestIcon, TruckDeliveryIcon, Store02Icon, UserGroupIcon, CustomerService01Icon, ProductLoadingIcon, DistributeVerticalBottomIcon, DigitalClockIcon } from '@hugeicons/core-free-icons';
 import Swal from 'sweetalert2';
 import 'animate.css';
 
@@ -29,23 +29,28 @@ const SideBar = ({ open, setOpen, menuOpen, setMenuOpen }: { open: boolean, setO
             to: "/dashboard",
             icon: <HugeiconsIcon icon={DashboardSquare02Icon} />
         },
-        ...(userAccount?.accounts_roles?.some(role => role.role_id === 1 || role.role_id === 2 || role.role_id === 3 || role.role_id === 4) ? [
+        ...(userAccount?.accounts_roles?.some(role => [1, 2, 3, 4].includes(role.role_id)) ? [
             {
                 id: 2,
                 title: "Inventory",
                 to: "/inventory",
-                icon: <HugeiconsIcon icon={WarehouseIcon} />
+                icon: <HugeiconsIcon icon={ProductLoadingIcon} />
+            },
+            {
+                id: 3,
+                title: "Rack Map",
+                to: "/racks",
+                icon: <HugeiconsIcon icon={DistributeVerticalBottomIcon} />
             }
         ] : []),
         {
-            id: 3,
+            id: 4,
             title: "Logistics",
-            // to: "#",
             icon: <HugeiconsIcon icon={FlowIcon} />,
             submenu: [
                 ...(userAccount?.accounts_roles?.some(role => role.role_id === 7) ? [
                     {
-                        id: 4,
+                        id: 5,
                         title: "Shipping",
                         to: "/shipping",
                         icon: <HugeiconsIcon icon={Trolley02Icon} />
@@ -53,65 +58,57 @@ const SideBar = ({ open, setOpen, menuOpen, setMenuOpen }: { open: boolean, setO
                 ] : []),
                 ...(userAccount?.accounts_roles?.some(role => role.role_id === 8) ? [
                     {
-                        id: 5,
+                        id: 6,
                         title: "Receiving",
-                        to: "#",
+                        to: "/receiving",
                         icon: <HugeiconsIcon icon={LiftTruckIcon} />
                     }
                 ] : []),
                 ...(userAccount?.accounts_roles?.some(role => role.role_id === 9) ? [
                     {
-                        id: 6,
+                        id: 7,
                         title: "Replenishment",
-                        to: "#",
+                        to: "/replenishment",
                         icon: <HugeiconsIcon icon={PackageMovingIcon} />
-                    },
+                    }
                 ] : []),
                 ...(userAccount?.accounts_roles?.some(role => role.role_id === 5) ? [
                     {
-                        id: 7,
+                        id: 8,
                         title: "Picking",
-                        to: "#",
+                        to: "/picking",
                         icon: <HugeiconsIcon icon={TaskDaily01Icon} />
                     }
                 ] : []),
             ]
         },
-        ...(userAccount?.accounts_roles?.some(role => role.role_id === 2 || role.role_id === 3) ? [
-            {
-                id: 8,
-                title: "Orders",
-                to: "#",
-                icon: <HugeiconsIcon icon={ComputerDollarIcon} />
-            }
-        ] : []),
-        ...(userAccount?.accounts_roles?.some(role => role.role_id === 2 || role.role_id === 3) ? [
+        ...(userAccount?.accounts_roles?.some(role => [2, 3].includes(role.role_id)) ? [
             {
                 id: 9,
-                title: "Returns",
-                to: "#",
-                icon: <HugeiconsIcon icon={ReturnRequestIcon} />
-            }
-        ] : []),
-        ...(userAccount?.accounts_roles?.some(role => role.role_id === 2 || role.role_id === 3) ? [
+                title: "Orders",
+                to: "/orders",
+                icon: <HugeiconsIcon icon={ComputerDollarIcon} />
+            },
             {
                 id: 10,
+                title: "Returns",
+                to: "/returns",
+                icon: <HugeiconsIcon icon={ReturnRequestIcon} />
+            },
+            {
+                id: 11,
                 title: "Carriers",
                 to: "/carriers",
                 icon: <HugeiconsIcon icon={TruckDeliveryIcon} />
-            }
-        ] : []),
-        ...(userAccount?.accounts_roles?.some(role => role.role_id === 2 || role.role_id === 3) ? [
-            {
-                id: 11,
-                title: "Vendors",
-                to: "#",
-                icon: <HugeiconsIcon icon={Store02Icon} />
-            }
-        ] : []),
-        ...(userAccount?.accounts_roles?.some(role => role.role_id === 2 || role.role_id === 3) ? [
+            },
             {
                 id: 12,
+                title: "Vendors",
+                to: "/vendors",
+                icon: <HugeiconsIcon icon={Store02Icon} />
+            },
+            {
+                id: 13,
                 title: "Users",
                 to: "/users",
                 icon: <HugeiconsIcon icon={UserGroupIcon} />

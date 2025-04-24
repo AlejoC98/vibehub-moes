@@ -8,6 +8,7 @@ import { GlobalContext } from '@/utils/context/global_provider';
 import { GridColDef } from '@mui/x-data-grid';
 import { convertTimeByTimeZone } from '@/utils/functions/main';
 import ShippingForm from '@/components/forms/shipping/shipping_form';
+import StatusBadge from '@/components/status_badge';
 
 const Shipping = () => {
 
@@ -28,32 +29,7 @@ const Shipping = () => {
         }
       }, width: 180, editable: false},
       { field: 'status', headerName: 'Status', renderCell: (params) => {
-        switch (params.row.status) {
-          case 'Pending':
-            return <Box sx={{color: "#FFFFFF", height: '100%', display: 'grid', placeItems: 'center'}}>
-              <Typography sx={{ background: '#FFE082', padding: '.5px 2px', borderRadius: 1 }}>{params.row.status}</Typography>
-            </Box>;
-          case 'Processing':
-            return <Box sx={{color: "#FFFFFF", height: '100%', display: 'grid', placeItems: 'center'}}>
-              <Typography sx={{ background: '#64B5F6', padding: '.5px 2px', borderRadius: 1 }}>{params.row.status}</Typography>
-            </Box>;
-          case 'Shipped':
-            return <Box sx={{color: "#FFFFFF", height: '100%', display: 'grid', placeItems: 'center'}}>
-              <Typography sx={{ background: '#242f40', padding: '.5px 2px', borderRadius: 1 }}>{params.row.status}</Typography>
-            </Box>;
-          case 'Delivered':
-            return <Box sx={{color: "#FFFFFF", height: '100%', display: 'grid', placeItems: 'center'}}>
-              <Typography sx={{ background: '#81C784', padding: '.5px 2px', borderRadius: 1 }}>{params.row.status}</Typography>
-            </Box>;
-          case 'Cancelled':
-            return <Box sx={{color: "#FFFFFF", height: '100%', display: 'grid', placeItems: 'center'}}>
-              <Typography sx={{ background: '#E57373', padding: '.5px 2px', borderRadius: 1 }}>{params.row.status}</Typography>
-            </Box>;
-          default:
-            return <Box sx={{or: "#FFFFFF", height: '100%', display: 'grid', placeItems: 'center'}}>
-              <Typography sx={{ background: '#EEE', padding: '.5px 2px', borderRadius: 1 }}>{params.row.status}</Typography>
-            </Box>;
-        }
+        return <StatusBadge status={params.row.status} />
       }}
     ];
 

@@ -4,6 +4,7 @@ import { calculateRevenue } from '@/utils/functions/main'
 import { GlobalContext } from '@/utils/context/global_provider'
 import { Box } from '@mui/material'
 import Grid from '@mui/material/Grid2';
+import GroupsIcon from '@mui/icons-material/Groups';
 import Metrics from '@/components/dashboard/metrics';
 import DiscountIcon from '@mui/icons-material/Discount';
 import AttachMoneyIcon from '@mui/icons-material/AttachMoney';
@@ -12,7 +13,7 @@ import AssignmentReturnIcon from '@mui/icons-material/AssignmentReturn';
 import { NumericFormat } from 'react-number-format'
 
 const Dashboard = () => {
-const { products, orders, shippings, setIsLaunching } = useContext(GlobalContext);
+const { products, orders, shippings, users, setIsLaunching } = useContext(GlobalContext);
   const [revenue, setRevenue] = useState<number | string>();
 
   const data = [
@@ -138,29 +139,43 @@ const { products, orders, shippings, setIsLaunching } = useContext(GlobalContext
   return (
     <Box>
       <Grid container spacing={7}>
-        <Grid size={{ xl:3 ,lg: 3, md:6, sm:12, xs: 12}}>
+        <Grid size={{ xl:4 ,lg: 4, md:6, sm:12, xs: 12}}>
         <Metrics
-            color='#60992D'
-            title='Products Available'
-            icon={
-              <DiscountIcon sx={{ fontSize: '5rem', color: 'rgba(255, 255, 255, .5)', position: 'absolute', top: 20, right: 10}} />
-            }
-            content={'N/A'}
-            footer="Subio"
-          />
+              color='#FFFFFF'
+              title='Products Available'
+              icon={
+                <DiscountIcon sx={{ fontSize: '5rem', color: 'rgba(225, 225, 225, .8)', position: 'absolute', top: 20, right: 10 }} />
+              }
+              content={products?.length}
+              footer="Subio"
+              inAnimationDelay={'1.5s'}
+            />
         </Grid>
-        <Grid size={{ xl:3 ,lg: 3, md:6, sm:12, xs: 12}}>
-        <Metrics
-            color='#F07167'
+        <Grid size={{ xl:4 ,lg: 4, md:6, sm:12, xs: 12}}>
+          <Metrics
+            color='#FFFFFF'
             title='Orders Shipped'
             icon={
-              <LocalShippingIcon sx={{ fontSize: '5rem', color: 'rgba(255, 255, 255, .5)', position: 'absolute', top: 20, right: 10}} />
+              <LocalShippingIcon sx={{ fontSize: '5rem', color: 'rgba(225, 225, 225, .8)', position: 'absolute', top: 20, right: 10 }} />
             }
             content={shippings?.length}
             footer="Last month"
+            inAnimationDelay={'1.8s'}
           />
         </Grid>
-        <Grid size={{ xl:3 ,lg: 3, md:6, sm:12, xs: 12}}>
+        <Grid size={{ xl:4 ,lg: 4, md:6, sm:12, xs: 12}}>
+        <Metrics
+            color='#FFFFFF'
+            title='Active Users'
+            icon={
+              <GroupsIcon sx={{ fontSize: '5rem', color: 'rgba(225, 225, 225, .8)', position: 'absolute', top: 20, right: 10 }} />
+            }
+            content={users?.length}
+            footer="Last month"
+            inAnimationDelay={'2.1s'}
+          />
+        </Grid>
+        {/* <Grid size={{ xl:3 ,lg: 3, md:6, sm:12, xs: 12}}>
         <Metrics
             color='#0892A5'
             title='Returns'
@@ -170,8 +185,8 @@ const { products, orders, shippings, setIsLaunching } = useContext(GlobalContext
             content={'N/A'}
             footer="Last month"
           />
-        </Grid>
-        <Grid size={{ xl:3 ,lg: 3, md:6, sm:12, xs: 12}}>
+        </Grid> */}
+        {/* <Grid size={{ xl:3 ,lg: 3, md:6, sm:12, xs: 12}}>
         <Metrics
             color='#373F47'
             title='Month Revenue'
@@ -181,7 +196,7 @@ const { products, orders, shippings, setIsLaunching } = useContext(GlobalContext
             content={'N/A'}
             footer="Last month"
           />
-        </Grid>
+        </Grid> */}
       </Grid>
     </Box>
   )

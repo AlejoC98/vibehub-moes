@@ -53,12 +53,12 @@ const Details = ({
             <Grid container spacing={2}>
                 <Grid size={{ xl: 3, lg: 3, md: 2, sm: 2, xs: 2}}>
                     <IconButton onClick={() => router.back()}>
-                        <ArrowBackTwoToneIcon />
+                        <ArrowBackTwoToneIcon sx={{ color: '#FFFFFF'}} />
                     </IconButton>
                 </Grid>
                 <Grid size={{ xl: 6, lg: 6, md: 6, sm: 6, xs: 6}}>
                     <Box sx={{ display: 'flex', justifyContent: 'center', placeItems: 'center'}}>
-                        <Typography variant='h5' fontWeight='bold'>{title}</Typography>
+                        <Typography variant='h5' fontWeight='bold' sx={{ color: "#FFFFFF"}}>{title}</Typography>
                     </Box>
                 </Grid>
                 <Grid size={{ xl: 3, lg: 3, md: 4, sm: 4, xs: 4}}>

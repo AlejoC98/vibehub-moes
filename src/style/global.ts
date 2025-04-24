@@ -1,5 +1,5 @@
 'use client'
-import { AppBar, Box, InputBase, Paper, StepConnector, TextField, alpha, stepConnectorClasses, styled } from "@mui/material";
+import { AppBar, Box, InputBase, Paper, StepConnector, Switch, TextField, alpha, stepConnectorClasses, styled } from "@mui/material";
 
 export const WhiteTextField = styled(TextField)({
     '& label.Mui-focused': {
@@ -28,10 +28,10 @@ export const WhiteTextField = styled(TextField)({
 export const VibeNavbar = styled(AppBar)({
     backgroundColor: 'transparent',
     boxShadow: 'none',
-    color: '#000000',
+    color: '#FFFFFF',
     height: '5rem',
     display: 'flex',
-    justifyContent: 'center'
+    justifyContent: 'center',
 });
 
 export const Search = styled('div')(({ theme }) => ({
@@ -142,3 +142,38 @@ export const ColorlibStepIconRoot = styled('div')<{
         },
       ],
 }));
+
+export const CustomSwicth = styled(Switch)(({ theme }) => ({
+    '& .MuiSwitch-switchBase': {
+    '&.Mui-checked': {
+      color: '#fff',
+      '& + .MuiSwitch-track': {
+        backgroundColor: '#f9564f',
+        opacity: 1,
+        border: 0,
+        ...theme.applyStyles('dark', {
+          backgroundColor: '#42858C',
+        }),
+      },
+      '&.Mui-disabled + .MuiSwitch-track': {
+        opacity: 0.5,
+      },
+    },
+    // '&.Mui-focusVisible .MuiSwitch-thumb': {
+    //   color: '#33cf4d',
+    //   border: '6px solid #fff',
+    // },
+    // '&.Mui-disabled .MuiSwitch-thumb': {
+    //   color: theme.palette.grey[100],
+    //   ...theme.applyStyles('dark', {
+    //     color: theme.palette.grey[600],
+    //   }),
+    // },
+    // '&.Mui-disabled + .MuiSwitch-track': {
+    //   opacity: 0.7,
+    //   ...theme.applyStyles('dark', {
+    //     opacity: 0.3,
+    //   }),
+    // },
+  },
+  }));

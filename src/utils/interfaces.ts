@@ -225,9 +225,10 @@ export interface ShippingContent {
 }
 
 export interface PickListContent {
+    id?: number;
     pl_number: number;
     closed_at?: string;
-    picker_name: string;
+    picked_by: string;
     verified_by: string;
     bol_number: string;
     total_products: number,
@@ -248,7 +249,7 @@ export interface ShippingInput {
 
 export interface PickListInput {
     pl_number: number;
-    picker_name: string;
+    picked_by: string;
     verified_by: string;
     bol_number: string;
     status: string;
