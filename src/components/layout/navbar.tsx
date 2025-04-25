@@ -30,7 +30,7 @@ const Navbar = ({ open, setOpen, menuOpen, setMenuOpen }: { open: boolean, setOp
     const isMenuOpen = Boolean(anchorNoti);
 
     const theme = useTheme();
-    const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
+    const isMobile = useMediaQuery(theme.breakpoints.down('md'));
 
     const handleSearch = () => {
         console.log('sisa');

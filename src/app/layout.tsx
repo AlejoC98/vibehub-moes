@@ -34,11 +34,18 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={`${geistSans.variable} ${geistMono.variable} ${inter.variable}`}>
-        <RightClickBlocker>
+        {process.env.NODE_ENV === 'production' ? (
+          <RightClickBlocker>
+            <LayoutWrapper>
+              {children}
+            </LayoutWrapper>
+          </RightClickBlocker>
+        ) : (
           <LayoutWrapper>
             {children}
           </LayoutWrapper>
-        </RightClickBlocker>
+        )}
+
       </body>
     </html>
   );

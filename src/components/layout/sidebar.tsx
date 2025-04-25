@@ -39,7 +39,7 @@ const SideBar = ({ open, setOpen, menuOpen, setMenuOpen }: { open: boolean, setO
             {
                 id: 3,
                 title: "Rack Map",
-                to: "/racks",
+                to: "#",
                 icon: <HugeiconsIcon icon={DistributeVerticalBottomIcon} />
             }
         ] : []),
@@ -204,27 +204,23 @@ const SideBar = ({ open, setOpen, menuOpen, setMenuOpen }: { open: boolean, setO
             <List sx={{ width: '100%' }}>
                 {MenuList.map(item => (
                     <Box key={item.id}>
-                        {open ? item.submenu ? <ListItem
+                        {open ? item.submenu ?<ListItem
                             sx={{ padding: '10px 0' }}
                             secondaryAction={
-                                <IconButton
-                                    edge="end"
-                                    aria-label="expand"
-                                    onClick={() => handleRedirectMenu(item.id)}
-                                >
-                                    {item.submenu ? menuOpen === item.id ? <ExpandLess /> : <ExpandMore /> : <></>}
-                                </IconButton>
+                                item.submenu ? menuOpen === item.id ? <ExpandLess /> : <ExpandMore /> : <></>
                             }>
-                            <ListItemIcon sx={{ justifyContent: 'center' }}>{item.icon}</ListItemIcon>
-                            <ListItemText primary={item.title} />
+                                <ListItemButton
+                            sx={{ padding: '10px 0', justifyContent: 'center', alignItems: 'center' }}
+                            selected={menuOpen === item.id}
+                            onClick={() => handleRedirectMenu(item.id)}>
+                                <ListItemIcon sx={{ justifyContent: 'center' }}>{item.icon}</ListItemIcon>
+                                <ListItemText primary={item.title} />
+                                </ListItemButton>
                         </ListItem> : <ListItemButton
                             sx={{ padding: '10px 0', justifyContent: 'center', alignItems: 'center' }}
-                            // href={item.to}
-                            // LinkComponent={Link}
                             selected={menuOpen === item.id}
                             onClick={() => {
                                 handleRedirectMenu(item.id, item.to);
-                                // handleOpenMenu(item.id);
                             }}>
                             <ListItemIcon sx={{ justifyContent: 'center' }}>
                                 {item.icon}
@@ -232,12 +228,9 @@ const SideBar = ({ open, setOpen, menuOpen, setMenuOpen }: { open: boolean, setO
                             <ListItemText primary={item.title} />
                         </ListItemButton> : <ListItemButton
                             sx={{ padding: '10px 0', justifyContent: 'center', alignItems: 'center' }}
-                            // href={item.to}
-                            // LinkComponent={Link}
                             selected={menuOpen === item.id}
                             onClick={() => {
                                 handleRedirectMenu(item.id, item.to);
-                                // handleOpenMenu(item.id);
                             }}>
                             <ListItemIcon sx={{ justifyContent: 'center' }}>
                                 {item.icon}
@@ -249,8 +242,6 @@ const SideBar = ({ open, setOpen, menuOpen, setMenuOpen }: { open: boolean, setO
                                     <ListItemButton
                                         key={subItem.id}
                                         sx={{ padding: '10px 12px', justifyItems: 'center', alignContent: 'center' }}
-                                        // href={subItem.to}
-                                        // LinkComponent={Link}
                                         onClick={() => {
                                             handleRedirectMenu(subItem.id, subItem.to)
                                         }}

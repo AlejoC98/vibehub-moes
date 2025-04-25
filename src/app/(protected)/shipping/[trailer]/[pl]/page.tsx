@@ -4,7 +4,7 @@ import React, { FormEvent, useContext, useEffect, useState } from 'react'
 import { GlobalContext } from '@/utils/context/global_provider';
 import { PickListContent, ShippingOrderProductContent } from '@/utils/interfaces';
 import Swal from 'sweetalert2';
-import { Box, Button, Collapse, Divider, FormControlLabel, FormGroup, List, ListItem, ListItemButton, ListItemText, Typography } from '@mui/material';
+import { Box, Button, Collapse, Divider, FormControlLabel, FormGroup, List, ListItem, ListItemButton, ListItemText, TextField, Typography } from '@mui/material';
 import Grid from '@mui/material/Grid2'
 import Block from '@/components/block';
 import UploadImageForm from '@/components/forms/upload_image_form';
@@ -17,6 +17,8 @@ import StatusBadge from '@/components/status_badge';
 import { toast } from 'react-toastify';
 import { createClient } from '@/utils/supabase/client';
 import { handleUploadToBucket, useFindUserByUUID } from '@/utils/functions/main';
+import { ImagePreviewDialog } from '@/components/image_preview_dialog';
+import PriorityHighIcon from '@mui/icons-material/PriorityHigh';
 
 const PickListDetails = () => {
 
@@ -77,14 +79,14 @@ const PickListDetails = () => {
           }
         });
 
-        const updatedProducts = productsSteps?.map((product) => {
-          if (product.product_sku === productSku) {
-            shipProduct = product.id;
-            return { ...product, is_ready: true };
-          } else {
-            return product;
-          }
-        });
+      const updatedProducts = productsSteps?.map((product) => {
+        if (product.product_sku === productSku) {
+          shipProduct = product.id;
+          return { ...product, is_ready: true };
+        } else {
+          return product;
+        }
+      });
 
       if (productIMG) {
         productURL = await handleUploadToBucket(
@@ -96,7 +98,7 @@ const PickListDetails = () => {
 
       const { data: newSP, error } = await supabase.from('shippings_products').update({
         is_ready: true,
-        img_url: productURL?.signedUrl
+        img_url: productURL!.signedUrl
       }).eq('id', shipProduct);
 
       if (error) {
@@ -116,7 +118,7 @@ const PickListDetails = () => {
     }
   }
 
-  const handleVerifyPickList = async() => {
+  const handleVerifyPickList = async () => {
     try {
       const { error } = await supabase.from('shippings_pick_list').update({
         verified_by: userAccount?.user_id
@@ -134,7 +136,7 @@ const PickListDetails = () => {
   }
 
   useEffect(() => {
-    const completePick = async() => {
+    const completePick = async () => {
       await supabase.from('shippings_pick_list').update({
         status: 'Completed',
         picked_by: userAccount?.user_id
@@ -180,11 +182,11 @@ const PickListDetails = () => {
         <Grid size={{ xl: 3, lg: 3, md: 12, sm: 12, xs: 12 }} sx={{ marginBottom: 5 }}>
           <Block>
             <Grid container spacing={5}>
-              { data?.status == 'Completed' && data?.verified_by == null && userAccount?.accounts_roles?.find((r) => r.role_id == 2 || r.role_id == 3) && (
+              {data?.status == 'Completed' && data?.verified_by == null && userAccount?.accounts_roles?.find((r) => r.role_id == 2 || r.role_id == 3) && (
                 <Grid size={12}>
                   <Button fullWidth variant='contained' className='btn-cerulean' onClick={handleVerifyPickList}>Verify</Button>
                 </Grid>
-              ) }
+              )}
               <Grid size={{ lg: 6, md: 6, sm: 12, xs: 12 }}>
                 <Typography align='center' fontWeight={'bold'}>PL Number</Typography>
                 <Typography align='center' >{data?.pl_number}</Typography>
@@ -233,8 +235,8 @@ const PickListDetails = () => {
                       />
                     </ListItemButton>
                   </ListItem>
-                  <Collapse in={open == index} timeout="auto" unmountOnExit sx={{ width: '100%', background: '#e6e6e6'}}>
-                    <Grid container spacing={2} sx={{ margin: 3}}>
+                  <Collapse in={open == index} timeout="auto" unmountOnExit sx={{ width: '100%', background: '#e6e6e6' }}>
+                    <Grid container spacing={2} sx={{ margin: 3 }}>
                       <Grid size={{ xl: 6, lg: 6, md: 12, sm: 12, xs: 12 }}>
                         <FormGroup>
                           <FormControlLabel control={
@@ -246,17 +248,17 @@ const PickListDetails = () => {
                           } label="Verify Source?" />
                         </FormGroup>
                         {verifiedSource && (
-                          <Box>
-                            Lorem ipsum dolor sit amet consectetur adipisicing elit. Eos soluta ad quos libero. Ipsa eveniet accusamus praesentium fugit temporibus officia odio. Aspernatur quaerat vel ullam ipsum distinctio, quibusdam veritatis eveniet.
+                          <Box sx={{ display: 'flex', height: '100%', flexDirection: 'column', placeItems: 'center', justifyContent: 'center'}}>
+                            <PriorityHighIcon sx={{ fontSize: 50}} />
+                            <Typography variant='h6' fontWeight='bold'>Create Racks and Locations to take products from there!</Typography>
                           </Box>
                         )}
                       </Grid>
                       <Grid size={{ xl: 6, lg: 6, md: 12, sm: 12, xs: 12 }}>
                         <form onSubmit={handleLoadPickListProducts}>
                           <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
-                            <NumberField
+                            <TextField
                               fullWidth
-                              type='number'
                               value={label.is_ready ? label.product_sku : productSku}
                               disabled={label.is_ready}
                               label="Product Sku"
@@ -302,21 +304,18 @@ const PickListDetails = () => {
                               error={productQtyError}
                             />
                             {label.is_ready ? (
-                              <Box sx={{ display: 'grid', placeItems: 'center' }}>
-                                <img
-                                  src={label.img_url}
-                                  alt="Preview"
-                                  style={{
-                                    maxWidth: 200,
-                                    borderRadius: '8px',
-                                    display: 'block'
-                                  }}
-                                />
-                              </Box>
+                              label.img_url ? (
+                                <ImagePreviewDialog imageUrl={label.img_url} />
+                              ) : null
                             ) : (
-                              <UploadImageForm productIMG={productIMG} setProductIMG={setProductIMG} maxWidth={100} />
+                              <UploadImageForm
+                                productIMG={productIMG}
+                                setProductIMG={setProductIMG}
+                                maxWidth={100}
+                              />
                             )}
-                            { !label.is_ready && (
+
+                            {!label.is_ready && (
                               <SubmitButton fullWidth={true} className='btn-munsell' btnText='Load' />
                             )}
                           </Box>

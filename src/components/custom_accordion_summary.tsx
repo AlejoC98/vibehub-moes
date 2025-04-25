@@ -64,7 +64,7 @@ const CustomAccordionSummary = ({ panels, openDefault = false } : { panels: Pane
   return (
     <Box>
         { panels.map((panle, index) => (
-            <Accordion expanded={expanded === `panel${index}`} onChange={handleChange(`panel${index}`)}>
+            <Accordion key={index} expanded={expanded === `panel${index}`} onChange={handleChange(`panel${index}`)}>
             <AccordionSummary aria-controls="panel1d-content" id="panel1d-header">
                 <Typography component="span">{ panle.question }</Typography>
             </AccordionSummary>
