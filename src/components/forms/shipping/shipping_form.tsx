@@ -39,7 +39,7 @@ const ShippingForm = ({ defaultData, setOpenModal }: { defaultData?: ShippingCon
 
   const supabase = createClient();
   const findUserByUUID = useFindUserByUUID();
-  const { userAccount, users } = useContext(GlobalContext);
+  const { userAccount } = useContext(GlobalContext);
 
   const [activeStep, setActiveStep] = useState<number>(0);
   const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -70,7 +70,7 @@ const ShippingForm = ({ defaultData, setOpenModal }: { defaultData?: ShippingCon
   const stepsContent = [
     <CreateOrderForm defaultData={defaultData} register={register} setValue={setValue} errors={errors} />,
     <PickListForm pickLists={orderPickList} setPickLists={setOrderPickList} />,
-    <Box sx={{ flexGrow: 1, padding: 5 }}>
+    <Box sx={{ flexGrow: 1, padding: 5, overflowY: 'auto', maxHeight: 500}}>
       <Grid container spacing={2}>
         <Grid size={4}>
           <Typography fontWeight='bold'>Carrier</Typography>
@@ -104,7 +104,6 @@ const ShippingForm = ({ defaultData, setOpenModal }: { defaultData?: ShippingCon
               >
                   <ListItemText primary={`PL # - ${pick.pl_number}`} />
               </ListItem>
-
               <Collapse in={expanded[index]} timeout="auto" unmountOnExit>
                   <Box sx={{ p: 2 }}>
                       <Grid container spacing={2}>

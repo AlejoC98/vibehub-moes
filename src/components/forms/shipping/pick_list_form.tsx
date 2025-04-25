@@ -17,6 +17,7 @@ import { IMaskInput } from 'react-imask';
 import ExpandLess from '@mui/icons-material/ExpandLess';
 import ExpandMore from '@mui/icons-material/ExpandMore';
 import EditIcon from '@mui/icons-material/Edit';
+import RemoveIcon from '@mui/icons-material/Remove';
 
 interface OrderProductInput extends ProductContent {
     quantity?: number,
@@ -74,45 +75,45 @@ const PickListForm = ({
 
     const handleAddPickListToOrder = () => {
         try {
-          setIsLoading(true);
-      
-          if (orderProducts.length <= 0) {
-            throw new Error('You need to add products to create the record!');
-          }
-          
-          if (pickList == undefined || Object.values(pickList!).includes('') || Object.values(pickList!).includes(undefined)) {
-            throw new Error("We're missing some information");
-          }
-      
-          const totalQuantity = orderProducts.reduce((sum, item) => sum + item.quantity!, 0);
-      
-          const updatedPickList = {
-            ...pickList!,
-            total_products: totalQuantity,
-            shippings_products: orderProducts,
-          };
-      
-          const existingIndex = pickLists.findIndex(p => p.pl_number === pickList!.pl_number);
-      
-          if (existingIndex !== -1) {
-            // Update existing
-            const newPickLists = [...pickLists];
-            newPickLists[existingIndex] = updatedPickList;
-            setPickLists(newPickLists);
-          } else {
-            // Add new
-            setPickLists([...pickLists, updatedPickList]);
-          }
-      
-          setOrderProducts([]);
-          setPickList(undefined);
-          setSelectedProduct(undefined);
+            setIsLoading(true);
+
+            if (orderProducts.length <= 0) {
+                throw new Error('You need to add products to create the record!');
+            }
+
+            if (pickList == undefined || Object.values(pickList!).includes('') || Object.values(pickList!).includes(undefined)) {
+                throw new Error("We're missing some information");
+            }
+
+            const totalQuantity = orderProducts.reduce((sum, item) => sum + item.quantity!, 0);
+
+            const updatedPickList = {
+                ...pickList!,
+                total_products: totalQuantity,
+                shippings_products: orderProducts,
+            };
+
+            const existingIndex = pickLists.findIndex(p => p.pl_number === pickList!.pl_number);
+
+            if (existingIndex !== -1) {
+                // Update existing
+                const newPickLists = [...pickLists];
+                newPickLists[existingIndex] = updatedPickList;
+                setPickLists(newPickLists);
+            } else {
+                // Add new
+                setPickLists([...pickLists, updatedPickList]);
+            }
+
+            setOrderProducts([]);
+            setPickList(undefined);
+            setSelectedProduct(undefined);
         } catch (error: any) {
-          toast.warning(error.message);
+            toast.warning(error.message);
         } finally {
-          setIsLoading(false);
+            setIsLoading(false);
         }
-      };      
+    };
 
     const handleSearch = () => {
         if (keyword == '' || keyword == null) {
@@ -135,47 +136,47 @@ const PickListForm = ({
 
     const handleAddProductToOrder = (product: OrderProductInput, quantity: number) => {
         if (quantity == undefined || quantity <= 0) {
-          toast.warning('Set a quantity!');
-          return;
+            toast.warning('Set a quantity!');
+            return;
         }
-      
+
         const alreadyExists = orderProducts.some(p => p.sku === product.sku);
         if (alreadyExists) {
-          toast.warning('This product is already in the order!');
-          return;
+            toast.warning('This product is already in the order!');
+            return;
         }
-      
+
         setOrderProducts([...orderProducts, { ...product, quantity }]);
         setSelectedProductQuantity(undefined);
-    };      
+    };
 
     const handleAddCustomProductToOrder = () => {
         if (customProduct?.quantity == undefined || customProduct.quantity <= 0) {
-          toast.warning('Set a quantity!');
-          return;
+            toast.warning('Set a quantity!');
+            return;
         }
-      
+
         const alreadyExists = orderProducts.some(p => p.sku === customProduct.sku);
         if (alreadyExists) {
-          toast.warning('This product is already in the order!');
-          return;
+            toast.warning('This product is already in the order!');
+            return;
         }
-      
+
         setOrderProducts([
-          ...orderProducts,
-          {
-            sku: customProduct.sku,
-            quantity: customProduct.quantity,
-            created_at: new Date().toDateString(),
-            created_by: userAccount?.user_id!,
-          },
+            ...orderProducts,
+            {
+                sku: customProduct.sku,
+                quantity: customProduct.quantity,
+                created_at: new Date().toDateString(),
+                created_by: userAccount?.user_id!,
+            },
         ]);
-      
+
         setIsCustomProduct(false);
         setCustomProduct(undefined);
         setSelectedProductQuantity(undefined);
-      };
-      
+    };
+
 
     const handleRemoveProduct = (skuToRemove: string) => {
         setOrderProducts(orderProducts.filter(product => product.sku !== skuToRemove));
@@ -208,36 +209,40 @@ const PickListForm = ({
             <Grid container spacing={2}>
                 <Grid size={8}>
                     <Grid container spacing={3}>
-                        <Grid size={{ lg: 6, md: 6, sm: 12, xs: 12 }}>
-                            <NumberField
-                                fullWidth
-                                label="PL Number"
-                                type='number'
-                                value={pickList?.pl_number || ''}
-                                onChange={(e) => setPickList((prev) => ({
-                                    ...prev!,
-                                    pl_number: parseInt(e.target.value),
-                                }))}
-                            />
+                        <Grid size={6}>
+                            <Grid container spacing={2}>
+                                <Grid size={{ lg: 12, md: 12, sm: 12, xs: 12 }}>
+                                    <NumberField
+                                        fullWidth
+                                        label="PL Number"
+                                        type='number'
+                                        value={pickList?.pl_number || ''}
+                                        onChange={(e) => setPickList((prev) => ({
+                                            ...prev!,
+                                            pl_number: parseInt(e.target.value),
+                                        }))}
+                                    />
+                                </Grid>
+                                <Grid size={{ lg: 12, md: 12, sm: 12, xs: 12 }}>
+                                    <TextField
+                                        fullWidth
+                                        label="BOL Number"
+                                        variant="outlined"
+                                        value={pickList?.bol_number || ''}
+                                        onChange={(e) => setPickList((prev) => ({
+                                            ...prev!,
+                                            bol_number: e.target.value,
+                                        }))}
+                                        slotProps={{
+                                            input: {
+                                                inputComponent: MaskedInput as any,
+                                            }
+                                        }}
+                                    />
+                                </Grid>
+                            </Grid>
                         </Grid>
-                        <Grid size={{ lg: 6, md: 6, sm: 12, xs: 12 }}>
-                            <TextField
-                                fullWidth
-                                label="BOL Number"
-                                variant="outlined"
-                                value={pickList?.bol_number || ''}
-                                onChange={(e) => setPickList((prev) => ({
-                                    ...prev!,
-                                    bol_number: e.target.value,
-                                }))}
-                                slotProps={{
-                                    input: {
-                                        inputComponent: MaskedInput as any,
-                                    }
-                                }}
-                            />
-                        </Grid>
-                        <Grid size={12}>
+                        <Grid size={6}>
                             <TextField
                                 fullWidth
                                 multiline
@@ -254,7 +259,7 @@ const PickListForm = ({
                         </Grid>
                         <Grid size={12}>
                             <Grid container spacing={2}>
-                                <Grid size={10}>
+                                <Grid size={6}>
                                     <TextField
                                         fullWidth
                                         placeholder='Search...'
@@ -285,16 +290,20 @@ const PickListForm = ({
                                         }}
                                     />
                                 </Grid>
-                                <Grid size={2}>
+                                <Grid size={6}>
                                     <Box sx={{ display: 'grid', placeItems: 'center', height: '100%' }}>
-                                        <IconButton className='btn-bittersweet' onClick={() => setIsCustomProduct(!isCustomProduct)}>
-                                            <AddIcon />
+                                        <IconButton sx={{ 'transition': 'all .5s ease-in-out' }} className={isCustomProduct ? 'btn-gunmetal' : 'btn-bittersweet'} onClick={() => setIsCustomProduct(!isCustomProduct)}>
+                                            {isCustomProduct ? (
+                                                <RemoveIcon />
+                                            ) : (
+                                                <AddIcon />
+                                            )}
                                         </IconButton>
                                     </Box>
                                 </Grid>
                                 {isCustomProduct && (
                                     <Grid size={12}>
-                                        <Box sx={{ margin: '0 auto', maxWidth: 400 }}>
+                                        <Box sx={{ margin: '0 auto', maxWidth: 400,  height: 262 }}>
                                             <Grid container spacing={2}>
                                                 <Grid size={12}>
                                                     <TextField
@@ -334,10 +343,9 @@ const PickListForm = ({
                                         </Box>
                                     </Grid>
                                 )}
-
                                 {!isCustomProduct && (
                                     <Grid size={{ xl: 6, lg: 6, md: 6, sm: 12, xs: 12 }}>
-                                        <List sx={{ maxHeight: 300, overflowY: 'auto' }}>
+                                        <List sx={{ maxHeight: 210, overflowY: 'auto' }}>
                                             {displayData?.map((pro, index) => {
                                                 if (!orderProducts?.find(op => op.id == pro.id)) {
                                                     return <Box key={index}>
@@ -383,7 +391,7 @@ const PickListForm = ({
                                 )}
                                 {!isCustomProduct && (
                                     <Grid size={{ xl: 6, lg: 6, md: 6, sm: 12, xs: 12 }}>
-                                        <List sx={{ maxHeight: 300, overflowY: 'auto'}}>
+                                        <List sx={{ maxHeight: 300, overflowY: 'auto' }}>
                                             {orderProducts?.map((pro, index) => (
                                                 <ListItem key={index} secondaryAction={
                                                     <IconButton edge="end" aria-label="delete" onClick={() => handleRemoveProduct(pro.sku!)}>
@@ -417,8 +425,8 @@ const PickListForm = ({
                     </Grid>
                 </Grid>
                 <Grid size={4}>
-                    <Typography>Pick Lists</Typography>
-                    <List>
+                    <Typography variant='h6' fontWeight='bold' textAlign='center'>Pick Lists</Typography>
+                    <List sx={{ maxHeight: 450, overflowY: 'auto'}}>
                         {pickLists.map((pick, index) => (
                             <Box key={index} sx={{ width: '100%', margin: '.5rem auto' }}>
                                 <ListItem
@@ -433,7 +441,6 @@ const PickListForm = ({
                                 >
                                     <ListItemText primary={`PL # - ${pick.pl_number}`} />
                                 </ListItem>
-
                                 <Collapse in={expanded[index]} timeout="auto" unmountOnExit>
                                     <Box sx={{ p: 2 }}>
                                         <Grid container spacing={2}>

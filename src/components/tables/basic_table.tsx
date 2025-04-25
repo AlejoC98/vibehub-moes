@@ -1,5 +1,5 @@
 'use client'
-import { Box, Button, Dialog, DialogTitle, IconButton, InputAdornment, Menu, MenuItem, TextField, Typography } from '@mui/material';
+import { Box, Button, Dialog, DialogActions, DialogContent, DialogTitle, IconButton, InputAdornment, Menu, MenuItem, TextField, Typography } from '@mui/material';
 import { DataGrid, GridCallbackDetails, GridColDef, GridRowId, GridRowSelectionModel } from '@mui/x-data-grid'
 import { usePathname, useRouter } from 'next/navigation';
 import React, { cloneElement, MouseEvent, ReactElement, useContext, useRef, useState } from 'react';
@@ -11,11 +11,12 @@ import CloseIcon from '@mui/icons-material/Close';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import VisibilityIcon from '@mui/icons-material/Visibility';
-import { deepSearch, exportToExcel } from '@/utils/functions/main';
+import { deepSearch, exportShippingToExcel, exportToExcel } from '@/utils/functions/main';
 import Swal from 'sweetalert2';
 import { toast } from 'react-toastify';
 import { GlobalContext } from '@/utils/context/global_provider';
 import { createClient } from '@/utils/supabase/client';
+import FileDropZone from '../forms/upload_file_form';
 
 const BasicTable = ({
   title,
@@ -25,7 +26,7 @@ const BasicTable = ({
   source,
   createForm,
   createFormTitle,
-} : { 
+}: {
   title: string,
   data: Array<any>,
   columns: GridColDef[],
@@ -34,7 +35,7 @@ const BasicTable = ({
   createForm?: ReactElement<any>,
   createFormTitle?: string,
 }) => {
-  
+
   const router = useRouter();
   const pathname = usePathname();
   const supabase = createClient();
@@ -44,6 +45,8 @@ const BasicTable = ({
   const menuId = 'primary-search-account-menu';
   const isMenuOpen = Boolean(anchorEl);
   const [openModal, setOpenModal] = useState<boolean>(false);
+  const [openImportModal, setOpenImportModal] = useState<boolean>(false);
+  const [excelFile, setExcelFile] = useState<File | null>(null);
   const [searchData, setSearchData] = useState<GridColDef[]>([]);
   const serachRef = useRef<HTMLInputElement | null>(null);
   const [selectedRow, setSelectedRow] = useState<GridRowId | null>(null);
@@ -52,15 +55,17 @@ const BasicTable = ({
 
   const defaultColumns: GridColDef[] = [
     ...(created_column
-      ? [    { field: 'created_by', headerName: 'Created By', renderCell: (params:any) => {
-        var userName;
-        if (params.row.created_by == 1) {
-          userName = {username: 'Alejoc98'}
-        } else {
-          userName = users?.find(u => u.user_id == params.row.created_by);
+      ? [{
+        field: 'created_by', headerName: 'Created By', renderCell: (params: any) => {
+          var userName;
+          if (params.row.created_by == 1) {
+            userName = { username: 'Alejoc98' }
+          } else {
+            userName = users?.find(u => u.user_id == params.row.created_by);
+          }
+          return userName?.username || params.row.created_by;
         }
-        return userName?.username || params.row.created_by;
-      }},]
+      },]
       : []),
     {
       field: 'actions',
@@ -99,9 +104,60 @@ const BasicTable = ({
     setFormData({});
   };
 
-  const handleCreateXlsxFile = () => {
+  const handleOpenImportDialog = async () => {
+    handleMenuClose();
+    setOpenImportModal(true);
+  }
+
+  const handleCloseImport = () => {
+    setExcelFile(null);
+    setOpenImportModal(false);
+  };
+
+  const handleUploadImportFile = () => {
     try {
-      exportToExcel(data, [...columns, ...defaultColumns]);
+      if (excelFile == null) {
+        throw new Error('Please select a valid file!');
+      }
+      handleCloseImport();
+
+      switch (source) {
+        case 'products':
+          console.log('Products');
+          break;
+        case 'shippings_orders':
+          console.log('Shipping Orders');
+          break;
+        default:
+          throw new Error('We couldn\'t proccess')
+          break;
+      }
+
+    } catch (error: any) {
+      toast.warning(error.message);
+    }
+  }
+
+  const handleCreateXlsxFile = async () => {
+    try {
+      if (selectedRow == null) {
+        exportToExcel(data, [...columns, ...defaultColumns]);
+      } else {
+
+        switch (source) {
+          case 'shippings_orders':
+            const { data: tableQuery, error } = await supabase.from(source!).select('*, shippings_pick_list(*, shippings_products(*))').eq('id', selectedRow).single();
+
+            if (error) {
+              throw new Error(error.message);
+            }
+            exportShippingToExcel(tableQuery, users!);
+            break;
+          default:
+            toast.warning('Error creating file, please try again later!');
+            break;
+        }
+      }
     } catch (error: any) {
       toast.warning(error.message);
     }
@@ -127,7 +183,7 @@ const BasicTable = ({
         trigger={() => <MenuItem>PRINT</MenuItem>}
         content={() => tableContent.current}
       /> */}
-      <MenuItem>IMPORT</MenuItem>
+      <MenuItem onClick={handleOpenImportDialog}>IMPORT</MenuItem>
       <MenuItem onClick={handleCreateXlsxFile}>EXPORT</MenuItem>
     </Menu>
   );
@@ -185,11 +241,11 @@ const BasicTable = ({
         confirmButtonText: 'Procceed',
         confirmButtonColor: '#f9564f',
         showCancelButton: true,
-      }).then(async(result) => {
+      }).then(async (result) => {
         if (result.isConfirmed) {
           const { error } = await supabase.from(source!).update({
             'deleted': true
-          }).eq('id', selectedRow); 
+          }).eq('id', selectedRow);
           // const { error } = await supabase.from(source!).delete().eq('id', selectedRow); 
           if (error) {
             throw new Error(error.message);
@@ -207,15 +263,15 @@ const BasicTable = ({
   }
 
   return (
-<Box sx={{ minHeight: 400, width: '100%'}}>
+    <Box sx={{ minHeight: 400, width: '100%' }}>
       <Grid container spacing={2}>
-        <Grid size={{ lg: 4, md: 4, sm: 12, xs: 12}}>
-          <Box sx={{display: 'flex', width: '100%', height: '100%', alignItems: 'center'}} >
+        <Grid size={{ lg: 4, md: 4, sm: 12, xs: 12 }}>
+          <Box sx={{ display: 'flex', width: '100%', height: '100%', alignItems: 'center' }} >
             <Typography variant='h4'>{title}</Typography>
           </Box>
         </Grid>
-        <Grid size={{ lg: 4, md: 4, sm: 12, xs: 12}}>
-          <Box sx={{ width: '100%'}}>
+        <Grid size={{ lg: 4, md: 4, sm: 12, xs: 12 }}>
+          <Box sx={{ width: '100%' }}>
             <TextField
               fullWidth
               onChange={(e) => handleSearch(e.target.value)}
@@ -243,20 +299,20 @@ const BasicTable = ({
             />
           </Box>
         </Grid>
-        <Grid size={{ lg:4, md: 4, sm: 12, xs: 12}}>
-          <Box sx={{width: '100%'}}>
+        <Grid size={{ lg: 4, md: 4, sm: 12, xs: 12 }}>
+          <Box sx={{ width: '100%' }}>
             <Box sx={{ flexGrow: 1 }} />
             <Box sx={{
               display: 'flex',
               gap: 1,
-              justifyContent: { lg: 'end', md: 'end', sm: 'end', xs: 'end'}
+              justifyContent: { lg: 'end', md: 'end', sm: 'end', xs: 'end' }
             }}>
               {selectedRow != null && (
                 <Button variant='contained' className='bg-red-700 hover:bg-red-800 ml-5' onClick={handleDelete}>
                   <DeleteIcon />
                 </Button>
               )}
-              { createForm !== undefined && (
+              {createForm !== undefined && (
                 <Button variant='contained' startIcon={<AddIcon />} className='btn-munsell ml-5' onClick={() => setOpenModal(true)}>
                   New
                 </Button>
@@ -285,22 +341,39 @@ const BasicTable = ({
               checkboxSelection
             />
           ) : (
-            <Box sx={{ display: 'grid', placeItems: 'center', minHeight: 200}}>
+            <Box sx={{ display: 'grid', placeItems: 'center', minHeight: 200 }}>
               <Typography variant='h4'>No Records yet!</Typography>
             </Box>
           )}
         </Grid>
       </Grid>
-      { createForm !== undefined && (
-        <Box sx={{ background: 'red', width: 800}}>
+      {createForm !== undefined && (
+        <Box sx={{ background: 'red', width: 800 }}>
           <Dialog fullWidth maxWidth='lg' onClose={handleClose} open={openModal}>
             <DialogTitle>
-              <Typography align='center' fontWeight='bold' sx={{ fontSize: 25}}>{createFormTitle}</Typography>
+              <Typography align='center' fontWeight='bold' sx={{ fontSize: 25 }}>{createFormTitle}</Typography>
             </DialogTitle>
             {cloneElement(createForm, { defaultData: formData, setOpenModal: setOpenModal })}
           </Dialog>
         </Box>
       )}
+      <Dialog fullWidth maxWidth='sm' onClose={handleCloseImport} open={openImportModal}>
+        <DialogTitle>
+          <Typography align='center' fontWeight='bold' sx={{ fontSize: 25 }}>Import File</Typography>
+        </DialogTitle>
+        <DialogContent>
+          <FileDropZone
+            excelFile={excelFile}
+            setExcelFile={setExcelFile}
+          />
+        </DialogContent>
+        <DialogActions sx={{ justifyContent: 'space-between' }}>
+          <Button variant='contained' onClick={handleCloseImport} className='btn-gunmetal'>Close</Button>
+          <Button variant='contained' onClick={handleUploadImportFile} className='btn-munsell' autoFocus>
+            Upload
+          </Button>
+        </DialogActions>
+      </Dialog>
     </Box>
   )
 }

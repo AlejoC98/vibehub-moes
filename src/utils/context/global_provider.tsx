@@ -39,20 +39,28 @@ const GlobalProvider = ({ children }: { children: ReactNode }) => {
                 }
                 setTimeout(() => {
                     getShippingsOrders();
-                }, 1000);
+                }, 500);
             }).on('postgres_changes', {
                 event: '*', schema: 'public', table: 'shippings_pick_list'
             }, (payload) => {
                 setTimeout(() => {
                     getShippingsOrders();
-                }, 1000);
+                }, 500);
             }).on('postgres_changes', {
                 event: '*', schema: 'public', table: 'shippings_products'
             }, (payload) => {
                 setTimeout(() => {
                     getShippingsOrders();
-                }, 1000);
+                }, 500);
             })
+            .on('postgres_changes', {
+                event: '*', schema: 'public', table: 'products'
+            }, (payload) => {
+                setTimeout(() => {
+                    getProducts();
+                }, 500);
+            })
+            .subscribe();
             // .on('postgres_changes', {
             //     event: '*', schema: 'public', table: 'shippings_pick_list'
             // }, (payload) => {
@@ -92,14 +100,6 @@ const GlobalProvider = ({ children }: { children: ReactNode }) => {
             //         getCarriers();
             //     }, 1000);
             // })
-            .on('postgres_changes', {
-                event: '*', schema: 'public', table: 'products'
-            }, (payload) => {
-                setTimeout(() => {
-                    getProducts();
-                }, 1000);
-            })
-            .subscribe();
         // .on('postgres_changes', {
         //         event: '*', schema: 'public', table: 'racks'
         //     }, (payload) => {
@@ -142,7 +142,7 @@ const GlobalProvider = ({ children }: { children: ReactNode }) => {
         const getProducts = async () => {
             var returnProducts = [];
 
-            const { data: productsQuery, error: productsError } = await supabase.from('products').select('*');
+            const { data: productsQuery, error: productsError } = await supabase.from('products').select('*').not('deleted', 'eq', true);
 
             if (productsQuery!.length > 0) {
                 for (var product of productsQuery!) {

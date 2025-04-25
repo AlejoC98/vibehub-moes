@@ -79,15 +79,6 @@ const PickListDetails = () => {
           }
         });
 
-      const updatedProducts = productsSteps?.map((product) => {
-        if (product.product_sku === productSku) {
-          shipProduct = product.id;
-          return { ...product, is_ready: true };
-        } else {
-          return product;
-        }
-      });
-
       if (productIMG) {
         productURL = await handleUploadToBucket(
           'shippingorders',
@@ -96,7 +87,16 @@ const PickListDetails = () => {
         );
       }
 
-      const { data: newSP, error } = await supabase.from('shippings_products').update({
+      const updatedProducts = productsSteps?.map((product) => {
+        if (product.product_sku === productSku) {
+          shipProduct = product.id;
+          return { ...product, is_ready: true, img_url: productURL!.signedUrl};
+        } else {
+          return product;
+        }
+      });
+
+      const { error } = await supabase.from('shippings_products').update({
         is_ready: true,
         img_url: productURL!.signedUrl
       }).eq('id', shipProduct);

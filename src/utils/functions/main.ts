@@ -1,4 +1,5 @@
-import * as XLSX from 'xlsx'
+// import * as XLSX from 'xlsx'
+import * as XLSX from 'xlsx-js-style';
 import { saveAs } from 'file-saver';
 import { toast } from "react-toastify";
 import { AccountContent, OrderContent } from "@/utils/interfaces";
@@ -85,20 +86,17 @@ export function prepareExportData(data: any[], columns: GridColDef[]) {
     const formattedRow: Record<string, any> = {}
 
     columns.forEach((col) => {
-      // Skip if no field (like actions column)
       if (!col.field || col.field === 'actions') return
 
-      // Use renderCell if it exists, else raw value
       const value = col.renderCell
         ? col.renderCell({
           id: row.id,
           field: col.field,
           row,
           value: row[col.field],
-        } as any) // cast to any to avoid typing issues
+        } as any)
         : row[col.field]
 
-      // Assign value to header name
       formattedRow[col.headerName ?? col.field] = value
     })
 
@@ -125,6 +123,136 @@ export function exportToExcel(data: any[], columns: GridColDef[], fileName: stri
 
   saveAs(blob, `${fileName}.xlsx`)
 }
+
+export const exportShippingToExcel = (order: any, users: any[]) => {
+  const sheetRows: any[][] = [];
+
+  const findUsernameByUUID = (uuid: string): string | undefined => {
+    const user = users.find(u => u.user_id === uuid);
+    return user?.username;
+  };
+
+  const orderHeaders = [
+    'Order ID', 'Assign To', 'Carrier', 'Trailer #', 'Closed At',
+    'Closed By', 'Created At', 'Created By', 'Dock Door', 'Deleted',
+    'Status', 'Total Shipped'
+  ];
+  sheetRows.push(orderHeaders);
+
+  const orderRow = [
+    order.id,
+    findUsernameByUUID(order.assign_to),
+    order.carrier,
+    order.trailer_number,
+    order.closed_at,
+    findUsernameByUUID(order.closed_by),
+    order.created_at,
+    findUsernameByUUID(order.created_by),
+    order.dock_door,
+    order.deleted,
+    order.status,
+    order.total_shipped
+  ];
+  sheetRows.push(orderRow);
+
+  const mergeRanges: XLSX.Range[] = [];
+
+  order.shippings_pick_list?.forEach((pickList: any) => {
+    const pickLabelRow = Array(orderHeaders.length).fill('');
+    pickLabelRow[0] = 'Shipping Pick List';
+    const pickLabelRowIndex = sheetRows.length;
+    sheetRows.push(pickLabelRow);
+    mergeRanges.push({ s: { r: pickLabelRowIndex, c: 0 }, e: { r: pickLabelRowIndex, c: orderHeaders.length - 1 } });
+
+    const pickHeaders = [
+      'PL #', 'Picked By', 'Verified By', 'BOL #',
+      'Pick Status', 'Pick Created At', 'Pick Notes', 'Total Products'
+    ];
+    const pickHeadersRowIndex = sheetRows.length;
+    sheetRows.push(pickHeaders);
+
+    const pickRow = [
+      pickList.pl_number,
+      findUsernameByUUID(pickList.picked_by),
+      findUsernameByUUID(pickList.verified_by),
+      pickList.bol_number,
+      pickList.status,
+      pickList.created_at,
+      pickList.notes,
+      pickList.total_products
+    ];
+    sheetRows.push(pickRow);
+
+    const prodLabelRow = Array(orderHeaders.length).fill('');
+    prodLabelRow[0] = 'Shippings Products';
+    const prodLabelRowIndex = sheetRows.length;
+    sheetRows.push(prodLabelRow);
+    mergeRanges.push({ s: { r: prodLabelRowIndex, c: 0 }, e: { r: prodLabelRowIndex, c: orderHeaders.length - 1 } });
+
+    const productHeaders = [
+      'Product SKU', 'Product Quantity', 'Ready',
+      'Created At', 'Created By', 'Image'
+    ];
+    const productHeadersRowIndex = sheetRows.length;
+    sheetRows.push(productHeaders);
+
+    pickList.shippings_products?.forEach((product: any) => {
+      const prodRow = [
+        product.product_sku || '',
+        product.product_quantity || '',
+        product.is_ready || '',
+        product.created_at || '',
+        findUsernameByUUID(product.created_by) || '',
+        product.img_url || ''
+      ];
+      sheetRows.push(prodRow);
+    });
+  });
+
+  const worksheet = XLSX.utils.aoa_to_sheet(sheetRows);
+  worksheet['!merges'] = mergeRanges;
+
+  mergeRanges.forEach((range) => {
+    const cellRef = XLSX.utils.encode_cell(range.s);
+    if (worksheet[cellRef]) {
+      worksheet[cellRef].s = {
+        alignment: { horizontal: 'center', vertical: 'center' },
+        font: { bold: true, sz: 16 }
+      };
+    }
+  });
+
+  orderHeaders.forEach((_, colIndex) => {
+    const cellRef = XLSX.utils.encode_cell({ r: 0, c: colIndex });
+    if (worksheet[cellRef]) {
+      worksheet[cellRef].s = { font: { bold: true } };
+    }
+  });
+
+  sheetRows.forEach((row, rowIndex) => {
+    const isPickHeaders = row?.[0] === 'PL #' || row?.[0] === 'pl_number';
+    const isProductHeaders = row?.[0] === 'Product SKU' || row?.[0] === 'product_sku';
+
+    if (isPickHeaders || isProductHeaders) {
+      row.forEach((_, colIndex) => {
+        const cellRef = XLSX.utils.encode_cell({ r: rowIndex, c: colIndex });
+        if (worksheet[cellRef]) {
+          worksheet[cellRef].s = { font: { bold: true } };
+        }
+      });
+    }
+  });
+
+  const workbook = XLSX.utils.book_new();
+  XLSX.utils.book_append_sheet(workbook, worksheet, 'Shipping');
+
+  const buffer = XLSX.write(workbook, { bookType: 'xlsx', type: 'array', cellStyles: true });
+  const blob = new Blob([buffer], {
+    type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+  });
+
+  saveAs(blob, 'shipping_data.xlsx');
+};
 
 export const startCountdown = (
   ref: RefObject<HTMLElement | null>,
@@ -160,7 +288,6 @@ export const useFindUserByUUID = () => {
 };
 
 export const convertTimeByTimeZone = (sessionTimeZone: string, utcDate?: string) => {
-  // const utcFormatted = formatInTimeZone(utcDate, 'UTC', 'MMMM d, yyyy h:mm a');
   try {
 
     var formatted;
