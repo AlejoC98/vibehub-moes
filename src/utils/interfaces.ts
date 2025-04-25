@@ -71,6 +71,7 @@ export interface GlobalContent {
     userAccount?: AccountContent;
     receivings?: ReceivingContent[];
     shippings?: ShippingContent[];
+    updateReports?: UpdateReportContent[],
     isLaunching: boolean;
     setIsLaunching: (status: boolean) => void
 }
@@ -417,4 +418,22 @@ export interface TicketInput {
     full_name: string;
     username: string;
     message: string;
+}
+
+export interface UpdateReportInput {
+    title: string;
+    content: string;
+    img: string;
+    icon: string;
+    color: string;
+}
+
+export interface UpdateReportContent {
+    id: number;
+    title: string;
+    content: string;
+    img: string;
+    icon: string;
+    color: string;
+    created_at: Date;
 }

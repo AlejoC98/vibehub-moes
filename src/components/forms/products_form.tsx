@@ -4,15 +4,14 @@ import React, { forwardRef, useContext, useState } from 'react'
 import { ProductInput } from '@/utils/interfaces'
 import { convertTimeByTimeZone, generateRandomNumberString, handleUploadToBucket } from '@/utils/functions/main';
 import { toast } from 'react-toastify';
-import { NumberFormatBase, NumericFormat, PatternFormat } from 'react-number-format';
 import QrCodeIcon from '@mui/icons-material/QrCode';
 import { createClient } from '@/utils/supabase/client';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { GlobalContext } from '@/utils/context/global_provider';
-import { Box, Button, IconButton, TextField } from '@mui/material';
+import { Box, IconButton, TextField } from '@mui/material';
 import { IMaskInput } from 'react-imask';
-import UploadImageForm from './upload_image_form';
-import SubmitButton from '../submit_button';
+import SubmitButton from '@/components/submit_button';
+import ImageDropzone from '@/components/image_dropzone';
 
 interface CustomMaskProps {
   name: string;
@@ -96,8 +95,8 @@ const ProductsForm = ({ defaultData, setOpenModal }: { defaultData?: ProductInpu
     <Box sx={{ flexGrow: 1, padding: 5 }}>
       <form onSubmit={handleSubmit(hanldeNewProduct)}>
         <Grid container spacing={2}>
-          <Grid size={12}>
-            <UploadImageForm productIMG={productIMG} setProductIMG={setProductIMG} />
+          <Grid size={12}>           
+            <ImageDropzone productIMG={productIMG} setProductIMG={setProductIMG} />
           </Grid>
           <Grid size={12}>
             <TextField

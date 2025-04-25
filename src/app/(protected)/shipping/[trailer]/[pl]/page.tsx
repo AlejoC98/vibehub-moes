@@ -7,7 +7,6 @@ import Swal from 'sweetalert2';
 import { Box, Button, Collapse, Divider, FormControlLabel, FormGroup, List, ListItem, ListItemButton, ListItemText, TextField, Typography } from '@mui/material';
 import Grid from '@mui/material/Grid2'
 import Block from '@/components/block';
-import UploadImageForm from '@/components/forms/upload_image_form';
 import Details from '@/components/details';
 import SubmitButton from '@/components/submit_button';
 import { CustomSwicth, NumberField } from '@/style/global';
@@ -19,6 +18,7 @@ import { createClient } from '@/utils/supabase/client';
 import { handleUploadToBucket, useFindUserByUUID } from '@/utils/functions/main';
 import { ImagePreviewDialog } from '@/components/image_preview_dialog';
 import PriorityHighIcon from '@mui/icons-material/PriorityHigh';
+import ImageDropzone from '@/components/image_dropzone';
 
 const PickListDetails = () => {
 
@@ -308,7 +308,7 @@ const PickListDetails = () => {
                                 <ImagePreviewDialog imageUrl={label.img_url} />
                               ) : null
                             ) : (
-                              <UploadImageForm
+                              <ImageDropzone
                                 productIMG={productIMG}
                                 setProductIMG={setProductIMG}
                                 maxWidth={100}

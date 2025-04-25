@@ -8,7 +8,7 @@ import Link from 'next/link';
 import { GlobalContext } from '@/utils/context/global_provider';
 import { usePathname, useRouter } from 'next/navigation';
 import { HugeiconsIcon } from '@hugeicons/react';
-import { DashboardSquare02Icon, WarehouseIcon, FlowIcon, Trolley02Icon, LiftTruckIcon, PackageMovingIcon, TaskDaily01Icon, ComputerDollarIcon, ReturnRequestIcon, TruckDeliveryIcon, Store02Icon, UserGroupIcon, CustomerService01Icon, ProductLoadingIcon, DistributeVerticalBottomIcon, DigitalClockIcon } from '@hugeicons/core-free-icons';
+import { DashboardSquare02Icon, WarehouseIcon, FlowIcon, Trolley02Icon, LiftTruckIcon, PackageMovingIcon, TaskDaily01Icon, ComputerDollarIcon, ReturnRequestIcon, TruckDeliveryIcon, Store02Icon, UserGroupIcon, CustomerService01Icon, ProductLoadingIcon, DistributeVerticalBottomIcon, FileManagementIcon } from '@hugeicons/core-free-icons';
 import Swal from 'sweetalert2';
 import 'animate.css';
 
@@ -33,7 +33,7 @@ const SideBar = ({ open, setOpen, menuOpen, setMenuOpen }: { open: boolean, setO
             {
                 id: 2,
                 title: "Inventory",
-                to: "/inventory",
+                to: "#",
                 icon: <HugeiconsIcon icon={ProductLoadingIcon} />
             },
             {
@@ -113,6 +113,14 @@ const SideBar = ({ open, setOpen, menuOpen, setMenuOpen }: { open: boolean, setO
                 to: "/users",
                 icon: <HugeiconsIcon icon={UserGroupIcon} />
             }
+        ] : []),
+        ...(userAccount?.accounts_roles?.some(role => [1].includes(role.role_id)) ? [
+            {
+                id: 14,
+                title: "Management",
+                to: "/management",
+                icon: <HugeiconsIcon icon={FileManagementIcon} />
+            },
         ] : []),
     ];
 

@@ -1,6 +1,6 @@
 'use client'
 import { createContext, ReactNode, useEffect, useState } from "react";
-import { AccountContent, AccountRolesContent, CarriersContent, CustomerContent, GlobalContent, LocationContent, NotificationContent, OrderContent, ProductContent, RackContent, ReceivingContent, RoleContent, RoleNotificationContent, ShippingContent, VendorsContent } from "@/utils/interfaces";
+import { AccountContent, AccountRolesContent, CarriersContent, CustomerContent, GlobalContent, LocationContent, NotificationContent, OrderContent, ProductContent, RackContent, ReceivingContent, RoleContent, RoleNotificationContent, ShippingContent, UpdateReportContent, VendorsContent } from "@/utils/interfaces";
 import { createClient } from "@/utils/supabase/client";
 import { createNotification } from "../functions/main";
 
@@ -19,6 +19,7 @@ const GlobalProvider = ({ children }: { children: ReactNode }) => {
     const [users, setUsers] = useState<AccountContent[]>([]);
     const [racks, setRacks] = useState<RackContent[]>([]);
     const [orders, setOrders] = useState<OrderContent[]>([]);
+    const [updateReports, setUpdatesReports] = useState<UpdateReportContent[]>();
     const [receivings, setReceivings] = useState<ReceivingContent[]>([]);
     const [shippings, setShippings] = useState<ShippingContent[]>([]);
     const [products, setProducts] = useState<ProductContent[]>([]);
@@ -256,13 +257,23 @@ const GlobalProvider = ({ children }: { children: ReactNode }) => {
 
         getShippingsOrders();
 
+        const getUpdatesReports = async() => {
+            const { data: reports, error } = await supabase.from('reports_updates').select();
+
+
+            setUpdatesReports(reports || []);
+
+        }
+
+        getUpdatesReports();
+
         return () => {
             supabase.removeChannel(channel);
         }
     }, [supabase]);
 
     return (
-        <GlobalContext.Provider value={{ locations, roles, users, vendors, carriers, products, racks, notifications, orders, userAccount, receivings, shippings, isLaunching, setIsLaunching }}>{children}</GlobalContext.Provider>
+        <GlobalContext.Provider value={{ locations, roles, users, vendors, carriers, products, racks, notifications, orders, userAccount, receivings, shippings, updateReports, isLaunching, setIsLaunching }}>{children}</GlobalContext.Provider>
     )
 };
 
