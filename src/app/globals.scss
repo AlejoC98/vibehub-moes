@@ -56,40 +56,128 @@ main {
   overflow: hidden;
 }
 
-.btn-gunmetal {
+.btn-gunmetal,
+.btn-gunmetal-dark,
+.btn-bittersweet,
+.btn-xanthous,
+.btn-munsell,
+.btn-cerulean {
   background-color: $gunmetal !important;
   color: #fff !important;
+  transition: background-color 0.2s ease, transform 0.1s ease;
+
+  &:hover {
+    background-color: darken($gunmetal, 7%) !important;
+  }
+
+  &:active {
+    background-color: darken($gunmetal, 12%) !important;
+    transform: scale(0.98);
+  }
+
+  &:disabled {
+    background-color: lighten($gunmetal, 25%) !important;
+    color: #ccc !important;
+    cursor: not-allowed;
+  }
 }
 
 .btn-gunmetal-dark {
   background-color: $gunmetal-dark !important;
-  color: #fff !important;
+
+  &:hover {
+    background-color: darken($gunmetal-dark, 7%) !important;
+  }
+
+  &:active {
+    background-color: darken($gunmetal-dark, 12%) !important;
+    transform: scale(0.98);
+  }
+
+  &:disabled {
+    background-color: lighten($gunmetal-dark, 25%) !important;
+    color: #ccc !important;
+    cursor: not-allowed;
+  }
 }
 
 .btn-bittersweet {
   background-color: $bittersweet !important;
-  color: #fff !important;
+
+  &:hover {
+    background-color: darken($bittersweet, 7%) !important;
+  }
+
+  &:active {
+    background-color: darken($bittersweet, 12%) !important;
+    transform: scale(0.98);
+  }
+
+  &:disabled {
+    background-color: lighten($bittersweet, 25%) !important;
+    color: #ccc !important;
+    cursor: not-allowed;
+  }
 }
 
 .btn-xanthous {
   background-color: $xanthous !important;
-  color: #fff !important;
+
+  &:hover {
+    background-color: darken($xanthous, 7%) !important;
+  }
+
+  &:active {
+    background-color: darken($xanthous, 12%) !important;
+    transform: scale(0.98);
+  }
+
+  &:disabled {
+    background-color: lighten($xanthous, 25%) !important;
+    color: #ccc !important;
+    cursor: not-allowed;
+  }
 }
 
 .btn-munsell {
   background-color: $munsell !important;
-  color: #fff !important;
+
+  &:hover {
+    background-color: darken($munsell, 7%) !important;
+  }
+
+  &:active {
+    background-color: darken($munsell, 12%) !important;
+    transform: scale(0.98);
+  }
+
+  &:disabled {
+    background-color: lighten($munsell, 25%) !important;
+    color: #ccc !important;
+    cursor: not-allowed;
+  }
 }
 
 .btn-cerulean {
   background-color: $cerulean !important;
-  color: #fff !important;
+
+  &:hover {
+    background-color: darken($cerulean, 7%) !important;
+  }
+
+  &:active {
+    background-color: darken($cerulean, 12%) !important;
+    transform: scale(0.98);
+  }
+
+  &:disabled {
+    background-color: lighten($cerulean, 25%) !important;
+    color: #ccc !important;
+    cursor: not-allowed;
+  }
 }
 
-.bg-gunmetal {
-  background-color: $gunmetal !important;
-  color: #fff !important;
-}
+// CUSTOM BACKGROUND
 
 .bg-gunmetal-dark {
   background-color: $gunmetal-dark !important;

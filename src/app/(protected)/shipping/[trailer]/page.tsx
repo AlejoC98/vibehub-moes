@@ -10,6 +10,7 @@ import { ShippingContent } from '@/utils/interfaces'
 import SearchList from '@/components/search_pick_list'
 import { convertTimeByTimeZone, useFindUserByUUID } from '@/utils/functions/main'
 import CompleteOrderForm from '@/components/forms/shipping/complete_shipping_form'
+import { ImagePreviewDialog } from '@/components/image_preview_dialog'
 
 const OrderDetails = () => {
 
@@ -100,6 +101,13 @@ const OrderDetails = () => {
                 <Typography variant='h6' fontWeight='bold'>Total Shipped</Typography>
                 <Typography>{totalOrderShipped}</Typography>
               </Grid>
+              { data?.img_url != null && (
+                <Grid size={12}>
+                  <Box sx={{ display: 'flex', justifyContent: 'center', placeItems: 'center'}}>
+                    <ImagePreviewDialog imageUrl={data?.img_url!} />
+                  </Box>
+                </Grid>
+              )}
             </Grid>
           </Block>
         </Grid>

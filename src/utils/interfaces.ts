@@ -223,6 +223,7 @@ export interface ShippingContent {
     closed_by?: string;
     assign_to?: string;
     total_shipped: number;
+    img_url?: string;
     shippings_pick_list: PickListContent[];
 }
 

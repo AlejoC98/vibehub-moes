@@ -142,130 +142,154 @@ const GlobalProvider = ({ children }: { children: ReactNode }) => {
 
         const getProducts = async () => {
             var returnProducts = [];
-
-            const { data: productsQuery, error: productsError } = await supabase.from('products').select('*').not('deleted', 'eq', true);
-
+          
+            const { data: productsQuery, error: productsError } = await supabase
+              .from('products')
+              .select('*')
+              .not('deleted', 'eq', true)
+              .order('created_at', { ascending: false });
+          
             if (productsQuery!.length > 0) {
-                for (var product of productsQuery!) {
-                    var { data: locationsQuery, error } = await supabase.from('racks_locations').select().eq('product_id', product.id).maybeSingle();
-
-                    if (!error && locationsQuery != null) {
-                        returnProducts.push({ ...product, 'locations': locationsQuery });
-                    } else {
-                        returnProducts.push(product);
-                    }
+              for (var product of productsQuery!) {
+                var { data: locationsQuery, error } = await supabase
+                  .from('racks_locations')
+                  .select()
+                  .eq('product_id', product.id)
+                  .maybeSingle();
+          
+                if (!error && locationsQuery != null) {
+                  returnProducts.push({ ...product, 'locations': locationsQuery });
+                } else {
+                  returnProducts.push(product);
                 }
+              }
             }
-
+          
             setProducts(returnProducts);
-        }
-
-        getProducts();
-
-        const getRacks = async () => {
+          };
+          getProducts();
+          
+          const getRacks = async () => {
             const { data: racksQuery, error: racksError } = await supabase
-                .from('racks')
-                .select('*,racks_locations (*, racks_locations_products(*, products(*)))');
+              .from('racks')
+              .select('*, racks_locations (*, racks_locations_products(*, products(*)))')
+              .order('created_at', { ascending: false });
+          
             setRacks(racksQuery ?? []);
-        }
-
-        getRacks();
-
-        const getNotifications = async (account_roles?: AccountRolesContent[]) => {
-
+          };
+          getRacks();
+          
+          const getNotifications = async (account_roles?: AccountRolesContent[]) => {
             var roleIds: number[] = [];
-
+          
             if (roles?.length == 0) {
-                roleIds = userAccount?.accounts_roles?.map(item => item.role_id) || [];
+              roleIds = userAccount?.accounts_roles?.map(item => item.role_id) || [];
             } else {
-                roleIds = account_roles?.map((item: any) => item.role_id) || [];
+              roleIds = account_roles?.map((item: any) => item.role_id) || [];
             }
-
-            const { data: notiQuery, error } = await supabase.from('roles_notifications').select('*, notifications(*)').in('role_id', roleIds);
-
+          
+            const { data: notiQuery, error } = await supabase
+              .from('roles_notifications')
+              .select('*, notifications(*)')
+              .in('role_id', roleIds)
+              .order('created_at', { ascending: false });
+          
             setNotifications(notiQuery || []);
-        }
-
-        const getAccountInformation = async () => {
+          };
+          
+          const getAccountInformation = async () => {
             const { data: userData } = await supabase.auth.getUser();
-
+          
             const { data: account, error: accountError } = await supabase
-                .from('accounts')
-                .select('*, locations!accounts_location_id_fkey(*), accounts_roles(*, roles(id, name))')
-                .eq('user_id', userData.user!.id)
-                .single();
-
+              .from('accounts')
+              .select('*, locations!accounts_location_id_fkey(*), accounts_roles(*, roles(id, name))')
+              .eq('user_id', userData.user!.id)
+              .single();
+          
             const userTZ = Intl.DateTimeFormat().resolvedOptions().timeZone;
-
+          
             setUserAccount({ ...account, 'sessionTimeZone': userTZ });
-
+          
             getNotifications(account.accounts_roles);
-        }
-
-        getAccountInformation();
-
-        const getRoles = async () => {
-            const { data: rolesQuery, error: roleErrors } = await supabase.from('roles').select().not('id', 'eq', 1);
-
+          };
+          getAccountInformation();
+          
+          const getRoles = async () => {
+            const { data: rolesQuery, error: roleErrors } = await supabase
+              .from('roles')
+              .select()
+              .not('id', 'eq', 1)
+              .order('created_at', { ascending: false });
+          
             setRoles(rolesQuery || []);
-        }
-
-        getRoles();
-
-        const getUser = async () => {
+          };
+          getRoles();
+          
+          const getUser = async () => {
             const { data: usersQuery, error: userError } = await supabase
-                .from('accounts')
-                .select('*, accounts_roles(*, roles(id, name)), locations(*)');
-
+              .from('accounts')
+              .select('*, accounts_roles(*, roles(id, name)), locations(*)')
+              .order('created_at', { ascending: false });
+          
             const filteredUsers = usersQuery?.filter(account =>
-                !account.accounts_roles?.some((ar: any) => ar.roles?.id === 1)
+              !account.accounts_roles?.some((ar: any) => ar.roles?.id === 1)
             );
-
+          
             setUsers(filteredUsers || []);
-        }
-
-        getUser();
-
-        const getVendors = async () => {
-            const { data: vendorsQuery, error } = await supabase.from('vendors').select();
-
+          };
+          getUser();
+          
+          const getVendors = async () => {
+            const { data: vendorsQuery, error } = await supabase
+              .from('vendors')
+              .select()
+              .order('created_at', { ascending: false });
+          
             setVendors(vendorsQuery || []);
-        }
-
-        getVendors();
-
-        const getCarriers = async () => {
-            const { data: carriersQuery, error } = await supabase.from('carriers').select();
-
+          };
+          getVendors();
+          
+          const getCarriers = async () => {
+            const { data: carriersQuery, error } = await supabase
+              .from('carriers')
+              .select()
+              .order('created_at', { ascending: false });
+          
             setCarriers(carriersQuery || []);
-        }
-
-        getCarriers();
-
-        const getReceivings = async () => {
-            const { data: receivingQuery, error: receivingError } = await supabase.from('receiving').select('*, vendors(id, name), receiving_products(*, products(*))');
+          };
+          getCarriers();
+          
+          const getReceivings = async () => {
+            const { data: receivingQuery, error: receivingError } = await supabase
+              .from('receiving')
+              .select('*, vendors(id, name), receiving_products(*, products(*))')
+              .order('created_at', { ascending: false });
+          
             setReceivings(receivingQuery || []);
-        }
-
-        getReceivings();
-
-        const getShippingsOrders = async () => {
-            const { data: shippingQuery, error } = await supabase.from('shippings_orders').select('*, shippings_pick_list(*, shippings_products(*))').not('deleted', 'eq', true);
-
+          };
+          getReceivings();
+          
+          const getShippingsOrders = async () => {
+            const { data: shippingQuery, error } = await supabase
+              .from('shippings_orders')
+              .select('*, shippings_pick_list(*, shippings_products(*))')
+              .not('deleted', 'eq', true)
+              .order('created_at', { ascending: false });
+          
             setShippings(shippingQuery || []);
-        }
-
-        getShippingsOrders();
-
-        const getUpdatesReports = async() => {
-            const { data: reports, error } = await supabase.from('reports_updates').select();
-
-
+          };
+          getShippingsOrders();
+          
+          const getUpdatesReports = async () => {
+            const { data: reports, error } = await supabase
+              .from('reports_updates')
+              .select()
+              .order('created_at', { ascending: false });
+          
             setUpdatesReports(reports || []);
-
-        }
-
-        getUpdatesReports();
+          };
+          getUpdatesReports();
+          
 
         return () => {
             supabase.removeChannel(channel);

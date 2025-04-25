@@ -37,6 +37,7 @@ const PickListDetails = () => {
   const [productSkuError, setProductSkuError] = useState<boolean>(false);
   const [productQty, setProductQty] = useState<string>('');
   const [productQtyError, setProductQtyError] = useState<boolean>(false);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
 
   const handleClick = (tab: number) => {
     setOpen(open != tab ? tab : null);
@@ -45,6 +46,8 @@ const PickListDetails = () => {
   const handleLoadPickListProducts = async (e: FormEvent<HTMLFormElement>) => {
     try {
       e.preventDefault();
+      setIsLoading(true);
+
       var productURL = null;
       var now = new Date().toLocaleString();
       var error_message = '';
@@ -116,6 +119,7 @@ const PickListDetails = () => {
     } catch (error: any) {
       toast.warning(error.message);
     }
+    setIsLoading(false);
   }
 
   const handleVerifyPickList = async () => {
@@ -316,7 +320,7 @@ const PickListDetails = () => {
                             )}
 
                             {!label.is_ready && (
-                              <SubmitButton fullWidth={true} className='btn-munsell' btnText='Load' />
+                              <SubmitButton isLoading={isLoading} fullWidth={true} className='btn-munsell' btnText='Load' />
                             )}
                           </Box>
                         </form>

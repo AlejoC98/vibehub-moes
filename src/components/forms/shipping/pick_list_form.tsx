@@ -18,6 +18,7 @@ import ExpandLess from '@mui/icons-material/ExpandLess';
 import ExpandMore from '@mui/icons-material/ExpandMore';
 import EditIcon from '@mui/icons-material/Edit';
 import RemoveIcon from '@mui/icons-material/Remove';
+import { createClient } from '@/utils/supabase/client';
 
 interface OrderProductInput extends ProductContent {
     quantity?: number,
@@ -60,7 +61,8 @@ const PickListForm = ({
     setPickLists: (pick: PickListContent[]) => void
 }) => {
 
-    const { products, users, userAccount } = useContext(GlobalContext);
+    const supabase = createClient();
+    const { products, userAccount } = useContext(GlobalContext);
 
     const [keyword, setKeyWord] = useState<string>('');
     const [pickList, setPickList] = useState<PickListContent>();
@@ -190,7 +192,10 @@ const PickListForm = ({
         });
     };
 
-    const removePick = (indexToRemove: number) => {
+    const removePick = async(indexToRemove: number) => {
+
+        await supabase.from('shippings_pick_list').delete().eq('id', pickLists[indexToRemove].id);
+
         setPickLists(pickLists.filter((_, index) => index !== indexToRemove));
         setExpanded((prev) => prev.filter((_, index) => index !== indexToRemove));
     };
@@ -439,7 +444,7 @@ const PickListForm = ({
                                         </Box>
                                     }
                                 >
-                                    <ListItemText primary={`PL # - ${pick.pl_number}`} />
+                                    <ListItemText primary={`PL # - ${pick.pl_number}`} secondary={pick.status || 'New'} />
                                 </ListItem>
                                 <Collapse in={expanded[index]} timeout="auto" unmountOnExit>
                                     <Box sx={{ p: 2 }}>

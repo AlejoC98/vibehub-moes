@@ -88,6 +88,10 @@ const ShippingForm = ({ defaultData, setOpenModal }: { defaultData?: ShippingCon
           <Typography fontWeight='bold'>Assign To</Typography>
           <Typography>{ findUserByUUID(shippingOrder?.assign_to!) }</Typography>
         </Grid>
+        <Grid size={4}>
+          <Typography fontWeight='bold'>Total Pick Lists</Typography>
+          <Typography>{ orderPickList.length }</Typography>
+        </Grid>
         <Grid size={12}>
           <List>
             { orderPickList.map((pick, index) => (
@@ -170,6 +174,7 @@ const ShippingForm = ({ defaultData, setOpenModal }: { defaultData?: ShippingCon
 
       for (var pickOrder of orderPickList) {
         const { data: newPick, error: pickError} = await supabase.from('shippings_pick_list').upsert({
+          'id': pickOrder.id,
           'pl_number': pickOrder.pl_number,
           'bol_number': pickOrder.bol_number,
           'notes': pickOrder.notes,
