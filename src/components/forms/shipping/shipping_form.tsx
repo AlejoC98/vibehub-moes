@@ -274,7 +274,7 @@ const ShippingForm = ({ defaultData, setOpenModal }: { defaultData?: ShippingCon
             type='submit'
             btnText={(activeStep + 1) == steps.length ? 'Complete' : 'Next'}
             isLoading={isLoading}
-            className='btn-cyan-dark'
+            className='btn-munsell'
           />
         </Box>
       </form>

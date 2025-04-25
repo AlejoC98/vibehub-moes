@@ -212,9 +212,9 @@ const PickListForm = ({
     return (
         <Box sx={{ flexGrow: 1, padding: 5 }}>
             <Grid container spacing={2}>
-                <Grid size={8}>
+                <Grid size={{ xl: 8, lg: 8, md: 12, sm: 12, xs: 12}}>
                     <Grid container spacing={3}>
-                        <Grid size={6}>
+                        <Grid size={{ xl: 6, lg: 6, md: 12, sm: 12, xs: 12}}>
                             <Grid container spacing={2}>
                                 <Grid size={{ lg: 12, md: 12, sm: 12, xs: 12 }}>
                                     <NumberField
@@ -247,7 +247,7 @@ const PickListForm = ({
                                 </Grid>
                             </Grid>
                         </Grid>
-                        <Grid size={6}>
+                        <Grid size={{ xl: 6, lg: 6, md: 12, sm: 12, xs: 12}}>
                             <TextField
                                 fullWidth
                                 multiline
@@ -264,7 +264,7 @@ const PickListForm = ({
                         </Grid>
                         <Grid size={12}>
                             <Grid container spacing={2}>
-                                <Grid size={6}>
+                                <Grid size={{ xl: 6, lg: 6, md: 10, sm: 10, xs: 10}}>
                                     <TextField
                                         fullWidth
                                         placeholder='Search...'
@@ -295,7 +295,7 @@ const PickListForm = ({
                                         }}
                                     />
                                 </Grid>
-                                <Grid size={6}>
+                                <Grid size={{ xl: 6, lg: 6, md: 2, sm: 2, xs: 2}}>
                                     <Box sx={{ display: 'grid', placeItems: 'center', height: '100%' }}>
                                         <IconButton sx={{ 'transition': 'all .5s ease-in-out' }} className={isCustomProduct ? 'btn-gunmetal' : 'btn-bittersweet'} onClick={() => setIsCustomProduct(!isCustomProduct)}>
                                             {isCustomProduct ? (
@@ -429,7 +429,7 @@ const PickListForm = ({
                         </Grid>
                     </Grid>
                 </Grid>
-                <Grid size={4}>
+                <Grid size={{ xl: 4, lg: 4, md: 12, sm: 12, xs: 12}}>
                     <Typography variant='h6' fontWeight='bold' textAlign='center'>Pick Lists</Typography>
                     <List sx={{ maxHeight: 450, overflowY: 'auto'}}>
                         {pickLists.map((pick, index) => (
