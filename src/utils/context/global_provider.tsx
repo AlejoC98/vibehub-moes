@@ -142,7 +142,6 @@ const GlobalProvider = ({ children }: { children: ReactNode }) => {
 
         const getProducts = async () => {
             var returnProducts = [];
-          
             const { data: productsQuery, error: productsError } = await supabase
               .from('products')
               .select('*')

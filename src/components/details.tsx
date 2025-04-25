@@ -1,9 +1,10 @@
 'use client'
 import { Box, Button, Dialog, DialogTitle, IconButton, Typography } from '@mui/material'
 import Grid from '@mui/material/Grid2'
-import React, { cloneElement, ReactElement, ReactNode, useState } from 'react'
+import React, { cloneElement, ReactElement, ReactNode, useContext, useState } from 'react'
 import ArrowBackTwoToneIcon from '@mui/icons-material/ArrowBackTwoTone';
 import { useRouter } from 'next/navigation';
+import { GlobalContext } from '@/utils/context/global_provider';
 
 interface ActionButtonsContent {
     text?: string,
@@ -16,21 +17,17 @@ const Details = ({
     children,
     title,
     actionButtons,
-    // editForm,
-    // actionButton,
-    // actionButtonColor,
     modalTitle
 }: { 
     children: ReactNode,
     title: string,
     actionButtons: ActionButtonsContent[]
-    // actionButton?: string,
-    // actionButtonColor?: string,
-    // editForm: ReactElement<any>,
     modalTitle?: string
 }) => {
 
     const router = useRouter();
+
+    const { setIsLaunching } = useContext(GlobalContext);
     const [openModal, setOpenModal] = useState<boolean>(false);
     const [activeFrom, setActiveForm] = useState<ReactElement<any>>(<></>);
     const [activeDefaultData, setActiveDefaultData] = useState<ReactElement<any>>();
@@ -52,7 +49,10 @@ const Details = ({
         <Box>
             <Grid container spacing={2}>
                 <Grid size={{ xl: 3, lg: 3, md: 2, sm: 2, xs: 2}}>
-                    <IconButton onClick={() => router.back()}>
+                    <IconButton onClick={() => {
+                        setIsLaunching(true);
+                        router.back();
+                    }}>
                         <ArrowBackTwoToneIcon sx={{ color: '#FFFFFF'}} />
                     </IconButton>
                 </Grid>

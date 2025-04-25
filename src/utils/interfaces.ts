@@ -197,6 +197,7 @@ export interface ShippingOrderProductInput {
     is_ready: boolean;
     product_quantity: number;
     product_sku: string;
+    serial_number: string;
     shipping_order_id: number;
 }
 
@@ -207,6 +208,7 @@ export interface ShippingOrderProductContent {
     created_at: string;
     created_by: string;
     product_sku: string;
+    serial_number: string;
     shipping_order_id: number;
 }
 

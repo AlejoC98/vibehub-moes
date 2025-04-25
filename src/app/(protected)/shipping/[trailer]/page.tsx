@@ -58,46 +58,46 @@ const OrderDetails = () => {
         title='Shipping Order'
         modalTitle='Complete Shipping Order?'
       >
-        <Grid size={{ xl: 3, lg: 3, md: 12, sm: 12, xs: 12 }} sx={{ marginBottom: 5 }}>
-          <Block>
+        <Grid size={{ xl: 3, lg: 4, md: 12, sm: 12, xs: 12 }} sx={{ marginBottom: 5 }}>
+          <Block sx={{ maxHeight: 600, overflowY: 'auto'}}>
             <Grid container spacing={5}>
               {data?.created_by != undefined && (
-                <Grid size={6}>
+                <Grid size={{ xl: 6, lg: 12, md: 12, sm: 12, xs: 12}}>
                   <Typography variant='h6' fontWeight='bold'>Created By</Typography>
                   <Typography>{findUserByUUID(data?.created_by!)}</Typography>
                 </Grid>
               )}
               {data?.created_at != undefined && (
-                <Grid size={data?.created_by != undefined ? 6 : 12}>
+                <Grid size={{ xl: data?.created_by != undefined ? 6 : 12, lg: 12, md: 12, sm: 12, xs: 12}}>
                   <Typography variant='h6' fontWeight='bold'>Created At</Typography>
                   <Typography>{convertTimeByTimeZone(userAccount?.sessionTimeZone!, data?.created_at)}</Typography>
                 </Grid>
               )}
-              <Grid size={6}>
+              <Grid size={{ xl: 6, lg: 12, md: 12, sm: 12, xs: 12}}>
                 <Typography variant='h6' fontWeight='bold'>Carrier</Typography>
                 <Typography>{data?.carrier}</Typography>
               </Grid>
-              <Grid size={6}>
+              <Grid size={{ xl: 6, lg: 12, md: 12, sm: 12, xs: 12}}>
                 <Typography variant='h6' fontWeight='bold'>Trailer Number</Typography>
                 <Typography>{data?.trailer_number}</Typography>
               </Grid>
               {data?.closed_by != undefined && (
-                <Grid size={6}>
+                <Grid size={{ xl: 6, lg: 12, md: 12, sm: 12, xs: 12}}>
                   <Typography variant='h6' fontWeight='bold'>Closed By</Typography>
                   <Typography>{findUserByUUID(data?.closed_by!)}</Typography>
                 </Grid>
               )}
               {data?.closed_at != null && (
-                <Grid size={6}>
+                <Grid size={{ xl: 6, lg: 12, md: 12, sm: 12, xs: 12}}>
                   <Typography variant='h6' fontWeight='bold'>Closed At</Typography>
                   <Typography>{convertTimeByTimeZone(userAccount?.sessionTimeZone!, data?.closed_at)}</Typography>
                 </Grid>
               )}
-              <Grid size={6}>
+              <Grid size={{ xl: 6, lg: 12, md: 12, sm: 12, xs: 12}}>
                 <Typography variant='h6' fontWeight='bold'>Dock Door</Typography>
                 <Typography>{data?.dock_door}</Typography>
               </Grid>
-              <Grid size={6}>
+              <Grid size={{ xl: 6, lg: 12, md: 12, sm: 12, xs: 12}}>
                 <Typography variant='h6' fontWeight='bold'>Total Shipped</Typography>
                 <Typography>{totalOrderShipped}</Typography>
               </Grid>
@@ -111,8 +111,8 @@ const OrderDetails = () => {
             </Grid>
           </Block>
         </Grid>
-        <Grid size={{ xl: 9, lg: 9, md: 12, sm: 12, xs: 12 }} sx={{ marginBottom: 5 }}>
-          <Block>
+        <Grid size={{ xl: 9, lg: 8, md: 12, sm: 12, xs: 12 }} sx={{ marginBottom: 5 }}>
+          <Block sx={{ maxHeight: 600, overflowY: 'auto'}}>
             <SearchList
               data={data?.shippings_pick_list!}
             />

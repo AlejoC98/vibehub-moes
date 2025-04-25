@@ -132,6 +132,8 @@ const BasicTable = ({
           throw new Error('We couldn\'t proccess')
           break;
       }
+      
+      toast.warning('File Successfuly Uploaded');
 
     } catch (error: any) {
       toast.warning(error.message);
@@ -366,10 +368,12 @@ const BasicTable = ({
             excelFile={excelFile}
             setExcelFile={setExcelFile}
           />
+          <br/>
+          <Typography className='coming-soon-text'>This feature is currently under development and will be available soon.</Typography>
         </DialogContent>
         <DialogActions sx={{ justifyContent: 'space-between' }}>
           <Button variant='contained' onClick={handleCloseImport} className='btn-gunmetal'>Close</Button>
-          <Button variant='contained' onClick={handleUploadImportFile} className='btn-munsell' autoFocus>
+          <Button variant='contained' onClick={handleUploadImportFile} className='btn-bittersweet' disabled autoFocus>
             Upload
           </Button>
         </DialogActions>

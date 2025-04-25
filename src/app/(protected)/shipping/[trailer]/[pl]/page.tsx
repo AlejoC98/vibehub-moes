@@ -35,6 +35,8 @@ const PickListDetails = () => {
   const [verifiedSource, setVerifiedSource] = useState<boolean>(false);
   const [productSku, setProductSku] = useState<String>('');
   const [productSkuError, setProductSkuError] = useState<boolean>(false);
+  const [serialNumber, setSerialNumber] = useState<String>('');
+  const [serialNumberError, setSerialNumberError] = useState<boolean>(false);
   const [productQty, setProductQty] = useState<string>('');
   const [productQtyError, setProductQtyError] = useState<boolean>(false);
   const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -50,39 +52,22 @@ const PickListDetails = () => {
 
       var productURL = null;
       var now = new Date().toLocaleString();
-      var error_message = '';
 
       var shipProduct;
 
-      if (productSkuError || productSku == '')
-        error_message = 'Product doesn\'t match!';
+      if (productSkuError || productSku == '') {
+        throw new Error('Product doesn\'t match!');
+      }
 
-      if (productQtyError || productQty == undefined)
-        error_message = 'Product quantity doesn\'t match!';
+      if (productQtyError || productQty == '') {
+        throw new Error('Product quantity doesn\'t match!');
+      }
+      
+      if (serialNumberError || serialNumber == '') {
+        throw new Error('Serial Number is required!');
+      }
 
-      if (error_message != '')
-        Swal.fire({
-          icon: 'info',
-          title: "Almost There!",
-          text: 'Product doesn\'t match!',
-          confirmButtonColor: '#549F93',
-          showClass: {
-            popup: `
-              animate__animated
-              animate__fadeInUp
-              animate__faster
-            `
-          },
-          hideClass: {
-            popup: `
-              animate__animated
-              animate__fadeOutDown
-              animate__faster
-            `
-          }
-        });
-
-      if (productIMG) {
+      if (productIMG != null) {
         productURL = await handleUploadToBucket(
           'shippingorders',
           `${data?.id}/${data?.pl_number}/${productSku + now}`,
@@ -101,7 +86,8 @@ const PickListDetails = () => {
 
       const { error } = await supabase.from('shippings_products').update({
         is_ready: true,
-        img_url: productURL!.signedUrl
+        img_url: productURL != null ? productURL?.signedUrl : null,
+        serialNumber: serialNumber
       }).eq('id', shipProduct);
 
       if (error) {
@@ -281,6 +267,15 @@ const PickListDetails = () => {
                                 }
                               }}
                               error={productSkuError}
+                            />
+                            <TextField
+                              fullWidth
+                              value={label.serial_number || serialNumber}
+                              disabled={label.is_ready}
+                              label="Serial Number"
+                              helperText={serialNumberError ? 'Serial number is required' : ''}
+                              onChange={(e) => setSerialNumber(e.target.value)}
+                              error={serialNumberError}
                             />
                             <NumberField
                               fullWidth
