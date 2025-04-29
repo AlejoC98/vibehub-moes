@@ -108,6 +108,7 @@ export interface ProductInput {
 }
 export interface ProductContent {
     id?: number;
+    quantity: number;
     img_url?: string;
     sku?: string;
     name?: string;
@@ -194,11 +195,13 @@ export interface ReceivingProductsContent {
 }
 
 export interface ShippingOrderProductInput {
+    id?: number;
     is_ready: boolean;
     product_quantity: number;
     product_sku: string;
-    serial_number: string;
+    serial_number?: string;
     shipping_order_id: number;
+    img_url?: string;
 }
 
 export interface ShippingOrderProductContent {
@@ -439,4 +442,8 @@ export interface UpdateReportContent {
     icon: string;
     color: string;
     created_at: Date;
+}
+
+export interface ExcelRow {
+[key: string]: string | number | boolean | null;
 }

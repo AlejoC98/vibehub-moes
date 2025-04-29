@@ -263,7 +263,7 @@ const ShippingForm = ({ defaultData, setOpenModal }: { defaultData?: ShippingCon
         ))}
       </Stepper>
       <form onSubmit={handleSubmit(stepsValidations[activeStep])}>
-        <Box sx={{ margin: '2rem auto' }}>
+        <Box sx={{ margin: '2rem auto'}}>
           {stepsContent[activeStep]}
         </Box>
         <Box sx={{ display: 'flex', justifyContent: activeStep > 0 ? 'space-between' : 'center', borderTop: '1px solid #aeaeae', padding: 1, background: '#eaeaea' }}>

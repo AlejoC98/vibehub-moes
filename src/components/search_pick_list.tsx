@@ -93,7 +93,7 @@ const SearchPickList = ({ data }: { data: PickListContent[] }) => {
                                         backgroundColor: '#dcdcdc',
                                     },
                                 }} onClick={() => setActivePick(activePick != index ? index : undefined)}>
-                                <ListItemText primary={item.pl_number} secondary='PL Number' />
+                                <ListItemText primary={item.pl_number} secondary={`Products ${item.shippings_products.length}`} />
                                 <StatusBadge status={item.status} />
                             </ListItemButton>
                         ))}

@@ -37,6 +37,9 @@ const FileDropZone: FC<Props> = ({ excelFile, setExcelFile }) => {
             border: '2px dashed #ccc',
             borderRadius: 2,
             padding: 3,
+            minHeight: 200,
+            display: 'grid',
+            placeItems: 'center',
             textAlign: 'center',
             cursor: 'pointer',
             backgroundColor: isDragActive ? '#f0f8ff' : '#fafafa',
@@ -47,7 +50,7 @@ const FileDropZone: FC<Props> = ({ excelFile, setExcelFile }) => {
           }}
         >
           <input {...getInputProps()} />
-          <CloudUploadIcon sx={{ fontSize: 40, color: '#42858C' }} />
+          <CloudUploadIcon sx={{ fontSize: 80, color: '#42858C' }} />
           <Typography variant="body1" mt={1}>
             {isDragActive
               ? "Drop the Excel file here..."

@@ -157,9 +157,9 @@ const GlobalProvider = ({ children }: { children: ReactNode }) => {
                   .maybeSingle();
           
                 if (!error && locationsQuery != null) {
-                  returnProducts.push({ ...product, 'locations': locationsQuery });
+                  returnProducts.push({ ...product, locations: locationsQuery, quantity: 0});
                 } else {
-                  returnProducts.push(product);
+                  returnProducts.push({...product, quantity: 0});
                 }
               }
             }

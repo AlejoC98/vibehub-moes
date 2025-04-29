@@ -2,7 +2,7 @@
 import * as XLSX from 'xlsx-js-style';
 import { saveAs } from 'file-saver';
 import { toast } from "react-toastify";
-import { AccountContent, OrderContent } from "@/utils/interfaces";
+import { AccountContent, ExcelRow, OrderContent } from "@/utils/interfaces";
 import { GridColDef } from '@mui/x-data-grid';
 import { RefObject, useContext } from 'react';
 import { formatInTimeZone } from 'date-fns-tz';
@@ -383,4 +383,48 @@ export const handleUploadToBucket = async (bucket: string, path: string, image: 
   }
 
   return signedURL;
+};
+
+export const readExcelFile = async (file: File): Promise<ExcelRow[]> => {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+
+    reader.onload = (event) => {
+      try {
+        const data = new Uint8Array(event.target?.result as ArrayBuffer);
+        const workbook = XLSX.read(data, { type: 'array' });
+
+        const sheetName = workbook.SheetNames[0];
+        const worksheet = workbook.Sheets[sheetName];
+
+        const jsonData = XLSX.utils.sheet_to_json<string[]>(worksheet, { header: 1 });
+
+        if (jsonData.length === 0) {
+          resolve([]);
+          return;
+        }
+
+        const headers = jsonData[0];
+        const rows = jsonData.slice(1);
+
+        const result: ExcelRow[] = rows.map((row) => {
+          const obj: ExcelRow = {};
+
+          headers.forEach((header, index) => {
+            obj[header] = row[index] !== undefined ? row[index] : null;
+          });
+
+          return obj;
+        });
+
+        resolve(result);
+      } catch (error) {
+        reject(error);
+      }
+    };
+
+    reader.onerror = (error) => reject(error);
+
+    reader.readAsArrayBuffer(file);
+  });
 };

@@ -1,10 +1,10 @@
 'use client'
 import { useParams } from 'next/navigation';
-import React, { FormEvent, useContext, useEffect, useState } from 'react'
+import React, { FormEvent, ReactNode, useContext, useEffect, useState } from 'react'
 import { GlobalContext } from '@/utils/context/global_provider';
-import { PickListContent, ShippingOrderProductContent } from '@/utils/interfaces';
+import { PickListContent, ShippingOrderProductContent, ShippingOrderProductInput } from '@/utils/interfaces';
 import Swal from 'sweetalert2';
-import { Box, Button, Collapse, Divider, FormControlLabel, FormGroup, List, ListItem, ListItemButton, ListItemText, TextField, Typography } from '@mui/material';
+import { Box, Button, Checkbox, Collapse, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Divider, FormControl, FormControlLabel, FormGroup, InputLabel, List, ListItem, ListItemButton, ListItemIcon, ListItemText, MenuItem, Select, TextField, Typography } from '@mui/material';
 import Grid from '@mui/material/Grid2'
 import Block from '@/components/block';
 import Details from '@/components/details';
@@ -15,17 +15,19 @@ import ExpandMore from '@mui/icons-material/ExpandMore';
 import StatusBadge from '@/components/status_badge';
 import { toast } from 'react-toastify';
 import { createClient } from '@/utils/supabase/client';
-import { handleUploadToBucket, useFindUserByUUID } from '@/utils/functions/main';
+import { convertTimeByTimeZone, handleUploadToBucket, useFindUserByUUID } from '@/utils/functions/main';
 import { ImagePreviewDialog } from '@/components/image_preview_dialog';
 import PriorityHighIcon from '@mui/icons-material/PriorityHigh';
 import ImageDropzone from '@/components/image_dropzone';
+import AddIcon from '@mui/icons-material/Add';
+import TransferList from '@/components/transfer_list';
 
 const PickListDetails = () => {
 
   const params = useParams();
   const supabase = createClient();
   const findUserByUUID = useFindUserByUUID();
-  const { shippings, setIsLaunching, userAccount } = useContext(GlobalContext);
+  const { shippings, setIsLaunching, userAccount, products } = useContext(GlobalContext);
 
   const [open, setOpen] = useState<number | null>(0);
   const [data, setData] = useState<PickListContent>();
@@ -40,6 +42,138 @@ const PickListDetails = () => {
   const [productQty, setProductQty] = useState<string>('');
   const [productQtyError, setProductQtyError] = useState<boolean>(false);
   const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [openModal, setOpenModal] = useState(false);
+  const [closeReason, setCloseReason] = useState<string>('');
+  const [closeReasonNotes, setCloseReasonNotes] = useState<string>('');
+  const [checked, setChecked] = useState([0]);
+  const [modalType, setModalType] = useState<string>();
+  const [orderProducts, setOrderProducts] = useState<ShippingOrderProductInput[]>([]);
+
+  const reasons = [
+    'Product unavailable',
+    'Customer canceled',
+    'Goods damaged',
+    'Time constraints',
+    'Warehouse error',
+    'Other'
+  ];
+
+  const handleToggle = (value: number) => () => {
+    const currentIndex = checked.indexOf(value);
+    const newChecked = [...checked];
+
+    if (currentIndex === -1) {
+      newChecked.push(value);
+    } else {
+      newChecked.splice(currentIndex, 1);
+    }
+
+    setChecked(newChecked);
+  };
+
+  const handleConfirmClose = async () => {
+    try {
+      if (!closeReason) {
+        throw new Error('Please select a reason.');
+      }
+
+      var shipProduct;
+
+      switch (closeReason) {
+        case 'Product unavailable':
+
+          if (closeReasonNotes == undefined || closeReasonNotes == '') {
+            throw new Error('Please type the unavialble item sku!');
+          }
+
+          const updatedProducts = productsSteps?.map((product) => {
+            if (product.product_sku === productSku) {
+              shipProduct = product.id;
+              return { ...product, is_ready: true };
+            } else {
+              return product;
+            }
+          });
+
+          if (shipProduct != null) {
+            const { error } = await supabase.from('shippings_products').update({
+              is_ready: true,
+              img_url: null,
+              serial_number: null
+            }).eq('id', shipProduct);
+
+            if (error) {
+              throw new Error(error.message);
+            }
+
+            setProductsSteps(updatedProducts);
+          }
+          break;
+        default:
+          break;
+      }
+
+      if (productsSteps?.length == 0) {
+        const completePick = async () => {
+          await supabase.from('shippings_pick_list').update({
+            status: 'Completed',
+            picked_by: userAccount?.user_id,
+            notes: `${closeReason} - ${closeReasonNotes}`
+          }).eq('id', data?.id);
+
+          setData({
+            ...data!,
+            'status': 'Completed'
+          });
+        }
+        if (completedProducts == productsSteps?.length) {
+          completePick();
+        }
+
+        toast.success('Products Voided!');
+      }
+
+    } catch (error: any) {
+      toast.warning(error.message);
+    }
+  };
+
+  const handleAddNewProducts = async () => {
+    try {
+      setIsLoading(true);
+      for (var product of orderProducts) {
+        const { data: newItemQuery, error } = await supabase.from('shippings_products').insert({
+          pick_list_id: data?.id,
+          product_sku: product.product_sku,
+          product_quantity: product.product_quantity,
+          created_by: userAccount?.user_id,
+          created_at: convertTimeByTimeZone(userAccount?.sessionTimeZone!)
+        }).select().single();
+
+        if (error) {
+          throw new Error(error.message);
+        }
+
+        setProductsSteps(prev => [ ...prev!, newItemQuery]);
+      }
+
+      toast.success('Products Added!');
+      handleClose();
+      setIsLoading(false);
+    } catch (error: any) {
+      toast.warning(error.message);
+    }
+  }
+
+  const handleClickOpen = (type: string) => {
+    setModalType(type);
+    setOpenModal(true);
+  };
+
+  const handleClose = () => {
+    setOpenModal(false);
+    setOrderProducts([]);
+  };
 
   const handleClick = (tab: number) => {
     setOpen(open != tab ? tab : null);
@@ -50,7 +184,7 @@ const PickListDetails = () => {
       e.preventDefault();
       setIsLoading(true);
 
-      var productURL = null;
+      var productURL: { signedUrl: any; } | null = null;
       var now = new Date().toLocaleString();
 
       var shipProduct;
@@ -62,8 +196,12 @@ const PickListDetails = () => {
       if (productQtyError || productQty == '') {
         throw new Error('Product quantity doesn\'t match!');
       }
-      
+
       if (serialNumberError || serialNumber == '') {
+        setSerialNumberError(true);
+        setTimeout(() => {
+          setSerialNumberError(false);
+        }, 1000);
         throw new Error('Serial Number is required!');
       }
 
@@ -78,7 +216,7 @@ const PickListDetails = () => {
       const updatedProducts = productsSteps?.map((product) => {
         if (product.product_sku === productSku) {
           shipProduct = product.id;
-          return { ...product, is_ready: true, img_url: productURL!.signedUrl};
+          return { ...product, is_ready: true, img_url: productURL != null ? productURL?.signedUrl : null };
         } else {
           return product;
         }
@@ -87,7 +225,7 @@ const PickListDetails = () => {
       const { error } = await supabase.from('shippings_products').update({
         is_ready: true,
         img_url: productURL != null ? productURL?.signedUrl : null,
-        serialNumber: serialNumber
+        serial_number: serialNumber
       }).eq('id', shipProduct);
 
       if (error) {
@@ -99,6 +237,7 @@ const PickListDetails = () => {
       setOpen(null);
       setProductSku('');
       setProductQty('');
+      setSerialNumber('');
       toast.success('Product Loaded!');
       setProductsSteps(updatedProducts);
 
@@ -202,7 +341,17 @@ const PickListDetails = () => {
         </Grid>
         <Grid size={{ xl: 9, lg: 9, md: 12, sm: 12, xs: 12 }} sx={{ marginBottom: 5 }}>
           <Block>
-            <Typography variant='h6' fontWeight='bold'>Products</Typography>
+            <Box sx={{ display: 'flex', justifyContent: 'space-between', placeItems: 'center' }}>
+              <Typography variant='h6' fontWeight='bold'>Products</Typography>
+              {data?.status != 'Completed' && (
+                <Box sx={{ display: 'flex', gap: 1 }}>
+                  <Button variant='contained' color='error' onClick={() => handleClickOpen('void')}>Void</Button>
+                  <Button onClick={() => handleClickOpen('add-products')} variant='contained' color='info'>
+                    <AddIcon />
+                  </Button>
+                </Box>
+              )}
+            </Box>
             <List>
               {productsSteps?.map((label: any, index) => (
                 <Box key={index}>
@@ -238,8 +387,8 @@ const PickListDetails = () => {
                           } label="Verify Source?" />
                         </FormGroup>
                         {verifiedSource && (
-                          <Box sx={{ display: 'flex', height: '100%', flexDirection: 'column', placeItems: 'center', justifyContent: 'center'}}>
-                            <PriorityHighIcon sx={{ fontSize: 50}} />
+                          <Box sx={{ display: 'flex', height: '100%', flexDirection: 'column', placeItems: 'center', justifyContent: 'center' }}>
+                            <PriorityHighIcon sx={{ fontSize: 50 }} />
                             <Typography variant='h6' fontWeight='bold'>Create Racks and Locations to take products from there!</Typography>
                           </Box>
                         )}
@@ -329,6 +478,87 @@ const PickListDetails = () => {
           </Block>
         </Grid>
       </Details>
+      <Dialog
+        open={openModal}
+        onClose={handleClose}
+      >
+        {modalType == 'void' ? (
+          <Box>
+            <DialogTitle>Close Pick List Incomplete</DialogTitle><DialogContent>
+              <DialogContentText>
+                This pick list is not fully completed. Please select a reason for closing it. This action cannot be undone.
+              </DialogContentText>
+              <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1, mt: 2 }}>
+                <FormControl fullWidth>
+                  <InputLabel id="close-reason-label">Reason</InputLabel>
+                  <Select
+                    labelId="close-reason-label"
+                    value={closeReason}
+                    label="Reason"
+                    onChange={(e) => setCloseReason(e.target.value)}
+                  >
+                    {reasons.map((reason) => (
+                      <MenuItem key={reason} value={reason}>
+                        {reason}
+                      </MenuItem>
+                    ))}
+                  </Select>
+                </FormControl>
+                <List sx={{ width: '100%', maxWidth: 360, bgcolor: 'background.paper' }}>
+                  {productsSteps?.map((label: any, index) => {
+                    const labelId = `checkbox-list-label-${index}`;
+
+                    return (
+                      <ListItem
+                        key={index}
+                        disablePadding
+                      >
+                        <ListItemButton role={undefined} onClick={handleToggle(index)} dense>
+                          <ListItemIcon>
+                            <Checkbox
+                              edge="start"
+                              checked={checked.includes(label.id)}
+                              tabIndex={-1}
+                              disableRipple
+                            />
+                          </ListItemIcon>
+                          <ListItemText id={labelId} primary={label.product_sku} />
+                        </ListItemButton>
+                      </ListItem>
+                    );
+                  })}
+                </List>
+                <TextField
+                  required
+                  multiline
+                  rows={4}
+                  value={closeReasonNotes}
+                  onChange={(e) => setCloseReasonNotes(e.target.value)}
+                  margin="dense"
+                  name="notes"
+                  label="Notes"
+                  type="email"
+                  fullWidth />
+              </Box>
+            </DialogContent>
+          </Box>
+        ) : (
+          <Box sx={{ minWidth: 500, maxHeight: 600 }}>
+            <DialogTitle>Add Products</DialogTitle>
+            <DialogContent>
+              <TransferList inventory={products!} orderProducts={orderProducts} setOrderProducts={setOrderProducts} />
+            </DialogContent>
+          </Box>
+        )}
+        <DialogActions>
+          <Button variant='contained' className='btn-gunmetal' onClick={handleClose}>Cancel</Button>
+          {modalType == 'void' ? (
+            <Button variant='contained' className='btn-munsell' onClick={handleConfirmClose}>Void PL</Button>
+          ) : (
+            <SubmitButton btnText='Add' isLoading={isLoading} className='btn-munsell' onClick={handleAddNewProducts} />
+          )}
+        </DialogActions>
+      </Dialog>
     </Box>
   )
 }
