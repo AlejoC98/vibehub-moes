@@ -504,30 +504,35 @@ const PickListDetails = () => {
                     ))}
                   </Select>
                 </FormControl>
-                <List sx={{ width: '100%', maxWidth: 360, bgcolor: 'background.paper' }}>
-                  {productsSteps?.map((label: any, index) => {
-                    const labelId = `checkbox-list-label-${index}`;
+                
+                { closeReason == 'Product unavailable' && (
+                  <List sx={{ width: '100%', maxWidth: 360, bgcolor: 'background.paper' }}>
+                    {productsSteps?.map((label: any, index) => {
+                      const labelId = `checkbox-list-label-${index}`;
+                      if (label.quantity > 0) {
+                        return (
+                          <ListItem
+                            key={index}
+                            disablePadding
+                          >
+                            <ListItemButton role={undefined} onClick={handleToggle(index)} dense>
+                              <ListItemIcon>
+                                <Checkbox
+                                  edge="start"
+                                  checked={checked.includes(label.id)}
+                                  tabIndex={-1}
+                                  disableRipple
+                                />
+                              </ListItemIcon>
+                              <ListItemText id={labelId} primary={label.product_sku} />
+                            </ListItemButton>
+                          </ListItem>
+                        );
+                      }
+                    })}
 
-                    return (
-                      <ListItem
-                        key={index}
-                        disablePadding
-                      >
-                        <ListItemButton role={undefined} onClick={handleToggle(index)} dense>
-                          <ListItemIcon>
-                            <Checkbox
-                              edge="start"
-                              checked={checked.includes(label.id)}
-                              tabIndex={-1}
-                              disableRipple
-                            />
-                          </ListItemIcon>
-                          <ListItemText id={labelId} primary={label.product_sku} />
-                        </ListItemButton>
-                      </ListItem>
-                    );
-                  })}
-                </List>
+                  </List>
+                )}
                 <TextField
                   required
                   multiline

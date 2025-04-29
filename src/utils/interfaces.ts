@@ -108,7 +108,7 @@ export interface ProductInput {
 }
 export interface ProductContent {
     id?: number;
-    quantity: number;
+    quantity?: number;
     img_url?: string;
     sku?: string;
     name?: string;
