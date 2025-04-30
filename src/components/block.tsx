@@ -9,7 +9,7 @@ const StyledBlock = styled(Box)(({ theme }) => ({
   ...theme.typography.body1,
   borderRadius: 10,
   boxShadow: '5px 10px 10px 0px rgba(0,0,0,0.35)',
-  height: '100%',
+  maxHeight: '100%',
 }));
 
 const Block: FC<BoxProps> = ({ children, ...rest }) => {

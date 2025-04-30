@@ -1,20 +1,21 @@
 'use client'
-import React, { MouseEvent, useContext, useEffect, useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import { Box, Button, IconButton, InputAdornment, List, ListItem, ListItemButton, ListItemText, TextField, Typography } from '@mui/material'
 import Grid from '@mui/material/Grid2'
 import { PickListContent } from '@/utils/interfaces';
 import SearchIcon from '@mui/icons-material/Search';
 import CloseIcon from '@mui/icons-material/Close';
-import Link from 'next/link';
-import { usePathname } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 import StatusBadge from './status_badge';
 import { GlobalContext } from '@/utils/context/global_provider';
 import { useFindUserByUUID } from '@/utils/functions/main';
 
 const SearchPickList = ({ data }: { data: PickListContent[] }) => {
 
+    const route = useRouter();
     const pathname = usePathname();
-    const { users } = useContext(GlobalContext);
+    const { users, setIsLaunching } = useContext(GlobalContext);
+
     const findUserByUUID = useFindUserByUUID();
     const [keyword, setKeyWord] = useState<string>('');
     const [activePick, setActivePick] = useState<number>();
@@ -36,6 +37,11 @@ const SearchPickList = ({ data }: { data: PickListContent[] }) => {
     const handleCleanSearch = () => {
         setKeyWord('');
         setDisplayData(data);
+    }
+
+    const handleOpenPL = (pl: number) => {
+        setIsLaunching(true);
+        route.push(`${pathname}/${pl}`);
     }
 
     useEffect(() => {
@@ -103,7 +109,7 @@ const SearchPickList = ({ data }: { data: PickListContent[] }) => {
                     <Grid size={{ xl: 6, lg: 6, md: 12, sm: 12, xs: 12 }} sx={{ maxHeight: 300, overflowY: 'auto' }}>
                         <Grid container spacing={2}>
                             <Grid size={12}>
-                                <Button LinkComponent={Link} href={`${pathname}/${data[activePick].pl_number}`} fullWidth className='btn-munsell'>Start Pick</Button>
+                                <Button fullWidth className='btn-munsell' onClick={() => handleOpenPL(data[activePick].pl_number)}>Start Pick</Button>
                             </Grid>
                             <Grid size={6}>
                                 <Typography fontWeight='bold'>PL #</Typography>

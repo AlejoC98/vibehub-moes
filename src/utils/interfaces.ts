@@ -71,7 +71,8 @@ export interface GlobalContent {
     userAccount?: AccountContent;
     receivings?: ReceivingContent[];
     shippings?: ShippingContent[];
-    updateReports?: UpdateReportContent[],
+    updateReports?: UpdateReportContent[];
+    pickingTasks?: PickingTasksContent[];
     isLaunching: boolean;
     setIsLaunching: (status: boolean) => void
 }
@@ -159,21 +160,39 @@ export interface ReceivingContent {
     status: string;
 }
 
-export interface PickingContent {
+export interface PickingInput {
     id?: number;
-    order_number?: number;
-    assign_to?: number;
-    due_at?: Date;
-    priority?: string;
-    notes?: string;
-    created_at?: Date;
+    product_sku: string;
+    img_url?: string;
+    img_file?: File;
+    serial_number: number;
+    product_quantity: number;
+    picked_by: string;
+    verify_by?: string;
 }
 
-export interface PickingProductContent {
-    product_id?: number;
-    name: string;
-    quantity?: number;
+export interface PickingTasksContent {
+    id: number;
+    pick_number: number;
+    created_by: string;
+    status: string;
+    verified_by?: string;
+    img_url: string;
+    pickings_products: PickingTasksProductsContent[];
 }
+
+export interface PickingTasksProductsContent {
+    id: number;
+    product_sku: string;
+    product_quantity: number;
+    is_ready: boolean;
+    created_by: string;
+    img_url?: string;
+    picked_by: string;
+    serial_number?: number;
+    picking_id: number;
+}
+
 
 export interface ReceivingProductsInput extends ProductContent {
     id?: number;

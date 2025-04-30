@@ -39,7 +39,7 @@ const BasicTable = ({
   const router = useRouter();
   const pathname = usePathname();
   const supabase = createClient();
-  const { setIsLaunching, users } = useContext(GlobalContext);
+  const { setIsLaunching, users, userAccount } = useContext(GlobalContext);
 
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const menuId = 'primary-search-account-menu';
@@ -231,6 +231,8 @@ const BasicTable = ({
       router.push(`${pathname}/${data.trailer_number}`);
     } else if (Object.keys(data).includes('pl_number')) {
       router.push(`${pathname}/${data.pl_number}`);
+    } else if (Object.keys(data).includes('pick_number')) {
+      router.push(`${pathname}/${data.pick_number}`);
     }
   }
 
@@ -309,7 +311,7 @@ const BasicTable = ({
               gap: 1,
               justifyContent: { lg: 'end', md: 'end', sm: 'end', xs: 'end' }
             }}>
-              {selectedRow != null && (
+              {selectedRow != null && userAccount?.accounts_roles?.some(role => [1, 2].includes(role.role_id)) && (
                 <Button variant='contained' className='bg-red-700 hover:bg-red-800 ml-5' onClick={handleDelete}>
                   <DeleteIcon />
                 </Button>

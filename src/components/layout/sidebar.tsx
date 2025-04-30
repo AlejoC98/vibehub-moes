@@ -215,7 +215,13 @@ const SideBar = ({ open, setOpen, menuOpen, setMenuOpen }: { open: boolean, setO
                         {open ? item.submenu ?<ListItem
                             sx={{ padding: '10px 0' }}
                             secondaryAction={
-                                item.submenu ? menuOpen === item.id ? <ExpandLess /> : <ExpandMore /> : <></>
+                                <IconButton
+                                    edge="end"
+                                    aria-label="expand"
+                                    onClick={() => handleRedirectMenu(item.id)}
+                                >
+                                    {item.submenu ? menuOpen === item.id ? <ExpandLess /> : <ExpandMore /> : <></>}
+                                </IconButton>
                             }>
                                 <ListItemButton
                             sx={{ padding: '10px 0', justifyContent: 'center', alignItems: 'center' }}

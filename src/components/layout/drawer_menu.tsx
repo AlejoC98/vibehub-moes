@@ -209,16 +209,19 @@ const DrawerMenu = ({ openDrawer, toggleDrawer }: { openDrawer: boolean, toggleD
                                     {item.submenu ? menuOpen === item.id ? <ExpandLess /> : <ExpandMore /> : <></>}
                                 </IconButton>
                             }>
-                            <ListItemIcon sx={{ justifyContent: 'center' }}>{item.icon}</ListItemIcon>
-                            <ListItemText primary={item.title} />
+                            <ListItemButton sx={{ padding: '10px 0', justifyContent: 'center', alignItems: 'center' }}
+                            selected={menuOpen === item.id}
+                            onClick={() => handleRedirectMenu(item.id)}>
+                                <ListItemIcon sx={{ justifyContent: 'center' }}>
+                                    {item.icon}
+                                </ListItemIcon>
+                                <ListItemText primary={item.title} />
+                            </ListItemButton>
                         </ListItem> : <ListItemButton
                             sx={{ padding: '10px 0', justifyContent: 'center', alignItems: 'center' }}
-                            // href={item.to}
-                            // LinkComponent={Link}
                             selected={menuOpen === item.id}
                             onClick={() => {
                                 handleRedirectMenu(item.id, item.to);
-                                // handleOpenMenu(item.id);
                             }}>
                             <ListItemIcon sx={{ justifyContent: 'center' }}>
                                 {item.icon}
@@ -226,12 +229,9 @@ const DrawerMenu = ({ openDrawer, toggleDrawer }: { openDrawer: boolean, toggleD
                             <ListItemText primary={item.title} />
                         </ListItemButton> : <ListItemButton
                             sx={{ padding: '10px 0', justifyContent: 'center', alignItems: 'center' }}
-                            // href={item.to}
-                            // LinkComponent={Link}
                             selected={menuOpen === item.id}
                             onClick={() => {
                                 handleRedirectMenu(item.id, item.to);
-                                // handleOpenMenu(item.id);
                             }}>
                             <ListItemIcon sx={{ justifyContent: 'center' }}>
                                 {item.icon}
@@ -243,8 +243,6 @@ const DrawerMenu = ({ openDrawer, toggleDrawer }: { openDrawer: boolean, toggleD
                                     <ListItemButton
                                         key={subItem.id}
                                         sx={{ padding: '10px 12px', justifyItems: 'center', alignContent: 'center' }}
-                                        // href={subItem.to}
-                                        // LinkComponent={Link}
                                         onClick={() => {
                                             handleRedirectMenu(subItem.id, subItem.to)
                                         }}

@@ -48,6 +48,7 @@ const PickListDetails = () => {
   const [checked, setChecked] = useState([0]);
   const [modalType, setModalType] = useState<string>();
   const [orderProducts, setOrderProducts] = useState<ShippingOrderProductInput[]>([]);
+  const [isReady, setIsReady] = useState<boolean>(false);
 
   const reasons = [
     'Product unavailable',
@@ -77,65 +78,39 @@ const PickListDetails = () => {
         throw new Error('Please select a reason.');
       }
 
-      var shipProduct;
-
       switch (closeReason) {
         case 'Product unavailable':
-
           if (closeReasonNotes == undefined || closeReasonNotes == '') {
             throw new Error('Please type the unavialble item sku!');
-          }
-
-          const updatedProducts = productsSteps?.map((product) => {
-            if (product.product_sku === productSku) {
-              shipProduct = product.id;
-              return { ...product, is_ready: true };
-            } else {
-              return product;
-            }
-          });
-
-          if (shipProduct != null) {
-            const { error } = await supabase.from('shippings_products').update({
-              is_ready: true,
-              img_url: null,
-              serial_number: null
-            }).eq('id', shipProduct);
-
-            if (error) {
-              throw new Error(error.message);
-            }
-
-            setProductsSteps(updatedProducts);
           }
           break;
         default:
           break;
       }
 
-      if (productsSteps?.length == 0) {
-        const completePick = async () => {
-          await supabase.from('shippings_pick_list').update({
-            status: 'Completed',
-            picked_by: userAccount?.user_id,
-            notes: `${closeReason} - ${closeReasonNotes}`
-          }).eq('id', data?.id);
+      const updatedProducts = productsSteps?.map((product) => {
+        return { ...product, is_ready: true, img_url: null };
+      });
 
-          setData({
-            ...data!,
-            'status': 'Completed'
-          });
-        }
-        if (completedProducts == productsSteps?.length) {
-          completePick();
-        }
+      setProductsSteps(updatedProducts);
 
-        toast.success('Products Voided!');
+      const { error } = await supabase.from('shippings_products').update({
+        is_ready: true,
+        img_url: null,
+        serial_number: null
+      }).eq('pick_list_id', data?.id);
+
+      if (error) {
+        throw new Error(error.message);
       }
 
+      setOpen(null);
+      completePick();
+      setCompletedProducts(productsSteps?.length!);
     } catch (error: any) {
       toast.warning(error.message);
     }
+    handleClose();
   };
 
   const handleAddNewProducts = async () => {
@@ -257,31 +232,42 @@ const PickListDetails = () => {
         throw new Error(error.message);
       }
 
+      setIsReady(false);
       toast.success('Pick List verified!');
-
     } catch (error: any) {
       toast.warning(error.message);
     }
   }
 
-  useEffect(() => {
-    const completePick = async () => {
-      await supabase.from('shippings_pick_list').update({
-        status: 'Completed',
-        picked_by: userAccount?.user_id
-      }).eq('id', data?.id);
+  const completePick = async () => {
+    await supabase.from('shippings_pick_list').update({
+      status: 'Completed',
+      picked_by: userAccount?.user_id
+    }).eq('id', data?.id);
 
-      setData({
-        ...data!,
-        'status': 'Completed'
-      });
-    }
+    setData({
+      ...data!,
+      'status': 'Completed'
+    });
+
+    setIsReady(true);
+  }
+
+  useEffect(() => {
+    
     if (completedProducts == productsSteps?.length) {
       completePick();
     }
   }, [completedProducts])
 
   useEffect(() => {
+    if (data?.status === 'Completed') {
+      if (data?.verified_by == null) {
+        if (userAccount?.accounts_roles?.find(r => r.role_id === 2 || r.role_id === 3)) {
+          setIsReady(true);
+        }
+      }
+    }
     const currentPL = shippings
       ?.flatMap(s => s.shippings_pick_list)
       .find(spl => spl.pl_number === parseInt(params.pl as string));
@@ -311,7 +297,7 @@ const PickListDetails = () => {
         <Grid size={{ xl: 3, lg: 3, md: 12, sm: 12, xs: 12 }} sx={{ marginBottom: 5 }}>
           <Block>
             <Grid container spacing={5}>
-              {data?.status == 'Completed' && data?.verified_by == null && userAccount?.accounts_roles?.find((r) => r.role_id == 2 || r.role_id == 3) && (
+              { isReady && (
                 <Grid size={12}>
                   <Button fullWidth variant='contained' className='btn-cerulean' onClick={handleVerifyPickList}>Verify</Button>
                 </Grid>

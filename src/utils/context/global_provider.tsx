@@ -1,6 +1,6 @@
 'use client'
 import { createContext, ReactNode, useEffect, useState } from "react";
-import { AccountContent, AccountRolesContent, CarriersContent, CustomerContent, GlobalContent, LocationContent, NotificationContent, OrderContent, ProductContent, RackContent, ReceivingContent, RoleContent, RoleNotificationContent, ShippingContent, UpdateReportContent, VendorsContent } from "@/utils/interfaces";
+import { AccountContent, AccountRolesContent, CarriersContent, CustomerContent, GlobalContent, LocationContent, NotificationContent, OrderContent, PickingTasksContent, ProductContent, RackContent, ReceivingContent, RoleContent, RoleNotificationContent, ShippingContent, UpdateReportContent, VendorsContent } from "@/utils/interfaces";
 import { createClient } from "@/utils/supabase/client";
 import { createNotification } from "../functions/main";
 
@@ -27,6 +27,7 @@ const GlobalProvider = ({ children }: { children: ReactNode }) => {
     const [locations, setLocations] = useState<LocationContent[]>([]);
     const [vendors, setVendors] = useState<VendorsContent[]>([]);
     const [carriers, setCarriers] = useState<CarriersContent[]>([]);
+    const [pickingTasks, setPickingTasks] = useState<PickingTasksContent[]>([]);
     const [notifications, setNotifications] = useState<RoleNotificationContent[]>([]);
 
     useEffect(() => {
@@ -60,7 +61,19 @@ const GlobalProvider = ({ children }: { children: ReactNode }) => {
                 setTimeout(() => {
                     getProducts();
                 }, 500);
-            })
+            }).on('postgres_changes', {
+                event: '*', schema: 'public', table: 'pickings'
+            }, (payload) => {
+                setTimeout(() => {
+                    getPickingTask();
+                }, 1000);
+            }).on('postgres_changes', {
+              event: '*', schema: 'public', table: 'pickings_products'
+          }, (payload) => {
+              setTimeout(() => {
+                  getPickingTask();
+              }, 1000);
+          })
             .subscribe();
             // .on('postgres_changes', {
             //     event: '*', schema: 'public', table: 'shippings_pick_list'
@@ -287,7 +300,19 @@ const GlobalProvider = ({ children }: { children: ReactNode }) => {
           
             setUpdatesReports(reports || []);
           };
+
           getUpdatesReports();
+
+          const getPickingTask = async() => {
+            const { data: pickings, error } = await supabase
+              .from('pickings')
+              .select('*, pickings_products(*)')
+              .order('created_at', { ascending: false });
+
+              setPickingTasks(pickings || []);
+          }
+
+          getPickingTask();
           
 
         return () => {
@@ -296,7 +321,7 @@ const GlobalProvider = ({ children }: { children: ReactNode }) => {
     }, [supabase]);
 
     return (
-        <GlobalContext.Provider value={{ locations, roles, users, vendors, carriers, products, racks, notifications, orders, userAccount, receivings, shippings, updateReports, isLaunching, setIsLaunching }}>{children}</GlobalContext.Provider>
+        <GlobalContext.Provider value={{ locations, roles, users, vendors, carriers, products, racks, notifications, orders, userAccount, receivings, shippings, updateReports, pickingTasks, isLaunching, setIsLaunching }}>{children}</GlobalContext.Provider>
     )
 };
 
