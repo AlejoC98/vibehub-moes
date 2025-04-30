@@ -1,6 +1,6 @@
 'use client'
 import { GlobalContext } from '@/utils/context/global_provider';
-import { Box, BoxProps, styled } from '@mui/material';
+import { Box, BoxProps, styled, useMediaQuery, useTheme } from '@mui/material';
 import React, { FC, useContext } from 'react';
 
 const StyledBlock = styled(Box)(({ theme }) => ({
@@ -9,16 +9,19 @@ const StyledBlock = styled(Box)(({ theme }) => ({
   ...theme.typography.body1,
   borderRadius: 10,
   boxShadow: '5px 10px 10px 0px rgba(0,0,0,0.35)',
-  maxHeight: '100%',
+  height: '100%',
 }));
 
 const Block: FC<BoxProps> = ({ children, ...rest }) => {
 
   const { isLaunching } = useContext(GlobalContext);
 
+  const theme = useTheme();
+  const isLargeScreen = useMediaQuery(theme.breakpoints.up('lg'));
+
   if (!isLaunching) {
       return (
-        <StyledBlock className='animate__animated animate__fadeInUpBig' {...rest}>
+        <StyledBlock className='animate__animated animate__fadeInUpBig' sx={{ height: isLargeScreen ? '100%' : 'auto' }} {...rest}>
           {children}
         </StyledBlock>
       );

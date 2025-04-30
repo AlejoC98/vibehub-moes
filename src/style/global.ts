@@ -1,5 +1,5 @@
 'use client'
-import { AppBar, Box, InputBase, Paper, StepConnector, Switch, TextField, alpha, stepConnectorClasses, styled } from "@mui/material";
+import { AppBar, Box, InputBase, ListItemButton, Paper, StepConnector, Switch, TextField, alpha, stepConnectorClasses, styled } from "@mui/material";
 
 export const WhiteTextField = styled(TextField)({
     '& label.Mui-focused': {
@@ -177,3 +177,20 @@ export const CustomSwicth = styled(Switch)(({ theme }) => ({
     // },
   },
   }));
+
+  export const SidebarItem = styled(ListItemButton)(({ theme }) => ({
+      borderRadius: 12,
+      '&:hover': {
+        backgroundColor: '#C3C4C5',
+      },
+      '&.Mui-selected': {
+        backgroundColor: '#242f40',
+        color: '#FFFFFF',
+        '& .MuiListItemIcon-root': {
+          color: '#FFFFFF',
+          } 
+      },
+      '&.Mui-selected:hover': {
+        backgroundColor: '#303A48',
+      },
+    }));

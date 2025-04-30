@@ -142,76 +142,79 @@ const Navbar = ({ open, setOpen, menuOpen, setMenuOpen }: { open: boolean, setOp
 
     return (
         <VibeNavbar position='static'>
-        <Toolbar>
-            <IconButton
-                size="large"
-                edge="start"
-                color="inherit"
-                aria-label="open drawer"
-                sx={{ mr: 2 }}
-                onClick={() => {
-                    setOpen(!open)
-                }}
-            >
-                <MenuIcon />
-            </IconButton>
-            { !isMobile && (
-                <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2, paddingTop: 5}}>
-                <Box sx={{ display: 'flex', placeItems: 'center', gap: 1 }}>
-                    <Typography variant='h6' fontWeight='bold'>Good morning</Typography>
-                    <Typography variant='h6' fontWeight='bold' sx={{ textTransform: 'capitalize' }}>{ userAccount?.username?.toLocaleLowerCase() }</Typography>
-                </Box>
-                    <Typography>Check your shifts, track your tasks, stay in control.</Typography>
-                </Box>
-            ) }
-            <Box sx={{ flexGrow: .5 }} />
-            <Search sx={{ width: isMobile ? 'none' : '100%' }}>
-                <SearchIconWrapper>
-                    <SearchIcon />
-                </SearchIconWrapper>
-                <StyledInputBase
-                    sx={{ width: isMobile ? '20ch' : '40ch' }}
-                    placeholder="Search.."
-                    inputProps={{ 'aria-label': 'search' }}
-                    onChange={handleSearch}
-                    ref={searchRef}
-                    className="w-full"
-                    endAdornment={
-                        <InputAdornment position='end'>
-                            <IconButton
-                                onClick={handleCleanSearch}
-                                sx={{ opacity: searchRef.current?.querySelector('input')!.value !== "" ? 1 : 0 }}
-                            >
-                                <CloseIcon fontSize='small' sx={{ color: '#FFFFFF'}} />
-                            </IconButton>
-                        </InputAdornment>
-                    }
-                />
-            </Search>
-            <Box sx={{ flexGrow: 1 }} />
-            <Box
-                sx={{ display: 'flex', placeItems: 'center', justifyContent: 'space-between', gap: 3}}
-            >
+            <Toolbar>
                 <IconButton
                     size="large"
-                    edge="end"
-                    aria-label="account of current user"
-                    aria-controls={menuId}
-                    aria-haspopup="true"
-                    onClick={handleMenuOpen}
+                    edge="start"
+                    color="inherit"
+                    aria-label="open drawer"
+                    sx={{ mr: 2 }}
+                    onClick={() => {
+                        setOpen(!open)
+                    }}
                 >
-                    <Badge badgeContent={pendingNotifcation} color='error'>
-                        <NotificationsIcon sx={{ color: '#FFFFFF'}} />
-                    </Badge>
+                    <MenuIcon />
                 </IconButton>
-                {renderNotiMenu}
-                <IconButton onClick={handleSettMenu}>
-                    <SettingsIcon sx={{ color: '#FFFFFF'}} />
-                </IconButton>
-                {renderSettingMenu}
-            </Box>
-        </Toolbar>
-    </VibeNavbar>
+                { !isMobile && (
+                    <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2, paddingTop: 5}}>
+                        <Box sx={{ display: { xl: 'flex', lg: 'flex', md: 'none', sm: 'none', xs: 'none'}, placeItems: 'center', gap: 1 }}>
+                            <Typography variant='h6' fontWeight='bold'>Good morning</Typography>
+                            <Typography variant='h6' fontWeight='bold' sx={{ textTransform: 'capitalize' }}>{ userAccount?.username?.toLocaleLowerCase() }</Typography>
+                        </Box>
+                        <Typography
+                            sx={{ display: { xl: 'block', lg: 'block', md: 'none', sm: 'none', xs: 'none'}}}>
+                            Check your shifts, track your tasks, stay in control.
+                        </Typography>
+                    </Box>
+                ) }
+                <Box sx={{ flexGrow: .5 }} />
+                <Search sx={{ width: isMobile ? 'none' : '100%' }}>
+                    <SearchIconWrapper>
+                        <SearchIcon />
+                    </SearchIconWrapper>
+                    <StyledInputBase
+                        sx={{ width: isMobile ? '20ch' : '40ch' }}
+                        placeholder="Search.."
+                        inputProps={{ 'aria-label': 'search' }}
+                        onChange={handleSearch}
+                        ref={searchRef}
+                        className="w-full"
+                        endAdornment={
+                            <InputAdornment position='end'>
+                                <IconButton
+                                    onClick={handleCleanSearch}
+                                    sx={{ opacity: searchRef.current?.querySelector('input')!.value !== "" ? 1 : 0 }}
+                                >
+                                    <CloseIcon fontSize='small' sx={{ color: '#FFFFFF'}} />
+                                </IconButton>
+                            </InputAdornment>
+                        }
+                    />
+                </Search>
+                <Box sx={{ flexGrow: 1 }} />
+                <Box
+                    sx={{ display: 'flex', placeItems: 'center', justifyContent: 'space-between', gap: 3}}
+                >
+                    <IconButton
+                        size="large"
+                        edge="end"
+                        aria-label="account of current user"
+                        aria-controls={menuId}
+                        aria-haspopup="true"
+                        onClick={handleMenuOpen}
+                    >
+                        <Badge badgeContent={pendingNotifcation} color='error'>
+                            <NotificationsIcon sx={{ color: '#FFFFFF'}} />
+                        </Badge>
+                    </IconButton>
+                    {renderNotiMenu}
+                    <IconButton onClick={handleSettMenu}>
+                        <SettingsIcon sx={{ color: '#FFFFFF'}} />
+                    </IconButton>
+                    {renderSettingMenu}
+                </Box>
+            </Toolbar>
+        </VibeNavbar>
     )
 }
 

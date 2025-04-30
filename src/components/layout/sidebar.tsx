@@ -1,6 +1,6 @@
 'use client'
 import React, { useContext, useEffect, useState } from 'react'
-import { Avatar, Box, Collapse, IconButton, List, ListItem, ListItemButton, ListItemIcon, ListItemText } from '@mui/material';
+import { Avatar, Box, Collapse, IconButton, List, ListItem, ListItemIcon, ListItemText, styled, ListItemButton } from '@mui/material';
 import { MenuItem } from '@/utils/interfaces';
 import ExpandLess from '@mui/icons-material/ExpandLess';
 import ExpandMore from '@mui/icons-material/ExpandMore';
@@ -11,6 +11,7 @@ import { HugeiconsIcon } from '@hugeicons/react';
 import { DashboardSquare02Icon, WarehouseIcon, FlowIcon, Trolley02Icon, LiftTruckIcon, PackageMovingIcon, TaskDaily01Icon, ComputerDollarIcon, ReturnRequestIcon, TruckDeliveryIcon, Store02Icon, UserGroupIcon, CustomerService01Icon, ProductLoadingIcon, DistributeVerticalBottomIcon, FileManagementIcon } from '@hugeicons/core-free-icons';
 import Swal from 'sweetalert2';
 import 'animate.css';
+import { SidebarItem } from '@/style/global';
 
 const SideBar = ({ open, setOpen, menuOpen, setMenuOpen }: { open: boolean, setOpen: (status: boolean) => void, menuOpen: number | null, setMenuOpen: (status: number | null) => void}) => {
 
@@ -171,8 +172,13 @@ const SideBar = ({ open, setOpen, menuOpen, setMenuOpen }: { open: boolean, setO
     }
 
     const checkDefaultActive = () => {
+        var page: string = pathname;
+        if (pathname.includes('/')) {
+            page = '/' + pathname.split('/')[1];
+        }
+
         for (const item of MenuList) {
-            if (item.to?.toLowerCase() === pathname) {
+            if (item.to?.toLowerCase() === page) {
                 if (item.id !== menuOpen) {
                     setMenuOpen(item.id);
                 }
@@ -181,7 +187,7 @@ const SideBar = ({ open, setOpen, menuOpen, setMenuOpen }: { open: boolean, setO
 
             if (item.submenu) {
                 for (const sub of item.submenu) {
-                    if (sub.to?.toLowerCase() === pathname) {
+                    if (sub.to?.toLowerCase() === page) {
                         if (item.id !== menuOpen) {
                             setMenuOpen(item.id);
                         }
@@ -220,17 +226,19 @@ const SideBar = ({ open, setOpen, menuOpen, setMenuOpen }: { open: boolean, setO
                                     aria-label="expand"
                                     onClick={() => handleRedirectMenu(item.id)}
                                 >
-                                    {item.submenu ? menuOpen === item.id ? <ExpandLess /> : <ExpandMore /> : <></>}
+                                    {item.submenu ? menuOpen === item.id ? <ExpandLess sx={{ color: menuOpen === item.id ? '#ffffff' : '#000000'}} /> : <ExpandMore sx={{ color: menuOpen === item.id ? '#ffffff' : '#000000'}} /> : <></>}
                                 </IconButton>
                             }>
-                                <ListItemButton
+                                <SidebarItem
                             sx={{ padding: '10px 0', justifyContent: 'center', alignItems: 'center' }}
                             selected={menuOpen === item.id}
                             onClick={() => handleRedirectMenu(item.id)}>
-                                <ListItemIcon sx={{ justifyContent: 'center' }}>{item.icon}</ListItemIcon>
+                                <ListItemIcon sx={{ justifyContent: 'center' }}>
+                                    { item.icon }
+                                </ListItemIcon>
                                 <ListItemText primary={item.title} />
-                                </ListItemButton>
-                        </ListItem> : <ListItemButton
+                                </SidebarItem>
+                        </ListItem> : <SidebarItem
                             sx={{ padding: '10px 0', justifyContent: 'center', alignItems: 'center' }}
                             selected={menuOpen === item.id}
                             onClick={() => {
@@ -240,7 +248,7 @@ const SideBar = ({ open, setOpen, menuOpen, setMenuOpen }: { open: boolean, setO
                                 {item.icon}
                             </ListItemIcon>
                             <ListItemText primary={item.title} />
-                        </ListItemButton> : <ListItemButton
+                        </SidebarItem> : <SidebarItem
                             sx={{ padding: '10px 0', justifyContent: 'center', alignItems: 'center' }}
                             selected={menuOpen === item.id}
                             onClick={() => {
@@ -249,11 +257,11 @@ const SideBar = ({ open, setOpen, menuOpen, setMenuOpen }: { open: boolean, setO
                             <ListItemIcon sx={{ justifyContent: 'center' }}>
                                 {item.icon}
                             </ListItemIcon>
-                        </ListItemButton>}
+                        </SidebarItem>}
                         <Collapse in={item.id === menuOpen} timeout="auto" unmountOnExit sx={{ padding: 0, margin: 0 }}>
                             <List component="div" disablePadding sx={{ justifyContent: 'center', alignItems: 'center', background: '#DEDEDE' }}>
                                 {item.submenu?.map(subItem => (
-                                    <ListItemButton
+                                    <SidebarItem
                                         key={subItem.id}
                                         sx={{ padding: '10px 12px', justifyItems: 'center', alignContent: 'center' }}
                                         onClick={() => {
@@ -264,14 +272,14 @@ const SideBar = ({ open, setOpen, menuOpen, setMenuOpen }: { open: boolean, setO
                                             {subItem.icon}
                                         </ListItemIcon>
                                         {open && <ListItemText primary={subItem.title} />}
-                                    </ListItemButton>
+                                    </SidebarItem>
                                 ))}
                             </List>
                         </Collapse>
                     </Box>
                 ))}
                 <Box sx={{ height: 50 }} />
-                <ListItemButton onClick={() => {
+                <SidebarItem onClick={() => {
                     setMenuOpen(null);
                     handleRedirectMenu(24, '/help-center');
                 }} selected={menuOpen == 24}>
@@ -279,7 +287,7 @@ const SideBar = ({ open, setOpen, menuOpen, setMenuOpen }: { open: boolean, setO
                     <HugeiconsIcon icon={CustomerService01Icon} />
                     </ListItemIcon>
                     <ListItemText primary={'Help Center'} />
-                </ListItemButton>
+                </SidebarItem>
             </List>
         </Box>
     )

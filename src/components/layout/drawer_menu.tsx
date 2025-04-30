@@ -1,5 +1,5 @@
 'use client'
-import { Box, Collapse, Drawer, IconButton, List, ListItem, ListItemButton, ListItemIcon, ListItemText } from '@mui/material'
+import { Box, Collapse, Drawer, IconButton, List, ListItem, ListItemIcon, ListItemText } from '@mui/material'
 import React, { Fragment, useContext, useEffect, useState } from 'react'
 import { GlobalContext } from '@/utils/context/global_provider';
 import { usePathname, useRouter } from 'next/navigation';
@@ -9,6 +9,7 @@ import ExpandMore from '@mui/icons-material/ExpandMore';
 import Swal from 'sweetalert2';
 import { HugeiconsIcon } from '@hugeicons/react';
 import { DashboardSquare02Icon, FlowIcon, Trolley02Icon, LiftTruckIcon, PackageMovingIcon, TaskDaily01Icon, ComputerDollarIcon, ReturnRequestIcon, TruckDeliveryIcon, Store02Icon, UserGroupIcon, CustomerService01Icon, ProductLoadingIcon, DistributeVerticalBottomIcon, DigitalClockIcon } from '@hugeicons/core-free-icons';
+import { SidebarItem } from '@/style/global';
 
 const DrawerMenu = ({ openDrawer, toggleDrawer }: { openDrawer: boolean, toggleDrawer: (status: boolean) => void }) => {
 
@@ -161,8 +162,13 @@ const DrawerMenu = ({ openDrawer, toggleDrawer }: { openDrawer: boolean, toggleD
     }
 
     const checkDefaultActive = () => {
+        var page: string = pathname;
+        if (pathname.includes('/')) {
+            page = '/' + pathname.split('/')[1];
+        }
+
         for (const item of MenuList) {
-            if (item.to?.toLowerCase() === pathname) {
+            if (item.to?.toLowerCase() === page) {
                 if (item.id !== menuOpen) {
                     setMenuOpen(item.id);
                 }
@@ -171,7 +177,7 @@ const DrawerMenu = ({ openDrawer, toggleDrawer }: { openDrawer: boolean, toggleD
 
             if (item.submenu) {
                 for (const sub of item.submenu) {
-                    if (sub.to?.toLowerCase() === pathname) {
+                    if (sub.to?.toLowerCase() === page) {
                         if (item.id !== menuOpen) {
                             setMenuOpen(item.id);
                         }
@@ -206,18 +212,18 @@ const DrawerMenu = ({ openDrawer, toggleDrawer }: { openDrawer: boolean, toggleD
                                     aria-label="expand"
                                     onClick={() => handleRedirectMenu(item.id)}
                                 >
-                                    {item.submenu ? menuOpen === item.id ? <ExpandLess /> : <ExpandMore /> : <></>}
+                                     {item.submenu ? menuOpen === item.id ? <ExpandLess sx={{ color: menuOpen === item.id ? '#ffffff' : '#000000'}} /> : <ExpandMore sx={{ color: menuOpen === item.id ? '#ffffff' : '#000000'}} /> : <></>}
                                 </IconButton>
                             }>
-                            <ListItemButton sx={{ padding: '10px 0', justifyContent: 'center', alignItems: 'center' }}
+                            <SidebarItem sx={{ padding: '10px 0', justifyContent: 'center', alignItems: 'center' }}
                             selected={menuOpen === item.id}
                             onClick={() => handleRedirectMenu(item.id)}>
                                 <ListItemIcon sx={{ justifyContent: 'center' }}>
                                     {item.icon}
                                 </ListItemIcon>
                                 <ListItemText primary={item.title} />
-                            </ListItemButton>
-                        </ListItem> : <ListItemButton
+                            </SidebarItem>
+                        </ListItem> : <SidebarItem
                             sx={{ padding: '10px 0', justifyContent: 'center', alignItems: 'center' }}
                             selected={menuOpen === item.id}
                             onClick={() => {
@@ -227,7 +233,7 @@ const DrawerMenu = ({ openDrawer, toggleDrawer }: { openDrawer: boolean, toggleD
                                 {item.icon}
                             </ListItemIcon>
                             <ListItemText primary={item.title} />
-                        </ListItemButton> : <ListItemButton
+                        </SidebarItem> : <SidebarItem
                             sx={{ padding: '10px 0', justifyContent: 'center', alignItems: 'center' }}
                             selected={menuOpen === item.id}
                             onClick={() => {
@@ -236,11 +242,11 @@ const DrawerMenu = ({ openDrawer, toggleDrawer }: { openDrawer: boolean, toggleD
                             <ListItemIcon sx={{ justifyContent: 'center' }}>
                                 {item.icon}
                             </ListItemIcon>
-                        </ListItemButton>}
+                        </SidebarItem>}
                         <Collapse in={item.id === menuOpen} timeout="auto" unmountOnExit sx={{ padding: 0, margin: 0 }}>
                             <List component="div" disablePadding sx={{ justifyContent: 'center', alignItems: 'center', background: '#DEDEDE' }}>
                                 {item.submenu?.map(subItem => (
-                                    <ListItemButton
+                                    <SidebarItem
                                         key={subItem.id}
                                         sx={{ padding: '10px 12px', justifyItems: 'center', alignContent: 'center' }}
                                         onClick={() => {
@@ -251,14 +257,14 @@ const DrawerMenu = ({ openDrawer, toggleDrawer }: { openDrawer: boolean, toggleD
                                             {subItem.icon}
                                         </ListItemIcon>
                                         {openDrawer && <ListItemText primary={subItem.title} />}
-                                    </ListItemButton>
+                                    </SidebarItem>
                                 ))}
                             </List>
                         </Collapse>
                     </Box>
                 ))}
                 <Box sx={{ height: 20 }} />
-                <ListItemButton onClick={() => {
+                <SidebarItem onClick={() => {
                     setMenuOpen(null);
                     toggleDrawer(false);
                     handleRedirectMenu(24, '/help-center');
@@ -267,7 +273,7 @@ const DrawerMenu = ({ openDrawer, toggleDrawer }: { openDrawer: boolean, toggleD
                     <HugeiconsIcon icon={CustomerService01Icon} />
                     </ListItemIcon>
                     <ListItemText primary={'Help Center'} />
-                </ListItemButton>
+                </SidebarItem>
             </Drawer>
         </Fragment>
     )
