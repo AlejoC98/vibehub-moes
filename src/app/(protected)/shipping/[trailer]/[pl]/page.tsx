@@ -105,7 +105,7 @@ const PickListDetails = () => {
       }
 
       setOpen(null);
-      completePick();
+      completePick(true);
       setCompletedProducts(productsSteps?.length!);
     } catch (error: any) {
       toast.warning(error.message);
@@ -239,10 +239,11 @@ const PickListDetails = () => {
     }
   }
 
-  const completePick = async () => {
+  const completePick = async (isVoided?: boolean) => {
     await supabase.from('shippings_pick_list').update({
       status: 'Completed',
-      picked_by: userAccount?.user_id
+      picked_by: userAccount?.user_id,
+      notes: isVoided ? `${findUserByUUID(userAccount?.user_id!)} closed this pick for the following reason: ${closeReason}, ${closeReasonNotes != '' && closeReasonNotes != undefined ? `here's more details: ${closeReasonNotes}` : ''}` : undefined
     }).eq('id', data?.id);
 
     setData({
@@ -254,7 +255,6 @@ const PickListDetails = () => {
   }
 
   useEffect(() => {
-    
     if (completedProducts == productsSteps?.length) {
       completePick();
     }
