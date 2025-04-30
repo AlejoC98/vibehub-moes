@@ -168,7 +168,9 @@ const PickListDetails = () => {
         throw new Error('Product doesn\'t match!');
       }
 
-      if (productQtyError || productQty == '') {
+      const processProduct = productsSteps?.find(p => p.product_sku == productSku);
+
+      if (productQtyError || productQty == '' || parseInt(productQty) < processProduct?.product_quantity! ) {
         throw new Error('Product quantity doesn\'t match!');
       }
 
