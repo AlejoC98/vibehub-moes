@@ -2,15 +2,14 @@
 import ImageDropzone from '@/components/image_dropzone'
 import { GlobalContext } from '@/utils/context/global_provider';
 import { handleUploadToBucket } from '@/utils/functions/main';
-import { PickingInput } from '@/utils/interfaces';
+import { PickingInput, PickingTasksContent } from '@/utils/interfaces';
 import { createClient } from '@/utils/supabase/client';
 import { Box, Button, LinearProgress, Typography } from '@mui/material'
 import React, { useContext, useEffect, useState } from 'react'
 import { toast } from 'react-toastify';
 
-interface QuickPickComplete {
+interface QuickPickComplete extends PickingTasksContent {
     products: PickingInput[];
-    id: number;
 }
 
 const CompleteQuicPick = ({ defaultData, setOpenModal, title }: { defaultData?: QuickPickComplete, setOpenModal?: (status: boolean) => void, title: string}) => {
@@ -32,7 +31,7 @@ const CompleteQuicPick = ({ defaultData, setOpenModal, title }: { defaultData?: 
                         if (product.img_file != null) {
                             productURL = await handleUploadToBucket(
                                 'pickings',
-                                `${defaultData?.id!}/${product.product_sku + now}`,
+                                `${defaultData?.pick_number!}/${product.product_sku + now}`,
                                 product.img_file!
                             );
                         }
@@ -54,7 +53,7 @@ const CompleteQuicPick = ({ defaultData, setOpenModal, title }: { defaultData?: 
 
                     const completeURL = await handleUploadToBucket(
                         'pickings',
-                        `${defaultData?.id!}/complete-${defaultData?.id!}`,
+                        `${defaultData?.pick_number!}/complete-${defaultData?.pick_number!}`,
                         loadedOrderIMG!
                     );
 

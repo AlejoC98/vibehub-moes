@@ -105,7 +105,7 @@ const PickListDetails = () => {
                 text: 'Complete',
                 color: '#64B6AC',
                 form: <CompleteQuicPick title={'Complete Quick Order'} />,
-                data: { products: scannedProducts, id: data?.pick_number }
+                data: { products: scannedProducts, ...data }
             }
         ]
         : [];
