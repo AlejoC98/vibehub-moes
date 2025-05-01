@@ -18,6 +18,9 @@ const Shipping = () => {
       { field: 'carrier', headerName: 'Carrier', width: 100},
       { field: 'trailer_number', headerName: 'Trailer #' },
       { field: 'total_shipped', headerName: 'Total Shipped', width: 110},
+      { field: 'shippings_pick_list', headerName: 'Total Pick Lists', renderCell: (params) => {
+        return params.row.shippings_pick_list.length;
+      }, width: 120},
       { field: 'created_at', headerName: 'Created At', renderCell: (params) => {
         return convertTimeByTimeZone(userAccount?.sessionTimeZone!, params.row.created_at);
       }, width: 180},

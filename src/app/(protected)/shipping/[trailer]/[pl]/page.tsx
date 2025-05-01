@@ -4,7 +4,7 @@ import React, { FormEvent, ReactNode, useContext, useEffect, useState } from 're
 import { GlobalContext } from '@/utils/context/global_provider';
 import { PickListContent, ShippingOrderProductContent, ShippingOrderProductInput } from '@/utils/interfaces';
 import Swal from 'sweetalert2';
-import { Box, Button, Checkbox, Collapse, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Divider, FormControl, FormControlLabel, FormGroup, InputLabel, List, ListItem, ListItemButton, ListItemIcon, ListItemText, MenuItem, Select, TextField, Typography } from '@mui/material';
+import { Box, Button, Checkbox, Collapse, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Divider, FormControl, FormControlLabel, FormGroup, IconButton, InputLabel, List, ListItem, ListItemButton, ListItemIcon, ListItemText, MenuItem, Select, TextField, Typography } from '@mui/material';
 import Grid from '@mui/material/Grid2'
 import Block from '@/components/block';
 import Details from '@/components/details';
@@ -45,10 +45,10 @@ const PickListDetails = () => {
   const [openModal, setOpenModal] = useState(false);
   const [closeReason, setCloseReason] = useState<string>('');
   const [closeReasonNotes, setCloseReasonNotes] = useState<string>('');
-  const [checked, setChecked] = useState([0]);
   const [modalType, setModalType] = useState<string>();
   const [orderProducts, setOrderProducts] = useState<ShippingOrderProductInput[]>([]);
   const [isReady, setIsReady] = useState<boolean>(false);
+  const [selected, setSelected] = useState<number[]>([]);
 
   const reasons = [
     'Product unavailable',
@@ -59,9 +59,9 @@ const PickListDetails = () => {
     'Other'
   ];
 
-  const handleToggle = (value: number) => () => {
-    const currentIndex = checked.indexOf(value);
-    const newChecked = [...checked];
+  const handleSelectToggle = (value: number) => () => {
+    const currentIndex = selected.indexOf(value);
+    const newChecked = [...selected];
 
     if (currentIndex === -1) {
       newChecked.push(value);
@@ -69,7 +69,7 @@ const PickListDetails = () => {
       newChecked.splice(currentIndex, 1);
     }
 
-    setChecked(newChecked);
+    setSelected(newChecked);
   };
 
   const handleConfirmClose = async () => {
@@ -78,18 +78,12 @@ const PickListDetails = () => {
         throw new Error('Please select a reason.');
       }
 
-      switch (closeReason) {
-        case 'Product unavailable':
-          if (closeReasonNotes == undefined || closeReasonNotes == '') {
-            throw new Error('Please type the unavialble item sku!');
-          }
-          break;
-        default:
-          break;
-      }
-
       const updatedProducts = productsSteps?.map((product) => {
-        return { ...product, is_ready: true, img_url: null };
+        if (selected.includes(product.id!)) {
+          return { ...product, is_ready: true, img_url: null, product_quantity: 0};
+        } else {
+          return product;
+        }
       });
 
       setProductsSteps(updatedProducts);
@@ -97,16 +91,22 @@ const PickListDetails = () => {
       const { error } = await supabase.from('shippings_products').update({
         is_ready: true,
         img_url: null,
-        serial_number: null
-      }).eq('pick_list_id', data?.id);
+        serial_number: null,
+        product_quantity: 0
+      }).in('id', selected);
 
       if (error) {
         throw new Error(error.message);
       }
 
       setOpen(null);
-      completePick(true);
-      setCompletedProducts(productsSteps?.length!);
+      setCloseReason('');
+      const updateCompletedProducts = updatedProducts!.filter(p => p.is_ready == true).length;
+      setCompletedProducts(updateCompletedProducts);
+      if (updateCompletedProducts == productsSteps?.length) {
+        completePick(true);
+      }
+      setSelected([]);
     } catch (error: any) {
       toast.warning(error.message);
     }
@@ -227,8 +227,14 @@ const PickListDetails = () => {
   const handleVerifyPickList = async () => {
     try {
       const { error } = await supabase.from('shippings_pick_list').update({
-        verified_by: userAccount?.user_id
+        verified_by: userAccount?.user_id,
+        status: 'Completed',
       }).eq('id', data?.id);
+
+      setData({
+        ...data!,
+        'status': 'Completed'
+      });
 
       if (error) {
         throw new Error(error.message);
@@ -243,14 +249,14 @@ const PickListDetails = () => {
 
   const completePick = async (isVoided?: boolean) => {
     await supabase.from('shippings_pick_list').update({
-      status: 'Completed',
+      status: data!.verified_by == null ? 'Awaiting Verification' : 'Completed',
       picked_by: userAccount?.user_id,
-      notes: isVoided ? `${findUserByUUID(userAccount?.user_id!)} closed this pick for the following reason: ${closeReason}, ${closeReasonNotes != '' && closeReasonNotes != undefined ? `here's more details: ${closeReasonNotes}` : ''}` : undefined
+      notes: isVoided ? `${data?.notes || ''} ${findUserByUUID(userAccount?.user_id!)} closed this pick for the following reason: ${closeReason}, ${closeReasonNotes != '' && closeReasonNotes != undefined ? `here's more details: ${closeReasonNotes}` : ''}`: undefined
     }).eq('id', data?.id);
 
     setData({
       ...data!,
-      'status': 'Completed'
+      'status': data!.verified_by == null ? 'Awaiting Verification' : 'Completed'
     });
 
     setIsReady(true);
@@ -333,7 +339,9 @@ const PickListDetails = () => {
               <Typography variant='h6' fontWeight='bold'>Products</Typography>
               {data?.status != 'Completed' && (
                 <Box sx={{ display: 'flex', gap: 1 }}>
-                  <Button variant='contained' color='error' onClick={() => handleClickOpen('void')}>Void</Button>
+                  { selected.length > 0 && (
+                    <Button variant='contained' color='error' onClick={() => handleClickOpen('void')}>Void</Button>
+                  )}
                   <Button onClick={() => handleClickOpen('add-products')} variant='contained' color='info'>
                     <AddIcon />
                   </Button>
@@ -346,11 +354,22 @@ const PickListDetails = () => {
                   <ListItem
                     disablePadding
                     secondaryAction={
-                      <Box sx={{ display: 'flex', gap: 5 }}>
+                      <IconButton onClick={() => handleClick(index)}>
                         {open == index ? <ExpandLess /> : <ExpandMore />}
-                      </Box>
+                      </IconButton>
                     }
                   >
+                    { !label.is_ready && (
+                      <ListItemIcon>
+                        <Checkbox
+                          edge="start"
+                          onChange={handleSelectToggle(label.id)}
+                          checked={selected.includes(label.id)}
+                          tabIndex={-1}
+                          disableRipple
+                        />
+                      </ListItemIcon>
+                    )}
                     <ListItemButton onClick={() => handleClick(index)} sx={{ width: '100%' }}>
                       <ListItemText
                         primary={
@@ -492,33 +511,6 @@ const PickListDetails = () => {
                     ))}
                   </Select>
                 </FormControl>
-                
-                { closeReason == 'Product unavailable' && (
-                  <List sx={{ width: '100%', maxWidth: 360, bgcolor: 'background.paper' }}>
-                    {productsSteps?.map((label: any, index) => {
-                      const labelId = `checkbox-list-label-${index}`;
-                      return (
-                        <ListItem
-                          key={index}
-                          disablePadding
-                        >
-                          <ListItemButton role={undefined} onClick={handleToggle(index)} dense>
-                            <ListItemIcon>
-                              <Checkbox
-                                edge="start"
-                                checked={checked.includes(label.id)}
-                                tabIndex={-1}
-                                disableRipple
-                              />
-                            </ListItemIcon>
-                            <ListItemText id={labelId} primary={label.product_sku} />
-                          </ListItemButton>
-                        </ListItem>
-                      );
-                    })}
-
-                  </List>
-                )}
                 <TextField
                   required
                   multiline

@@ -7,6 +7,10 @@ const StatusBadge = ({ status } : { status: string }) => {
           return <Box sx={{color: "#FFFFFF", height: '100%', display: 'grid', placeItems: 'center'}}>
             <Typography sx={{ background: '#FFE082', padding: '.5px 2px', borderRadius: 1 }}>{status}</Typography>
           </Box>;
+        case 'Awaiting Verification':
+          return <Box sx={{color: "#FFFFFF", height: '100%', display: 'grid', placeItems: 'center'}}>
+            <Typography sx={{ background: '#407899', padding: '.5px 2px', borderRadius: 1 }}>{status}</Typography>
+          </Box>;
         case 'Processing':
           return <Box sx={{color: "#FFFFFF", height: '100%', display: 'grid', placeItems: 'center'}}>
             <Typography sx={{ background: '#64B5F6', padding: '.5px 2px', borderRadius: 1 }}>{status}</Typography>
