@@ -41,19 +41,15 @@ $cerulean: #457b9d;
 html, body {
   margin: 0;
   padding: 0;
-  background-color: $gunmetal;
 }
 
-main {
+
+body.login-bg, main.login-bg {
   background-color: $gunmetal;
 }
-
-// body.login-bg, main.login-bg {
-//   background-color: $gunmetal;
-// }
 
 body.dashboard-bg, main.dashboard-bg {
-  background-color: #e3e2e3;
+  background-color: $gunmetal-dark;
 }
 
 main {
