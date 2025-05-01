@@ -4,6 +4,7 @@ import { Inter } from 'next/font/google'
 import "./globals.scss";
 import RightClickBlocker from "./right_click_blocker";
 import { Box } from "@mui/material";
+import LayoutWrapper from "./layout_wrapper";
 
 const inter = Inter({
   variable: "--font-inter-sans",
@@ -35,13 +36,15 @@ export default function RootLayout({
     <html lang="en">
       <body className={`${geistSans.variable} ${geistMono.variable} ${inter.variable}`}>
         {process.env.NODE_ENV === 'production' ? (
-          <RightClickBlocker>
-              { children }
-          </RightClickBlocker>
+          <LayoutWrapper>
+            <RightClickBlocker>
+                { children }
+            </RightClickBlocker>
+          </LayoutWrapper>
         ) : (
-          <Box>
+          <LayoutWrapper>
             { children }
-          </Box>
+          </LayoutWrapper>
         )}
 
       </body>
