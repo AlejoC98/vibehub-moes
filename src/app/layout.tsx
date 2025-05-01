@@ -36,7 +36,7 @@ export default function RootLayout({
       <body className={`${geistSans.variable} ${geistMono.variable} ${inter.variable}`}>
         {process.env.NODE_ENV === 'production' ? (
           <RightClickBlocker>
-              {children}
+              { children }
           </RightClickBlocker>
         ) : (
           <Box>
