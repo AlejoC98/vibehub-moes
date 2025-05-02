@@ -35,11 +35,11 @@ const PickListDetails = () => {
   const [productsSteps, setProductsSteps] = useState<ShippingOrderProductContent[]>();
   const [productIMG, setProductIMG] = useState<File | null>(null);
   const [verifiedSource, setVerifiedSource] = useState<boolean>(false);
-  const [productSku, setProductSku] = useState<String>('');
+  const [productSkuMap, setProductSkuMap] = useState<Record<number, string>>({});
   const [productSkuError, setProductSkuError] = useState<boolean>(false);
-  const [serialNumber, setSerialNumber] = useState<String>('');
+  const [serialNumberMap, setSerialNumberMap] = useState<Record<number, string>>({});
   const [serialNumberError, setSerialNumberError] = useState<boolean>(false);
-  const [productQty, setProductQty] = useState<string>('');
+  const [productQtyMap, setProductQtyMap] = useState<Record<number, string>>({});
   const [productQtyError, setProductQtyError] = useState<boolean>(false);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [openModal, setOpenModal] = useState(false);
@@ -49,10 +49,12 @@ const PickListDetails = () => {
   const [orderProducts, setOrderProducts] = useState<ShippingOrderProductInput[]>([]);
   const [isReady, setIsReady] = useState<boolean>(false);
   const [selected, setSelected] = useState<number[]>([]);
+  const [PLNotes, setPLNotes] = useState<string>('');
 
   const reasons = [
     'Product unavailable',
     'Customer canceled',
+    'Product Short',
     'Goods damaged',
     'Time constraints',
     'Warehouse error',
@@ -74,13 +76,29 @@ const PickListDetails = () => {
 
   const handleConfirmClose = async () => {
     try {
+
+      var defaultQuantity = 0;
+      var defautlSerial = '';
+
       if (!closeReason) {
         throw new Error('Please select a reason.');
       }
 
+      switch (closeReason) {
+        case 'Product Short':
+          if (serialNumberMap[selected[0]] == '' || (serialNumberMap[selected[0]] == undefined)) {
+            throw new Error('Serial Number can\'t be empty');
+          }
+          defautlSerial = serialNumberMap[selected[0]];
+          defaultQuantity = parseInt(productQtyMap[selected[0]]);
+          break;
+        default:
+          break;
+      }
+
       const updatedProducts = productsSteps?.map((product) => {
         if (selected.includes(product.id!)) {
-          return { ...product, is_ready: true, img_url: null, product_quantity: 0};
+          return { ...product, is_ready: true, img_url: null, product_quantity: defaultQuantity, serial_number: defautlSerial};
         } else {
           return product;
         }
@@ -99,6 +117,10 @@ const PickListDetails = () => {
         throw new Error(error.message);
       }
 
+      const newContent = `${findUserByUUID(userAccount?.user_id!)} voided this pick product for the following reason '${closeReason}', details: ${closeReasonNotes}`;
+
+      setPLNotes((prev) => prev ? `${prev} - ${newContent}` : newContent);
+
       setOpen(null);
       setCloseReason('');
       const updateCompletedProducts = updatedProducts!.filter(p => p.is_ready == true).length;
@@ -108,6 +130,7 @@ const PickListDetails = () => {
       }
       setSelected([]);
     } catch (error: any) {
+      setCloseReason('');
       toast.warning(error.message);
     }
     handleClose();
@@ -129,7 +152,7 @@ const PickListDetails = () => {
           throw new Error(error.message);
         }
 
-        setProductsSteps(prev => [ ...prev!, newItemQuery]);
+        setProductsSteps(prev => [...prev!, newItemQuery]);
       }
 
       toast.success('Products Added!');
@@ -154,44 +177,34 @@ const PickListDetails = () => {
     setOpen(open != tab ? tab : null);
   }
 
-  const handleLoadPickListProducts = async (e: FormEvent<HTMLFormElement>) => {
+  const handleLoadPickListProducts = async (e: FormEvent<HTMLFormElement>, productId: number, label: ShippingOrderProductContent) => {
+    e.preventDefault();
     try {
-      e.preventDefault();
       setIsLoading(true);
+
+      const sku = productSkuMap[productId];
+      const serial = serialNumberMap[productId];
+      const qty = productQtyMap[productId];
+
+      if (!sku || sku !== label.product_sku) throw new Error('Product doesn\'t match!');
+      if (!serial) throw new Error('Serial Number is required!');
+      if (!qty || parseInt(qty) < label.product_quantity!) throw new Error('Product quantity doesn\'t match!');
 
       var productURL: { signedUrl: any; } | null = null;
       var now = new Date().toLocaleString();
 
       var shipProduct;
 
-      if (productSkuError || productSku == '') {
-        throw new Error('Product doesn\'t match!');
-      }
-
-      const processProduct = productsSteps?.find(p => p.product_sku == productSku);
-
-      if (productQtyError || productQty == '' || parseInt(productQty) < processProduct?.product_quantity! ) {
-        throw new Error('Product quantity doesn\'t match!');
-      }
-
-      if (serialNumberError || serialNumber == '') {
-        setSerialNumberError(true);
-        setTimeout(() => {
-          setSerialNumberError(false);
-        }, 1000);
-        throw new Error('Serial Number is required!');
-      }
-
       if (productIMG != null) {
         productURL = await handleUploadToBucket(
           'shippingorders',
-          `${data?.id}/${data?.pl_number}/${productSku + now}`,
+          `${data?.id}/${data?.pl_number}/${sku + now}`,
           productIMG!
         );
       }
 
       const updatedProducts = productsSteps?.map((product) => {
-        if (product.product_sku === productSku) {
+        if (product.product_sku === sku) {
           shipProduct = product.id;
           return { ...product, is_ready: true, img_url: productURL != null ? productURL?.signedUrl : null };
         } else {
@@ -202,7 +215,7 @@ const PickListDetails = () => {
       const { error } = await supabase.from('shippings_products').update({
         is_ready: true,
         img_url: productURL != null ? productURL?.signedUrl : null,
-        serial_number: serialNumber
+        serial_number: serial
       }).eq('id', shipProduct);
 
       if (error) {
@@ -212,9 +225,6 @@ const PickListDetails = () => {
       setCompletedProducts(completedProducts + 1);
 
       setOpen(null);
-      setProductSku('');
-      setProductQty('');
-      setSerialNumber('');
       toast.success('Product Loaded!');
       setProductsSteps(updatedProducts);
 
@@ -251,7 +261,7 @@ const PickListDetails = () => {
     await supabase.from('shippings_pick_list').update({
       status: data!.verified_by == null ? 'Awaiting Verification' : 'Completed',
       picked_by: userAccount?.user_id,
-      notes: isVoided ? `${data?.notes || ''} ${findUserByUUID(userAccount?.user_id!)} closed this pick for the following reason: ${closeReason}, ${closeReasonNotes != '' && closeReasonNotes != undefined ? `here's more details: ${closeReasonNotes}` : ''}`: undefined
+      notes: PLNotes,
     }).eq('id', data?.id);
 
     setData({
@@ -305,7 +315,7 @@ const PickListDetails = () => {
         <Grid size={{ xl: 3, lg: 3, md: 12, sm: 12, xs: 12 }} sx={{ marginBottom: 5 }}>
           <Block>
             <Grid container spacing={5}>
-              { isReady && (
+              {isReady && (
                 <Grid size={12}>
                   <Button fullWidth variant='contained' className='btn-cerulean' onClick={handleVerifyPickList}>Verify</Button>
                 </Grid>
@@ -339,7 +349,7 @@ const PickListDetails = () => {
               <Typography variant='h6' fontWeight='bold'>Products</Typography>
               {data?.status != 'Completed' && (
                 <Box sx={{ display: 'flex', gap: 1 }}>
-                  { selected.length > 0 && (
+                  {selected.length > 0 && (
                     <Button variant='contained' color='error' onClick={() => handleClickOpen('void')}>Void</Button>
                   )}
                   <Button onClick={() => handleClickOpen('add-products')} variant='contained' color='info'>
@@ -359,7 +369,7 @@ const PickListDetails = () => {
                       </IconButton>
                     }
                   >
-                    { !label.is_ready && (
+                    {!label.is_ready && (
                       <ListItemIcon>
                         <Checkbox
                           edge="start"
@@ -401,58 +411,59 @@ const PickListDetails = () => {
                         )}
                       </Grid>
                       <Grid size={{ xl: 6, lg: 6, md: 12, sm: 12, xs: 12 }}>
-                        <form onSubmit={handleLoadPickListProducts}>
+                        <form onSubmit={(e) => handleLoadPickListProducts(e, label.id, label)}>
                           <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
                             <TextField
                               fullWidth
-                              value={label.is_ready ? label.product_sku : productSku}
+                              value={
+                                label.is_ready
+                                  ? label.product_sku ?? ''
+                                  : productSkuMap?.[label.id ?? -1] ?? ''
+                              }
                               disabled={label.is_ready}
                               label="Product Sku"
                               helperText={`SKU: ${label.product_sku}`}
                               onChange={(e) => {
-                                if (e.target.value.length == label.product_sku.length) {
-                                  setProductSku(e.target.value);
-                                  if (e.target.value == label.product_sku) {
-                                    setProductSkuError(false);
-                                  } else {
-                                    setProductSkuError(true);
-                                  }
-                                } else if (e.target.value.length < (label.product_sku.length + 1)) {
-                                  setProductSkuError(false);
-                                  setProductSku(e.target.value);
-                                }
+                                const value = e.target.value;
+                                setProductSkuMap((prev) => ({ ...prev, [label.id]: value }));
+                                setProductSkuError(value !== label.product_sku);
                               }}
                               error={productSkuError}
                             />
+
                             <TextField
                               fullWidth
-                              value={label.serial_number || serialNumber}
+                              value={
+                                label.is_ready
+                                  ? label.serial_number ?? ''
+                                  : serialNumberMap?.[label.id ?? -1] ?? ''
+                              }
                               disabled={label.is_ready}
                               label="Serial Number"
-                              helperText={serialNumberError ? 'Serial number is required' : ''}
-                              onChange={(e) => setSerialNumber(e.target.value)}
+                              onChange={(e) => {
+                                const value = e.target.value;
+                                setSerialNumberMap((prev) => ({ ...prev, [label.id]: value }));
+                              }}
                               error={serialNumberError}
                             />
                             <NumberField
                               fullWidth
                               type='number'
-                              value={label.is_ready ? label.product_quantity : productQty}
+                              value={
+                                label.is_ready
+                                  ? label.product_quantity ?? ''
+                                  : productQtyMap?.[label.id ?? -1] ?? ''
+                              }
                               disabled={label.is_ready}
-                              slotProps={{
-                                input: {
-                                  inputProps: {
-                                    max: label.product_quantity,
-                                  },
-                                },
-                              }}
                               label="Product Quantity"
                               onChange={(e) => {
-                                if (e.target.value <= label.product_quantity) {
+                                const value = e.target.value;
+                                if (value <= label.product_quantity) {
                                   setProductQtyError(false);
-                                  setProductQty(e.target.value)
+                                  setProductQtyMap((prev) => ({ ...prev, [label.id]: value }));
                                 } else {
                                   setProductQtyError(true);
-                                  setProductQty(e.target.value.slice(0, -1));
+                                  setProductQtyMap((prev) => ({ ...prev, [label.id]: value.slice(0, -1) }));
                                 }
                               }}
                               helperText={`Quantity: ${label.product_quantity}`}
@@ -491,9 +502,9 @@ const PickListDetails = () => {
       >
         {modalType == 'void' ? (
           <Box>
-            <DialogTitle>Close Pick List Incomplete</DialogTitle><DialogContent>
+            <DialogTitle>Close Pick List Product</DialogTitle><DialogContent>
               <DialogContentText>
-                This pick list is not fully completed. Please select a reason for closing it. This action cannot be undone.
+                This product is not fully completed. Please select a reason for closing it. This action cannot be undone.
               </DialogContentText>
               <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1, mt: 2 }}>
                 <FormControl fullWidth>
@@ -502,7 +513,18 @@ const PickListDetails = () => {
                     labelId="close-reason-label"
                     value={closeReason}
                     label="Reason"
-                    onChange={(e) => setCloseReason(e.target.value)}
+                    onChange={(e) => {
+                      if (e.target.value == 'Product Short') {
+                        if (selected.length != 1) {
+                          handleClose();
+                          toast.warning('You can only mark one product as short at a time.!');
+                        } else {
+                          setCloseReason(e.target.value);
+                        }
+                      } else {
+                        setCloseReason(e.target.value);
+                      }
+                    }}
                   >
                     {reasons.map((reason) => (
                       <MenuItem key={reason} value={reason}>
@@ -511,6 +533,19 @@ const PickListDetails = () => {
                     ))}
                   </Select>
                 </FormControl>
+                {closeReason == 'Product Short' && (
+                  <NumberField
+                  fullWidth
+                  type='number'
+                  value={productQtyMap[selected[0]] || ''}
+                  label="Product Quantity"
+                  onChange={(e) => {
+                    const value = e.target.value;
+                    setProductQtyMap((prev) => ({ ...prev, [selected[0]]: value }));
+                  }}
+                  error={productQtyError}
+                />
+                )}
                 <TextField
                   required
                   multiline

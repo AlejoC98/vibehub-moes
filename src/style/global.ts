@@ -159,38 +159,24 @@ export const CustomSwicth = styled(Switch)(({ theme }) => ({
         opacity: 0.5,
       },
     },
-    // '&.Mui-focusVisible .MuiSwitch-thumb': {
-    //   color: '#33cf4d',
-    //   border: '6px solid #fff',
-    // },
-    // '&.Mui-disabled .MuiSwitch-thumb': {
-    //   color: theme.palette.grey[100],
-    //   ...theme.applyStyles('dark', {
-    //     color: theme.palette.grey[600],
-    //   }),
-    // },
-    // '&.Mui-disabled + .MuiSwitch-track': {
-    //   opacity: 0.7,
-    //   ...theme.applyStyles('dark', {
-    //     opacity: 0.3,
-    //   }),
-    // },
   },
-  }));
+  })
+);
 
-  export const SidebarItem = styled(ListItemButton)(({ theme }) => ({
-      borderRadius: 12,
-      '&:hover': {
-        backgroundColor: '#C3C4C5',
-      },
-      '&.Mui-selected': {
-        backgroundColor: '#242f40',
+export const SidebarItem = styled(ListItemButton)(({ theme }) => ({
+    borderRadius: 12,
+    '&:hover': {
+      backgroundColor: '#C3C4C5',
+    },
+    '&.Mui-selected': {
+      backgroundColor: '#242f40',
+      color: '#FFFFFF',
+      '& .MuiListItemIcon-root': {
         color: '#FFFFFF',
-        '& .MuiListItemIcon-root': {
-          color: '#FFFFFF',
-          } 
-      },
-      '&.Mui-selected:hover': {
-        backgroundColor: '#303A48',
-      },
-    }));
+        } 
+    },
+    '&.Mui-selected:hover': {
+      backgroundColor: '#303A48',
+    },
+  })
+);

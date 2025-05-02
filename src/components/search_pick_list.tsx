@@ -105,38 +105,38 @@ const SearchPickList = ({ data }: { data: PickListContent[] }) => {
                         ))}
                     </List>
                 </Grid>
-                {activePick != undefined && (
+                {activePick != undefined && displayData && (
                     <Grid size={{ xl: 6, lg: 6, md: 12, sm: 12, xs: 12 }} sx={{ maxHeight: 300, overflowY: 'auto' }}>
                         <Grid container spacing={2}>
                             <Grid size={12}>
-                                <Button fullWidth className='btn-munsell' onClick={() => handleOpenPL(data[activePick].pl_number)}>Start Pick</Button>
+                                <Button fullWidth className='btn-munsell' onClick={() => handleOpenPL(displayData[activePick].pl_number)}>Start Pick</Button>
                             </Grid>
                             <Grid size={6}>
                                 <Typography fontWeight='bold'>PL #</Typography>
-                                <Typography>{data[activePick].pl_number}</Typography>
+                                <Typography>{displayData[activePick].pl_number}</Typography>
                             </Grid>
                             <Grid size={6}>
                                 <Typography fontWeight='bold'>BOL #</Typography>
-                                <Typography>{data[activePick].bol_number}</Typography>
+                                <Typography>{displayData[activePick].bol_number}</Typography>
                             </Grid>
                             <Grid size={6}>
                                 <Typography fontWeight='bold'>Picker</Typography>
-                                <Typography>{findUserByUUID(data[activePick].picked_by)}</Typography>
+                                <Typography>{findUserByUUID(displayData[activePick].picked_by)}</Typography>
                             </Grid>
                             <Grid size={6}>
                                 <Typography fontWeight='bold'>Verified By</Typography>
-                                <Typography>{data[activePick].verified_by}</Typography>
+                                <Typography>{displayData[activePick].verified_by}</Typography>
                             </Grid>
                             <Grid size={12}>
                                 <Typography variant='h6' fontWeight='bold'>Notes</Typography>
-                                <Typography>{data[activePick].notes}</Typography>
+                                <Typography>{displayData[activePick].notes}</Typography>
                             </Grid>
                             <Grid size={12}>
-                                <Typography fontWeight='bold'>Total Products: {data[activePick].total_products}</Typography>
+                                <Typography fontWeight='bold'>Total Products: {displayData[activePick].total_products}</Typography>
                             </Grid>
                             <Grid size={12}>
                                 <List sx={{ background: '#eaeaea' }}>
-                                    {data[activePick]?.shippings_products.map((p, index) => (
+                                    {displayData[activePick]?.shippings_products.map((p, index) => (
                                         <ListItem key={index}>
                                             <ListItemText primary={`Sku ${p.product_sku}`} secondary={`Quantity: ${p.product_quantity}`} />
                                         </ListItem>

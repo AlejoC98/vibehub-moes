@@ -18,8 +18,8 @@ const UsersForms = ({ defaultData, setOpenModal }: { defaultData?: AccountConten
     const {
         register,
         handleSubmit,
-        setValue,
-        watch,
+        // setValue,
+        // watch,
         formState: { errors },
     } = useForm<AccountContent>({
         defaultValues: {
