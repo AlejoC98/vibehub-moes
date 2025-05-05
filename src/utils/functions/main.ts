@@ -327,8 +327,8 @@ export const createNotification = async (roles: number[], redirect_to: string) =
       });
     }
   } catch (error: any) {
-    toast.warning(error.message);
     console.log(error.message);
+    toast.warning("Something went wrong.");
   }
 }
 

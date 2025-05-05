@@ -38,7 +38,8 @@ const TicketForm = () => {
             reset();
             toast.success('Ticket Submited!');
         } catch (error: any) {
-            toast.warning(error.message);
+            console.log(error.message);
+            toast.warning("Error sending ticket.");
         }
         setIsLoading(false);
     }

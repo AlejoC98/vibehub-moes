@@ -57,7 +57,10 @@ const ReplenishmentTask = () => {
                 throw new Error('Error finding location');
             }
         } catch (error: any) {
-            toast.warning(error.message);
+            console.log(error.message);
+            toast.warning("Something went wrong."
+
+);
         }
     }
 
@@ -83,7 +86,8 @@ const ReplenishmentTask = () => {
 
             setActiveStep(activeStep + 1);
         } catch (error: any) {
-            toast.warning(error.message);
+            console.log(error.message);
+            toast.warning("Something went wrong.");
         }
     }
 
@@ -167,7 +171,8 @@ const ReplenishmentTask = () => {
         toast.success('Replenishment Complete');
         route.back();
         } catch (error: any) {
-            toast.warning(error.message);
+            console.log(error.message);
+            toast.warning("Error moving product.");
         }
     }
 

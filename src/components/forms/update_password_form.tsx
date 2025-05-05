@@ -95,7 +95,8 @@ const UpdatePasswordForm = () => {
       startCountdown(ref, () => router.replace('/auth/login'), 3, 'Redirectin in ');
 
     } catch (error: any) {
-      toast.warning(error.message);
+      console.log(error.message);
+      toast.warning("Error updating password.");
       setIsRedirecting(false);
     }
   }

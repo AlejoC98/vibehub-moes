@@ -41,7 +41,8 @@ const CompleteOrderForm = ({ defaultData, setOpenModal }: { defaultData?: Shippi
             setOpenModal!(false);
             toast.success('Order Shipped!');
         } catch (error: any) {
-            toast.warning(error.message);
+            console.log(error.message);
+            toast.warning("Error shipping order.");
         }
         setIsShipping(false);
     }

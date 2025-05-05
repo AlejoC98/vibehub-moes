@@ -29,7 +29,8 @@ const Profile = () => {
         toast.success('Email send, Please check your email.');
       }
     } catch (error: any) {
-      toast.warning(error.message);
+      console.log(error.message);
+      toast.warning("Error sending reset email.");
     }
   }
 

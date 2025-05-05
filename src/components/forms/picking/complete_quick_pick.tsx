@@ -67,7 +67,8 @@ const CompleteQuicPick = ({ defaultData, setOpenModal, title }: { defaultData?: 
                     setOpenModal!(false);
                     toast.success('Quick Pick Completed!');
                 } catch (error: any) {
-                    toast.warning(error.message);
+                    console.log(error.message);
+                    toast.warning("Error completing task.");
                 }
                 setIsShipping(false);
             }

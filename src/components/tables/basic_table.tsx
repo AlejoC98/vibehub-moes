@@ -26,6 +26,7 @@ const BasicTable = ({
   source,
   createForm,
   createFormTitle,
+  actionButtons,
 }: {
   title: string,
   data: Array<any>,
@@ -34,6 +35,7 @@ const BasicTable = ({
   source?: string,
   createForm?: ReactElement<any>,
   createFormTitle?: string,
+  actionButtons?: ReactElement<any>[]
 }) => {
 
   const router = useRouter();
@@ -136,7 +138,8 @@ const BasicTable = ({
       toast.warning('File Successfuly Uploaded');
 
     } catch (error: any) {
-      toast.warning(error.message);
+      console.log(error.message);
+      toast.warning("Error uploading file.");
     }
   }
 
@@ -161,7 +164,8 @@ const BasicTable = ({
         }
       }
     } catch (error: any) {
-      toast.warning(error.message);
+      console.log(error.message);
+      toast.warning("Error creating file.");
     }
   }
 
@@ -316,11 +320,12 @@ const BasicTable = ({
                   <DeleteIcon />
                 </Button>
               )}
-              {createForm !== undefined && (
+              { selectedRow != null && userAccount?.accounts_roles?.some(role => [1, 2].includes(role.role_id)) && createForm !== undefined && (
                 <Button variant='contained' startIcon={<AddIcon />} className='btn-munsell ml-5' onClick={() => setOpenModal(true)}>
                   New
                 </Button>
               )}
+              { actionButtons?.map(button => button )}
               <Button onClick={handleProfileMenuOpen} variant='contained'>
                 <MoreVertIcon />
               </Button>

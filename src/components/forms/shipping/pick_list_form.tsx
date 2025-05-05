@@ -148,7 +148,8 @@ const PickListForm = ({
             setPickList(undefined);
             // setSelectedProduct(undefined);
         } catch (error: any) {
-            toast.warning(error.message);
+            console.log(error.message);
+            toast.warning("Error adding pick list.");
         } finally {
             setIsLoading(false);
         }
@@ -216,7 +217,8 @@ const PickListForm = ({
                 setPickLists([...pickLists, ...newPlS]);
             }
         } catch (error: any) {
-            toast.warning(error.message);
+            console.log(error.message);
+            toast.warning("Error loading file.");
         }
     }
 

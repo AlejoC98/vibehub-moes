@@ -76,7 +76,8 @@ const PickListDetails = () => {
 
 
         } catch (error: any) {
-            toast.warning(error.message || 'Something went wrong.');
+            console.log(error.message);
+            toast.warning('Something went wrong.');
         }
     }
 

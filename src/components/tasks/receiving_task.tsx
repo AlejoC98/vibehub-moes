@@ -68,7 +68,8 @@ const ReceivingTask = ({ data, updateData } : { data: ReceivingContent, updateDa
             setReceProducts((prev) => [...prev, { ...formData, 'product_id': product.products.id }]);
             reset();
         } catch (error: any) {
-            toast.warning(error.message);
+            console.log(error.message);
+            toast.warning("Error validating product.");
         }
     }
 
@@ -83,7 +84,10 @@ const ReceivingTask = ({ data, updateData } : { data: ReceivingContent, updateDa
 
             setActiveStep(activeStep + 1);
         } catch (error: any) {
-            toast.warning(error.message);
+            console.log(error.message);
+            toast.warning("Something went wrong."
+
+);
         }
     }
 
@@ -112,7 +116,8 @@ const ReceivingTask = ({ data, updateData } : { data: ReceivingContent, updateDa
 
             setActiveStep(activeStep + 1);
         } catch (error: any) {
-            toast.warning(error.message);
+            console.log(error.message);
+            toast.warning("Error receiving product.");
         }
     }
 

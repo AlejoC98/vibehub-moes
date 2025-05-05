@@ -131,7 +131,8 @@ const PickListDetails = () => {
       setSelected([]);
     } catch (error: any) {
       setCloseReason('');
-      toast.warning(error.message);
+      console.log(error.message);
+      toast.warning("Error Closing Task");
     }
     handleClose();
   };
@@ -159,7 +160,8 @@ const PickListDetails = () => {
       handleClose();
       setIsLoading(false);
     } catch (error: any) {
-      toast.warning(error.message);
+      console.log(error.message);
+      toast.warning('Error adding new product.');
     }
   }
 
@@ -229,7 +231,8 @@ const PickListDetails = () => {
       setProductsSteps(updatedProducts);
 
     } catch (error: any) {
-      toast.warning(error.message);
+      console.log(error.message);
+      toast.warning("Something went wrong.");
     }
     setIsLoading(false);
   }
@@ -253,7 +256,8 @@ const PickListDetails = () => {
       setIsReady(false);
       toast.success('Pick List verified!');
     } catch (error: any) {
-      toast.warning(error.message);
+      console.log(error.message);
+      toast.warning('something went wrong.');
     }
   }
 

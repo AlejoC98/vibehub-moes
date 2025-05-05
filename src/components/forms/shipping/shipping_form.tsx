@@ -160,7 +160,8 @@ const ShippingForm = ({ defaultData, setOpenModal }: { defaultData?: ShippingCon
       setActiveStep(activeStep + 1);
 
     } catch (error: any) {
-      toast.warning(error.message);
+      console.log(error.message);
+      toast.warning("Error creating order.");
     }
     setIsLoading(false);
   }
@@ -176,7 +177,7 @@ const ShippingForm = ({ defaultData, setOpenModal }: { defaultData?: ShippingCon
         const { data: newPick, error: pickError} = await supabase.from('shippings_pick_list').upsert({
           'id': pickOrder.id,
           'pl_number': pickOrder.pl_number,
-          'bol_number': pickOrder.bol_number,
+          'bol_number': pickOrder.bol_number || null,
           'notes': pickOrder.notes,
           'shipping_order_id': shippingOrder?.id,
           'total_products': pickOrder.total_products,
@@ -210,7 +211,8 @@ const ShippingForm = ({ defaultData, setOpenModal }: { defaultData?: ShippingCon
       setActiveStep(activeStep + 1);
 
     } catch (error: any) {
-      toast.warning(error.message);
+      console.log(error.message);
+      toast.warning("Error validating pick lists.");
     } finally {
       setIsLoading(false);
     }
@@ -231,7 +233,8 @@ const ShippingForm = ({ defaultData, setOpenModal }: { defaultData?: ShippingCon
       toast.success('Shipping order created!');
 
     } catch (error: any) {
-      toast.warning(error.message);
+      console.log(error.message);
+      toast.warning("Error completing order.");
     } finally {
       setIsLoading(false);
     }

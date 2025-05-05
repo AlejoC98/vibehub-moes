@@ -56,7 +56,8 @@ const PutAwayTask = ({ data, updateData } : { data: ReceivingContent, updateData
             }
 
         } catch (error: any) {
-            toast.warning(error.message);
+            console.log(error.message);
+            toast.warning("Something went wrong.");
         }
     }
 
@@ -84,7 +85,8 @@ const PutAwayTask = ({ data, updateData } : { data: ReceivingContent, updateData
             toast.success('Product Moved!');
 
         } catch (error: any) {
-            toast.warning(error.message);
+            console.log(error.message);
+            toast.warning("Something went wrong.");
         }
     }
 

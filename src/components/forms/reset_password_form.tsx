@@ -36,7 +36,8 @@ const ResetPasswordForm = () => {
                 reset();
             }
         } catch (error: any) {
-            toast.warning(error.message);
+            console.log(error.message);
+            toast.warning("Error sending reset email.");
         }
     }
 

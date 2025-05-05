@@ -62,8 +62,8 @@ const ProductsForm = ({ defaultData, setOpenModal }: { defaultData?: ProductInpu
       setOpenModal!(false);
       toast.success('Product Created!');
     } catch (error: any) {
-      console.error(error);
-      toast.warning(error.message);
+      console.log(error.message);
+      toast.warning("Error creating product");
     }
     setIsLoading(false);
   }
