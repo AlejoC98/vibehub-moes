@@ -61,7 +61,7 @@ const BasicTable = ({
         field: 'created_by', headerName: 'Created By', renderCell: (params: any) => {
           var userName;
           if (params.row.created_by == 1) {
-            userName = { username: 'Alejoc98' }
+            userName = { username: 'Support' }
           } else {
             userName = users?.find(u => u.user_id == params.row.created_by);
           }

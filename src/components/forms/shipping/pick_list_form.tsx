@@ -53,9 +53,9 @@ const MaskedInput = forwardRef<HTMLInputElement, CustomMaskProps>(
 );
 
 const requiredHeaders: { [key: string]: string } = {
-    'Picklist #': 'pl_number',
-    'Logistics Comment': 'bol_number',
-    'Group Name': 'notes'
+    'Internal Number': 'pl_number',
+    'Item No.': 'bol_number',
+    'Picked Quantity': 'shippings_products'
 };
 
 const PickListForm = ({
@@ -196,26 +196,27 @@ const PickListForm = ({
         try {
             const data = await readExcelFile(excelFile!);
 
-            if (data.length > 0) {
-                const newPlS: PickListContent[] = [];
-                for (var record of data) {
-                    const updatedPickList: any = {
-                        total_products: 0,
-                        shippings_products: [],
-                        pl_number: '',
-                        picked_by: '',
-                        verified_by: null,
-                        bol_number: ''
-                    }
-                    for (var header of Object.keys(requiredHeaders)) {
-                        updatedPickList[requiredHeaders[header]] = record[header];
-                    }
-                    console.log(updatedPickList);
-                    newPlS.push(updatedPickList);
-                    toggleContentUX();
-                }
-                setPickLists([...pickLists, ...newPlS]);
-            }
+            console.log(data);
+
+            // if (data.length > 0) {
+            //     const newPlS: PickListContent[] = [];
+            //     for (var record of data) {
+            //         const updatedPickList: any = {
+            //             total_products: 0,
+            //             shippings_products: [],
+            //             pl_number: '',
+            //             picked_by: '',
+            //             verified_by: null,
+            //             bol_number: ''
+            //         }
+            //         for (var header of Object.keys(requiredHeaders)) {
+            //             updatedPickList[requiredHeaders[header]] = record[header];
+            //         }
+            //         newPlS.push(updatedPickList);
+            //         toggleContentUX();
+            //     }
+            //     setPickLists([...pickLists, ...newPlS]);
+            // }
         } catch (error: any) {
             console.log(error.message);
             toast.warning("Error loading file.");

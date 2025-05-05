@@ -283,7 +283,7 @@ export const useFindUserByUUID = () => {
 
   return (uuid: string): string | undefined => {
     const user = users?.find(u => u.user_id === uuid);
-    return user?.username;
+    return user?.username || 'Support';
   };
 };
 
@@ -304,7 +304,7 @@ export const convertTimeByTimeZone = (sessionTimeZone: string, utcDate?: string)
 
 export const createNotification = async (roles: number[], redirect_to: string) => {
 
-  const supabase = await createClient();
+  const supabase = createClient();
 
   try {
     const { data: newNoti, error } = await supabase.from('notifications').insert({
