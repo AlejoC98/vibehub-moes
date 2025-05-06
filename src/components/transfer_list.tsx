@@ -72,7 +72,7 @@ const TransferList = ({ inventory, orderProducts, setOrderProducts } :
     // } else {
     //   const newProduct: ShippingOrderProductContent = {
     //     id: sourceItem.id,
-    //     product_sku: sourceItem.product_sku,
+    //     product_item: sourceItem.product_item,
     //     product_quantity: transferAmount,
     //     is_ready: sourceItem.is_ready ?? false,
     //     shipping_order_id: sourceItem.shipping_order_id ?? 0,
@@ -92,7 +92,7 @@ const TransferList = ({ inventory, orderProducts, setOrderProducts } :
   };
 
   const skuExists = (sku: string): boolean => {
-    return right.some(item => item.product_sku.toLowerCase() === sku.toLowerCase());
+    return right.some(item => item.product_item.toLowerCase() === sku.toLowerCase());
   };
 
   const handleAddNewItem = () => {
@@ -111,7 +111,7 @@ const TransferList = ({ inventory, orderProducts, setOrderProducts } :
     const newItem: ShippingOrderProductInput = {
       is_ready: false,
       product_quantity: newItemAmount!,
-      product_sku: trimmedSku,
+      product_item: trimmedSku,
       shipping_order_id: 0,
     };
   
@@ -222,7 +222,7 @@ const TransferList = ({ inventory, orderProducts, setOrderProducts } :
               <Avatar src="/static/img/default_product.jpg" />
             </ListItemAvatar>
             <ListItemText
-              primary={`${item.name || item.product_sku} (${item.amount || item.product_quantity})`}
+              primary={`${item.name || item.product_item} (${item.amount || item.product_quantity})`}
             />
           </ListItem>
         ))}

@@ -34,7 +34,7 @@ const PickListDetails = () => {
     const [productIMG, setProductIMG] = useState<File | null>(null);
 
     const skuExists = (sku: string): boolean => {
-        return scannedProducts.some(item => item.product_sku.toLowerCase() === sku.toLowerCase());
+        return scannedProducts.some(item => item.product_item.toLowerCase() === sku.toLowerCase());
     };
 
     const handleAddProduct = async () => {
@@ -55,7 +55,7 @@ const PickListDetails = () => {
                 setScannedProducts(pre => [
                     ...pre,
                     {
-                        product_sku: sku,
+                        product_item: sku,
                         product_quantity: quantity,
                         img_url: productIMG != undefined ? URL.createObjectURL(productIMG!) : undefined,
                         img_file: productIMG || undefined,
@@ -231,7 +231,7 @@ const PickListDetails = () => {
                                     <ListItemAvatar>
                                         <Avatar src={item.img_url || '/static/img/default_product.jpg'} />
                                     </ListItemAvatar>
-                                    <ListItemText primary={`SKU: ${item.product_sku}`} secondary={`Quantity:${item.product_quantity} - Serial: ${item.serial_number}`} />
+                                    <ListItemText primary={`SKU: ${item.product_item}`} secondary={`Quantity:${item.product_quantity} - Serial: ${item.serial_number}`} />
                                 </ListItem>
                             ))}
                         </List>

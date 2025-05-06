@@ -198,7 +198,7 @@ export const exportShippingToExcel = (order: any, users: any[]) => {
 
     pickList.shippings_products?.forEach((product: any) => {
       const prodRow = [
-        product.product_sku || '',
+        product.product_item || '',
         product.product_quantity || '',
         product.is_ready || '',
         product.created_at || '',
@@ -231,7 +231,7 @@ export const exportShippingToExcel = (order: any, users: any[]) => {
 
   sheetRows.forEach((row, rowIndex) => {
     const isPickHeaders = row?.[0] === 'PL #' || row?.[0] === 'pl_number';
-    const isProductHeaders = row?.[0] === 'Product SKU' || row?.[0] === 'product_sku';
+    const isProductHeaders = row?.[0] === 'Product SKU' || row?.[0] === 'product_item';
 
     if (isPickHeaders || isProductHeaders) {
       row.forEach((_, colIndex) => {

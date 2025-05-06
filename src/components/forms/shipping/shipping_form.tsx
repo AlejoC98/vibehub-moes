@@ -194,7 +194,7 @@ const ShippingForm = ({ defaultData, setOpenModal }: { defaultData?: ShippingCon
         for (var product of pickOrder.shippings_products) {
           const newSPStatus = await supabase.from('shippings_products').insert({
             'pick_list_id': newPick['id'],
-            'product_sku': product['sku'] || product['product_sku'],
+            'product_item': product['sku'] || product['product_item'],
             'product_quantity': product['quantity'] || 
             product['product_quantity'],
             'created_by': userAccount?.user_id,
