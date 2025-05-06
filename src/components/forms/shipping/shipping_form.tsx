@@ -1,5 +1,5 @@
 import React, { ReactElement, useContext, useEffect, useRef, useState } from 'react'
-import { Autocomplete, Box, Button, Collapse, IconButton, List, ListItem, ListItemText, Step, StepIconProps, StepLabel, Stepper, TextField, Typography } from '@mui/material';
+import { Autocomplete, Box, Button, Collapse, Fade, IconButton, List, ListItem, ListItemText, Step, StepIconProps, StepLabel, Stepper, TextField, Typography } from '@mui/material';
 import Grid from '@mui/material/Grid2'
 import { HugeiconsIcon } from '@hugeicons/react';
 import { createClient } from '@/utils/supabase/client';
@@ -15,6 +15,7 @@ import CreateOrderForm from './create_order_form';
 import PickListForm from './pick_list_form';
 import ExpandLess from '@mui/icons-material/ExpandLess';
 import ExpandMore from '@mui/icons-material/ExpandMore';
+import { PuffLoader } from 'react-spinners';
 
 const stepsIcons = {
   1: <HugeiconsIcon icon={ShippingCenterIcon} />,
@@ -59,75 +60,75 @@ const ShippingForm = ({ defaultData, setOpenModal }: { defaultData?: ShippingCon
   });
 
   const toggleItem = (index: number) => {
-      setExpanded((prev) => {
-          const updated = [...prev];
-          updated[index] = !updated[index];
-          return updated;
-      });
+    setExpanded((prev) => {
+      const updated = [...prev];
+      updated[index] = !updated[index];
+      return updated;
+    });
   };
 
   const steps = ['Order Details', 'Pick Lists', 'Review'];
   const stepsContent = [
     <CreateOrderForm defaultData={defaultData} register={register} setValue={setValue} errors={errors} />,
     <PickListForm pickLists={orderPickList} setPickLists={setOrderPickList} />,
-    <Box sx={{ flexGrow: 1, padding: 5, overflowY: 'auto', maxHeight: 500}}>
+    <Box sx={{ flexGrow: 1, padding: 5, overflowY: 'auto', maxHeight: 500 }}>
       <Grid container spacing={2}>
         <Grid size={4}>
           <Typography fontWeight='bold'>Carrier</Typography>
-          <Typography>{ shippingOrder?.carrier }</Typography>
+          <Typography>{shippingOrder?.carrier}</Typography>
         </Grid>
         <Grid size={4}>
           <Typography fontWeight='bold'>Door #</Typography>
-          <Typography>{ shippingOrder?.dock_door }</Typography>
+          <Typography>{shippingOrder?.dock_door}</Typography>
         </Grid>
         <Grid size={4}>
           <Typography fontWeight='bold'>Trailer #</Typography>
-          <Typography>{ shippingOrder?.trailer_number }</Typography>
+          <Typography>{shippingOrder?.trailer_number}</Typography>
         </Grid>
         <Grid size={4}>
           <Typography fontWeight='bold'>Assign To</Typography>
-          <Typography>{ findUserByUUID(shippingOrder?.assign_to!) }</Typography>
+          <Typography>{findUserByUUID(shippingOrder?.assign_to!)}</Typography>
         </Grid>
         <Grid size={4}>
           <Typography fontWeight='bold'>Total Pick Lists</Typography>
-          <Typography>{ orderPickList.length }</Typography>
+          <Typography>{orderPickList.length}</Typography>
         </Grid>
         <Grid size={12}>
           <List>
-            { orderPickList.map((pick, index) => (
+            {orderPickList.map((pick, index) => (
               <Box key={index} sx={{ width: '100%', margin: '.5rem auto' }}>
-              <ListItem
+                <ListItem
                   sx={{ background: '#eaeaea', width: '100%', borderRadius: 1 }}
                   secondaryAction={
-                      <Box>
-                          <IconButton onClick={() => toggleItem(index)}>
-                              {expanded[index] ? <ExpandLess /> : <ExpandMore />}
-                          </IconButton>
-                      </Box>
+                    <Box>
+                      <IconButton onClick={() => toggleItem(index)}>
+                        {expanded[index] ? <ExpandLess /> : <ExpandMore />}
+                      </IconButton>
+                    </Box>
                   }
-              >
+                >
                   <ListItemText primary={`PL # - ${pick.pl_number}`} />
-              </ListItem>
-              <Collapse in={expanded[index]} timeout="auto" unmountOnExit>
+                </ListItem>
+                <Collapse in={expanded[index]} timeout="auto" unmountOnExit>
                   <Box sx={{ p: 2 }}>
-                      <Grid container spacing={2}>
-                          <Grid size={12}>
-                              <Typography fontWeight='bold'>BOL #</Typography>
-                              <Typography>{pick.bol_number}</Typography>
-                          </Grid>
-                          <Grid size={12}>
-                              <Typography fontWeight='bold'>Total products</Typography>
-                              <Typography>{pick.total_products}</Typography>
-                          </Grid>
-                          <Grid size={12}>
-                              <Typography fontWeight='bold'>Notes</Typography>
-                              <Typography>{pick.notes}</Typography>
-                          </Grid>
+                    <Grid container spacing={2}>
+                      <Grid size={12}>
+                        <Typography fontWeight='bold'>BOL #</Typography>
+                        <Typography>{pick.bol_number}</Typography>
                       </Grid>
+                      <Grid size={12}>
+                        <Typography fontWeight='bold'>Total products</Typography>
+                        <Typography>{pick.total_products}</Typography>
+                      </Grid>
+                      <Grid size={12}>
+                        <Typography fontWeight='bold'>Notes</Typography>
+                        <Typography>{pick.notes}</Typography>
+                      </Grid>
+                    </Grid>
                   </Box>
-              </Collapse>
-          </Box>
-            )) }
+                </Collapse>
+              </Box>
+            ))}
           </List>
         </Grid>
       </Grid>
@@ -174,7 +175,7 @@ const ShippingForm = ({ defaultData, setOpenModal }: { defaultData?: ShippingCon
       }
 
       for (var pickOrder of orderPickList) {
-        const { data: newPick, error: pickError} = await supabase.from('shippings_pick_list').upsert({
+        const { data: newPick, error: pickError } = await supabase.from('shippings_pick_list').upsert({
           'id': pickOrder.id,
           'pl_number': pickOrder.pl_number,
           'bol_number': pickOrder.bol_number || null,
@@ -183,7 +184,7 @@ const ShippingForm = ({ defaultData, setOpenModal }: { defaultData?: ShippingCon
           'total_products': pickOrder.total_products,
           'created_by': userAccount?.user_id,
           'created_at': convertTimeByTimeZone(userAccount?.sessionTimeZone!)
-        }, { onConflict: 'id'}).select().single();
+        }, { onConflict: 'id' }).select().single();
 
         if (pickError) {
           throw new Error(pickError.message);
@@ -195,8 +196,8 @@ const ShippingForm = ({ defaultData, setOpenModal }: { defaultData?: ShippingCon
           const newSPStatus = await supabase.from('shippings_products').insert({
             'pick_list_id': newPick['id'],
             'product_item': product['sku'] || product['product_item'],
-            'product_quantity': product['quantity'] || 
-            product['product_quantity'],
+            'product_quantity': product['quantity'] ||
+              product['product_quantity'],
             'created_by': userAccount?.user_id,
             'created_at': convertTimeByTimeZone(userAccount?.sessionTimeZone!)
           });
@@ -218,7 +219,7 @@ const ShippingForm = ({ defaultData, setOpenModal }: { defaultData?: ShippingCon
     }
   }
 
-  const completeShippingOrder = async() => {
+  const completeShippingOrder = async () => {
     try {
       setIsLoading(true);
       const { error } = await supabase.from('shippings_orders').update({
@@ -266,7 +267,13 @@ const ShippingForm = ({ defaultData, setOpenModal }: { defaultData?: ShippingCon
         ))}
       </Stepper>
       <form onSubmit={handleSubmit(stepsValidations[activeStep])}>
-        <Box sx={{ margin: '2rem auto'}}>
+        <Box sx={{ margin: '2rem auto', position: 'relative' }}>
+          <Fade in={isLoading} timeout={500} unmountOnExit>
+            <Box sx={{ backgroundColor: 'rgba(225, 225, 225, 0.9)', position: 'absolute', top: 0, bottom: 0, left: 0, right: 0, zIndex: 1000, display: 'flex', flexDirection: 'column', placeItems: 'center', justifyContent: 'center', gap: 5 }}>
+              <PuffLoader color='#146c7f' size={80} />
+              <Typography variant='h6' textAlign='center'>Hang tight, we're almost there. Please keep this tab open.</Typography>
+            </Box>
+          </Fade>
           {stepsContent[activeStep]}
         </Box>
         <Box sx={{ display: 'flex', justifyContent: activeStep > 0 ? 'space-between' : 'center', borderTop: '1px solid #aeaeae', padding: 1, background: '#eaeaea' }}>

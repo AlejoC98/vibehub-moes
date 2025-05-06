@@ -258,7 +258,6 @@ const PickListForm = ({
             height={500}
             overflow={'auto'}
         >
-
             <Fade in={displayDropZone} timeout={500} unmountOnExit>
                 <Box sx={{
                     display: 'flex',

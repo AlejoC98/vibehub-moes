@@ -362,7 +362,9 @@ const BasicTable = ({
             <DialogTitle>
               <Typography align='center' fontWeight='bold' sx={{ fontSize: 25 }}>{createFormTitle}</Typography>
             </DialogTitle>
-            {cloneElement(createForm, { defaultData: formData, setOpenModal: setOpenModal })}
+              {
+                cloneElement(createForm, { defaultData: formData, setOpenModal: setOpenModal })
+              }
           </Dialog>
         </Box>
       )}
