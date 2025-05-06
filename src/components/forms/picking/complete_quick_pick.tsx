@@ -31,18 +31,17 @@ const CompleteQuicPick = ({ defaultData, setOpenModal, title }: { defaultData?: 
                         if (product.img_file != null) {
                             productURL = await handleUploadToBucket(
                                 'pickings',
-                                `${defaultData?.pick_number!}/${product.product_sku + now}`,
+                                `${defaultData?.pick_number!}/${product.product_item + now}`,
                                 product.img_file!
                             );
                         }
 
                         const { error } = await supabase.from('pickings_products').insert({
-                            product_sku: product.product_sku,
+                            product_item: product.product_item,
                             product_quantity: product.product_quantity,
                             is_ready: true,
                             img_url: productURL != null ? productURL?.signedUrl : null,
                             picked_by: userAccount?.user_id,
-                            serial_number: product.serial_number,
                             picking_id: defaultData?.id,
                         });
         

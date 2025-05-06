@@ -81,8 +81,10 @@ const SearchPickList = ({ data }: { data: PickListContent[] }) => {
                     />
                 </Grid>
                 <Grid size={12}>
-                    <Box padding={1}>
+                    <Box padding={1} sx={{ display: 'flex', justifyContent: 'space-around'}}>
                         <Typography variant='h6' fontWeight='bold'>Total Pick Lists: {data?.length}</Typography>
+                        <Typography variant='h6' fontWeight='bold'>Complete Pick Lists: {data?.filter(pl => pl.status == 'Completed').length}</Typography>
+                        <Typography variant='h6' fontWeight='bold'>Pending Pick Lists: {data?.filter(pl => pl.status == 'Pending').length}</Typography>
                     </Box>
                 </Grid>
                 <Grid size={{ xl: activePick != null ? 6 : 12, lg: activePick != null ? 6 : 12, md: 12, sm: 12, xs: 12 }}>
@@ -113,32 +115,32 @@ const SearchPickList = ({ data }: { data: PickListContent[] }) => {
                             </Grid>
                             <Grid size={6}>
                                 <Typography fontWeight='bold'>PL #</Typography>
-                                <Typography>{displayData[activePick].pl_number}</Typography>
+                                <Typography>{displayData[activePick].pl_number || ''}</Typography>
                             </Grid>
                             <Grid size={6}>
                                 <Typography fontWeight='bold'>BOL #</Typography>
-                                <Typography>{displayData[activePick].bol_number}</Typography>
+                                <Typography>{displayData[activePick].bol_number || ''}</Typography>
                             </Grid>
                             <Grid size={6}>
                                 <Typography fontWeight='bold'>Picker</Typography>
-                                <Typography>{findUserByUUID(displayData[activePick].picked_by)}</Typography>
+                                <Typography>{findUserByUUID(displayData[activePick].picked_by) || ''}</Typography>
                             </Grid>
                             <Grid size={6}>
                                 <Typography fontWeight='bold'>Verified By</Typography>
-                                <Typography>{displayData[activePick].verified_by}</Typography>
+                                <Typography>{displayData[activePick].verified_by || ''}</Typography>
                             </Grid>
                             <Grid size={12}>
                                 <Typography variant='h6' fontWeight='bold'>Notes</Typography>
-                                <Typography>{displayData[activePick].notes}</Typography>
+                                <Typography>{displayData[activePick].notes || ''}</Typography>
                             </Grid>
                             <Grid size={12}>
-                                <Typography fontWeight='bold'>Total Products: {displayData[activePick].total_products}</Typography>
+                                <Typography fontWeight='bold'>Total Products: {displayData[activePick].total_products || ''}</Typography>
                             </Grid>
                             <Grid size={12}>
                                 <List sx={{ background: '#eaeaea' }}>
                                     {displayData[activePick]?.shippings_products.map((p, index) => (
                                         <ListItem key={index}>
-                                            <ListItemText primary={`Sku ${p.product_sku}`} secondary={`Quantity: ${p.product_quantity}`} />
+                                            <ListItemText primary={`Item # ${p.product_item}`} secondary={`Quantity: ${p.product_quantity}`} />
                                         </ListItem>
                                     ))}
                                 </List>

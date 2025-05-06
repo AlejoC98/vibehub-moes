@@ -284,7 +284,7 @@ const GlobalProvider = ({ children }: { children: ReactNode }) => {
           const getShippingsOrders = async () => {
             const { data: shippingQuery, error } = await supabase
               .from('shippings_orders')
-              .select('*, shippings_pick_list(*, shippings_products(*))')
+              .select('*, shippings_pick_list(*, shippings_products(*, shippings_products_serials(*)))')
               .not('deleted', 'eq', true)
               .order('created_at', { ascending: false });
           

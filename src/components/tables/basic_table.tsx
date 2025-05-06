@@ -61,7 +61,7 @@ const BasicTable = ({
         field: 'created_by', headerName: 'Created By', renderCell: (params: any) => {
           var userName;
           if (params.row.created_by == 1) {
-            userName = { username: 'Alejoc98' }
+            userName = { username: 'Support' }
           } else {
             userName = users?.find(u => u.user_id == params.row.created_by);
           }
@@ -320,7 +320,7 @@ const BasicTable = ({
                   <DeleteIcon />
                 </Button>
               )}
-              { createForm !== undefined && (
+              { userAccount?.accounts_roles?.some(role => [1, 2].includes(role.role_id)) && createForm !== undefined && (
                 <Button variant='contained' startIcon={<AddIcon />} className='btn-munsell ml-5' onClick={() => setOpenModal(true)}>
                   New
                 </Button>

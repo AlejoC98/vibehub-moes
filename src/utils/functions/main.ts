@@ -198,7 +198,7 @@ export const exportShippingToExcel = (order: any, users: any[]) => {
 
     pickList.shippings_products?.forEach((product: any) => {
       const prodRow = [
-        product.product_sku || '',
+        product.product_item || '',
         product.product_quantity || '',
         product.is_ready || '',
         product.created_at || '',
@@ -231,7 +231,7 @@ export const exportShippingToExcel = (order: any, users: any[]) => {
 
   sheetRows.forEach((row, rowIndex) => {
     const isPickHeaders = row?.[0] === 'PL #' || row?.[0] === 'pl_number';
-    const isProductHeaders = row?.[0] === 'Product SKU' || row?.[0] === 'product_sku';
+    const isProductHeaders = row?.[0] === 'Product SKU' || row?.[0] === 'product_item';
 
     if (isPickHeaders || isProductHeaders) {
       row.forEach((_, colIndex) => {
@@ -283,7 +283,7 @@ export const useFindUserByUUID = () => {
 
   return (uuid: string): string | undefined => {
     const user = users?.find(u => u.user_id === uuid);
-    return user?.username;
+    return user?.username || 'Support';
   };
 };
 
@@ -304,7 +304,7 @@ export const convertTimeByTimeZone = (sessionTimeZone: string, utcDate?: string)
 
 export const createNotification = async (roles: number[], redirect_to: string) => {
 
-  const supabase = await createClient();
+  const supabase = createClient();
 
   try {
     const { data: newNoti, error } = await supabase.from('notifications').insert({

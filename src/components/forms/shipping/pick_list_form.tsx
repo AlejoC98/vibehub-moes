@@ -53,9 +53,9 @@ const MaskedInput = forwardRef<HTMLInputElement, CustomMaskProps>(
 );
 
 const requiredHeaders: { [key: string]: string } = {
-    'Picklist #': 'pl_number',
-    'Logistics Comment': 'bol_number',
-    'Group Name': 'notes'
+    'Internal Number': 'pl_number',
+    'Item No.': 'bol_number',
+    'Picked Quantity': 'shippings_products'
 };
 
 const PickListForm = ({
@@ -106,11 +106,9 @@ const PickListForm = ({
 
         const files = e.dataTransfer.files;
         if (files && files.length > 0) {
-            console.log('Dropped files:', files);
             setExcelFile(files[0]);
             setDisplayDropZone(true);
             setDisplayForm(false);
-            // Handle your files here
         }
     };
 
@@ -197,23 +195,47 @@ const PickListForm = ({
             const data = await readExcelFile(excelFile!);
 
             if (data.length > 0) {
+                const result: Record<string, any[]> = {};
                 const newPlS: PickListContent[] = [];
-                for (var record of data) {
+
+                data.forEach(item => {
+                    const key = String(item["Internal Number"]);
+
+                    const entry = {
+                        "Item No.": item["Item No."],
+                        "Item/Service Description": item["Item/Service Description"],
+                        "Pick Date": item["Pick Date"],
+                        "Picked Quantity": item["Picked Quantity"],
+                        "Released Quantity": item["Released Quantity"]
+                    };
+
+                    if (!result[key]) {
+                        result[key] = [];
+                    }
+
+                    result[key].push(entry);
+                });
+
+                for (const pl of Object.keys(result)) {
                     const updatedPickList: any = {
-                        total_products: 0,
-                        shippings_products: [],
-                        pl_number: '',
-                        picked_by: '',
-                        verified_by: null,
-                        bol_number: ''
-                    }
-                    for (var header of Object.keys(requiredHeaders)) {
-                        updatedPickList[requiredHeaders[header]] = record[header];
-                    }
-                    console.log(updatedPickList);
+                      total_products: result[pl].length,
+                      shippings_products: result[pl].map(p => ({
+                        is_ready: false,
+                        product_quantity: p['Picked Quantity'],
+                        shipping_order_id: 0,
+                        product_item: p['Item No.'],
+                        serial_number: null,
+                      })),
+                      pl_number: pl,
+                      picked_by: '',
+                      verified_by: null,
+                      bol_number: ''
+                    };
+                  
                     newPlS.push(updatedPickList);
                     toggleContentUX();
-                }
+                  }
+
                 setPickLists([...pickLists, ...newPlS]);
             }
         } catch (error: any) {

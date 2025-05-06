@@ -162,10 +162,10 @@ export interface ReceivingContent {
 
 export interface PickingInput {
     id?: number;
-    product_sku: string;
+    product_item: string;
     img_url?: string;
     img_file?: File;
-    serial_number: number;
+    // serial_number: number;
     product_quantity: number;
     picked_by: string;
     verify_by?: string;
@@ -189,7 +189,7 @@ export interface PickingTasksProductsContent {
     created_by: string;
     img_url?: string;
     picked_by: string;
-    serial_number?: number;
+    // serial_number?: number;
     picking_id: number;
 }
 
@@ -217,8 +217,8 @@ export interface ShippingOrderProductInput {
     id?: number;
     is_ready: boolean;
     product_quantity: number;
-    product_sku: string;
-    serial_number?: string;
+    product_item: string;
+    // serial_number?: string;
     shipping_order_id: number;
     img_url?: string;
 }
@@ -229,8 +229,8 @@ export interface ShippingOrderProductContent {
     product_quantity: number;
     created_at: string;
     created_by: string;
-    product_sku: string;
-    serial_number: string;
+    product_item: string;
+    shippings_products_serials: ShippingsProductsserialsContent[];
     shipping_order_id: number;
 }
 
@@ -249,6 +249,14 @@ export interface ShippingContent {
     total_shipped: number;
     img_url?: string;
     shippings_pick_list: PickListContent[];
+}
+
+export interface ShippingsProductsserialsContent {
+    id: number;
+    picked_by: string;
+    created_by: string;
+    serial_number: number;
+    shipping_product_id: number;
 }
 
 export interface PickListContent {
