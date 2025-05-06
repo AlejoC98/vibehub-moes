@@ -42,7 +42,6 @@ const CompleteQuicPick = ({ defaultData, setOpenModal, title }: { defaultData?: 
                             is_ready: true,
                             img_url: productURL != null ? productURL?.signedUrl : null,
                             picked_by: userAccount?.user_id,
-                            serial_number: product.serial_number,
                             picking_id: defaultData?.id,
                         });
         
