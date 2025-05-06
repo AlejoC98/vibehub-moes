@@ -231,7 +231,7 @@ const PickListDetails = () => {
                                     <ListItemAvatar>
                                         <Avatar src={item.img_url || '/static/img/default_product.jpg'} />
                                     </ListItemAvatar>
-                                    <ListItemText primary={`SKU: ${item.product_item}`} secondary={`Quantity:${item.product_quantity} - Serial: ${item.serial_number}`} />
+                                    <ListItemText primary={`SKU: ${item.product_item}`} secondary={`Quantity:${item.product_quantity}`} />
                                 </ListItem>
                             ))}
                         </List>
