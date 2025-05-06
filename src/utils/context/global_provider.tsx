@@ -42,13 +42,15 @@ const GlobalProvider = ({ children }: { children: ReactNode }) => {
                 setTimeout(() => {
                     getShippingsOrders();
                 }, 500);
-            }).on('postgres_changes', {
+            })
+            .on('postgres_changes', {
                 event: '*', schema: 'public', table: 'shippings_pick_list'
             }, (payload) => {
                 setTimeout(() => {
                     getShippingsOrders();
                 }, 500);
-            }).on('postgres_changes', {
+            })
+            .on('postgres_changes', {
                 event: '*', schema: 'public', table: 'shippings_products'
             }, (payload) => {
                 setTimeout(() => {
@@ -61,19 +63,21 @@ const GlobalProvider = ({ children }: { children: ReactNode }) => {
                 setTimeout(() => {
                     getProducts();
                 }, 500);
-            }).on('postgres_changes', {
+            })
+            .on('postgres_changes', {
                 event: '*', schema: 'public', table: 'pickings'
             }, (payload) => {
                 setTimeout(() => {
                     getPickingTask();
                 }, 1000);
-            }).on('postgres_changes', {
+            })
+            .on('postgres_changes', {
               event: '*', schema: 'public', table: 'pickings_products'
-          }, (payload) => {
-              setTimeout(() => {
-                  getPickingTask();
-              }, 1000);
-          })
+            }, (payload) => {
+                setTimeout(() => {
+                    getPickingTask();
+                }, 1000);
+            })
             .subscribe();
             // .on('postgres_changes', {
             //     event: '*', schema: 'public', table: 'shippings_pick_list'
@@ -313,7 +317,6 @@ const GlobalProvider = ({ children }: { children: ReactNode }) => {
           }
 
           getPickingTask();
-          
 
         return () => {
             supabase.removeChannel(channel);

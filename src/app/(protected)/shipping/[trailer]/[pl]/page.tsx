@@ -171,7 +171,7 @@ const PickListDetails = () => {
           for (var sp of defaultUpdate) {
             for (let index = 0; index < sp.product_quantity; index++) {
               const { error } = await supabase.from('shippings_products_serials').insert({
-                shipping_product_id: shortUpdate.id,
+                shipping_product_id: sp.pick_list_id,
                 serial_number: null,
               });
       
@@ -206,6 +206,7 @@ const PickListDetails = () => {
         completePick(true);
       }
       setSelected([]);
+      setCloseReasonNotes('');
     } catch (error: any) {
       setCloseReason('');
       console.log(error.message);
