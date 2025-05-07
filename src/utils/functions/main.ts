@@ -428,3 +428,11 @@ export const readExcelFile = async (file: File): Promise<ExcelRow[]> => {
     reader.readAsArrayBuffer(file);
   });
 };
+
+export const generateDefaultItemNumber = () => {
+  const now = new Date();
+  const year = now.getFullYear();
+  const day = String(now.getDate()).padStart(2, '0');
+
+  return `DE-${year}-${day}`;
+}

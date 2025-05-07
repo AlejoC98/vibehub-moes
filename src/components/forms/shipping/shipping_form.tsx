@@ -175,16 +175,23 @@ const ShippingForm = ({ defaultData, setOpenModal }: { defaultData?: ShippingCon
       }
 
       for (var pickOrder of orderPickList) {
-        const { data: newPick, error: pickError } = await supabase.from('shippings_pick_list').upsert({
-          'id': pickOrder.id,
-          'pl_number': pickOrder.pl_number,
-          'bol_number': pickOrder.bol_number || null,
-          'notes': pickOrder.notes,
-          'shipping_order_id': shippingOrder?.id,
-          'total_products': pickOrder.total_products,
-          'created_by': userAccount?.user_id,
-          'created_at': convertTimeByTimeZone(userAccount?.sessionTimeZone!)
-        }, { onConflict: 'id' }).select().single();
+        const { data: newPick, error: pickError } = await supabase
+          .from('shippings_pick_list')
+          .upsert(
+            {
+              ...(pickOrder.id && { id: pickOrder.id }),
+              pl_number: pickOrder.pl_number,
+              bol_number: pickOrder.bol_number || null,
+              notes: pickOrder.notes,
+              shipping_order_id: shippingOrder?.id,
+              total_products: pickOrder.total_products,
+              created_by: userAccount?.user_id,
+              created_at: convertTimeByTimeZone(userAccount?.sessionTimeZone!)
+            },
+            { onConflict: 'id' }
+          )
+          .select()
+          .single();
 
         if (pickError) {
           throw new Error(pickError.message);

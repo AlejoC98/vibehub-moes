@@ -21,7 +21,7 @@ import { createClient } from '@/utils/supabase/client';
 import TransferList from '@/components/transfer_list';
 import FileDropZone from '../upload_file_form';
 import FileUploadIcon from '@mui/icons-material/FileUpload';
-import { readExcelFile } from '@/utils/functions/main';
+import { generateDefaultItemNumber, readExcelFile } from '@/utils/functions/main';
 
 interface CustomMaskProps {
     name: string;
@@ -200,20 +200,22 @@ const PickListForm = ({
 
                 data.forEach(item => {
                     const key = String(item["Internal Number"]);
-
-                    const entry = {
-                        "Item No.": item["Item No."],
-                        "Item/Service Description": item["Item/Service Description"],
-                        "Pick Date": item["Pick Date"],
-                        "Picked Quantity": item["Picked Quantity"],
-                        "Released Quantity": item["Released Quantity"]
-                    };
-
-                    if (!result[key]) {
-                        result[key] = [];
+                    if (key != 'null') {
+                        // console.log(key != 'null' || key != null);
+                        const entry = {
+                            "Item No.": item["Item No."] || generateDefaultItemNumber(),
+                            "Item/Service Description": item["Item/Service Description"],
+                            "Pick Date": item["Pick Date"],
+                            "Picked Quantity": item["Picked Quantity"],
+                            "Released Quantity": item["Released Quantity"]
+                        };
+    
+                        if (!result[key]) {
+                            result[key] = [];
+                        }
+    
+                        result[key].push(entry);
                     }
-
-                    result[key].push(entry);
                 });
 
                 for (const pl of Object.keys(result)) {
