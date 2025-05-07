@@ -92,16 +92,21 @@ const PickListDetails = () => {
 
   const handleScanSerial = (product: ShippingOrderProductContent) => {
 
-    if (productSerialsMap[product.id!] == null || productSerialsMap[product.id!]?.length < product.product_quantity) {
-      setProductSerialsMap((prev) => ({
-        ...prev,
-        [product.id!]: [...(prev[product.id!] || []), inputSerialNumeberMap[product.id!]],
-      }));
+    if (inputSerialNumeberMap[product.id!] != '' && inputSerialNumeberMap[product.id!] != undefined) {
+      if (productSerialsMap[product.id!] == null || productSerialsMap[product.id!]?.length < product.product_quantity) {
+        setProductSerialsMap((prev) => ({
+          ...prev,
+          [product.id!]: [...(prev[product.id!] || []), inputSerialNumeberMap[product.id!]],
+        }));
+      } else {
+        toast.warning('You can\'t scan more serials!');
+      }
+  
+      setInputSerialNumberMap((prev) => ({ ...prev, [product.id!]: '' }));
     } else {
-      toast.warning('You can\'t scan more serials!');
+      toast.warning('Serial number can\'t be empty!');
     }
 
-    setInputSerialNumberMap((prev) => ({ ...prev, [product.id!]: '' }));
   }
 
   const handleVerifyPickList = async () => {
@@ -357,6 +362,9 @@ const PickListDetails = () => {
 
       skuList.forEach((item) => {
         const id = item.id;
+        // ******** This code is TEMP
+        setProductSkuMap((prev) => ({ ...prev, [item.id]: item.product_item }));
+        // ********
         const serials = item.shippings_products_serials?.map(
           (s: ShippingsProductsserialsContent) => s.serial_number) || [];
         result[id] = serials;
@@ -461,7 +469,8 @@ const PickListDetails = () => {
                       <Grid size={{ xl: 7, lg: 7, md: 12, sm: 12, xs: 12 }}>
                         <form onSubmit={(e) => handleLoadPickListProducts(e, label.id, label)}>
                           <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
-                            <TextField
+                            {/* This change is TEMP - original code */}
+                            {/* <TextField
                               fullWidth
                               label="Product Sku"
                               disabled={label.is_ready}
@@ -475,8 +484,15 @@ const PickListDetails = () => {
                                 const value = e.target.value;
                                 setProductSkuMap((prev) => ({ ...prev, [label.id]: value }));
                               }}
+                            /> */}
+                            {/* New TMP Code */}
+                            <TextField
+                              fullWidth
+                              disabled
+                              label="Item #"
+                              value={label.product_item}
+                              helperText={`Item #: ${label.product_item}`}
                             />
-
                             <TextField
                               fullWidth
                               label="Serial Number"
