@@ -434,5 +434,5 @@ export const generateDefaultItemNumber = () => {
   const year = now.getFullYear();
   const day = String(now.getDate()).padStart(2, '0');
 
-  return `DE-${year}-${day}`;
+  return `DE-${year}-${day}-`;
 }

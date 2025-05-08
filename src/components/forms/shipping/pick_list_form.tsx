@@ -120,7 +120,7 @@ const PickListForm = ({
                 throw new Error('You need to add products to create the record!');
             }
 
-            if (pickList == undefined || Object.values(pickList!).includes('') || Object.values(pickList!).includes(undefined)) {
+            if (pickList == undefined || Object.values(pickList!).includes(undefined)) {
                 throw new Error("We're missing some information");
             }
 
@@ -198,12 +198,13 @@ const PickListForm = ({
                 const result: Record<string, any[]> = {};
                 const newPlS: PickListContent[] = [];
 
+                var itemCount: number = 1;
                 data.forEach(item => {
                     const key = String(item["Internal Number"]);
                     if (key != 'null') {
-                        // console.log(key != 'null' || key != null);
+                        var itemNumber = generateDefaultItemNumber() + itemCount;
                         const entry = {
-                            "Item No.": item["Item No."] || generateDefaultItemNumber(),
+                            "Item No.": item["Item No."] || itemNumber,
                             "Item/Service Description": item["Item/Service Description"],
                             "Pick Date": item["Pick Date"],
                             "Picked Quantity": item["Picked Quantity"],
@@ -215,6 +216,7 @@ const PickListForm = ({
                         }
     
                         result[key].push(entry);
+                        itemCount++;
                     }
                 });
 

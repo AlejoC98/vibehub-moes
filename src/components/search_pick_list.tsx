@@ -127,7 +127,7 @@ const SearchPickList = ({ data }: { data: PickListContent[] }) => {
                             </Grid>
                             <Grid size={6}>
                                 <Typography fontWeight='bold'>Verified By</Typography>
-                                <Typography>{displayData[activePick].verified_by || ''}</Typography>
+                                <Typography>{findUserByUUID(displayData[activePick].verified_by) || ''}</Typography>
                             </Grid>
                             <Grid size={12}>
                                 <Typography variant='h6' fontWeight='bold'>Notes</Typography>
