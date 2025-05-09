@@ -1,7 +1,7 @@
 'use client';
 import { GlobalContext } from '@/utils/context/global_provider';
 import { Box, Button, Dialog, DialogActions, DialogContent, DialogTitle, Typography } from '@mui/material';
-import React, { useContext, useEffect } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import Grid from '@mui/material/Grid2';
 import Block from '@/components/block';
 import UpdatesReportsList from '@/components/updates_reports_list';
@@ -11,7 +11,7 @@ const Management = () => {
 
     const { setIsLaunching } = useContext(GlobalContext);
 
-    const [open, setOpen] = React.useState(false);
+    const [open, setOpen] = useState(false);
 
     const handleClickOpen = () => {
         setOpen(true);
@@ -27,6 +27,9 @@ const Management = () => {
     return (
         <Box>
             <Grid container spacing={5}>
+                <Grid size={12}>
+                    <Typography variant='h5' sx={{ color: '#FFFFFF' }}>Reports</Typography>
+                </Grid>
                 <Grid size={4}>
                     <Block>
                         <Typography>Report Updates</Typography>
@@ -43,6 +46,9 @@ const Management = () => {
                     <Block>
                         <Typography>Report Updates</Typography>
                     </Block>
+                </Grid>
+                <Grid size={12}>
+                    <Typography variant='h5' sx={{ color: '#000000' }}>Shipping Orders</Typography>
                 </Grid>
             </Grid>
             <Dialog
