@@ -90,9 +90,9 @@ const Shipping = () => {
               createFormTitle='Create Shipping Order'
               created_column={true}
               source='shippings_orders'
-              actionButtons={[
+              actionButtons={ showIdColumn ? [
                 <Button key='admin-close' variant='contained' className='btn-bittersweet' onClick={() => setOpenModal(true)}>Admin Close</Button>
-              ]}
+              ] : []}
             />
           </Block>
         </Grid>

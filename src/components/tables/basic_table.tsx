@@ -311,12 +311,12 @@ const BasicTable = ({
               gap: 1,
               justifyContent: { lg: 'end', md: 'end', sm: 'end', xs: 'end' }
             }}>
-              {selectedRow != null && userAccount?.accounts_roles?.some(role => [1, 2].includes(role.role_id)) && (
+              {selectedRow != null && userAccount?.accounts_roles?.some(role => [1, 2, 3].includes(role.role_id)) && (
                 <Button variant='contained' className='bg-red-700 hover:bg-red-800 ml-5' onClick={handleDelete}>
                   <DeleteIcon />
                 </Button>
               )}
-              { userAccount?.accounts_roles?.some(role => [1, 2].includes(role.role_id)) && createForm !== undefined && (
+              { userAccount?.accounts_roles?.some(role => [1, 2, 3].includes(role.role_id)) && createForm !== undefined && (
                 <Button variant='contained' startIcon={<AddIcon />} className='btn-munsell ml-5' onClick={() => setOpenModal(true)}>
                   New
                 </Button>
