@@ -20,10 +20,10 @@ const Shipping = () => {
   const [orderId, setOrderId] = useState<string>();
   const [openModal, setOpenModal] = useState<boolean>(false);
   const [isLoading, setIsLoading] = useState<boolean>(false);
-  const showIdColumn = userAccount?.accounts_roles?.some(r => r.role_id === 1);
+  const isAdmin = userAccount?.accounts_roles?.some(r => r.role_id === 1);
 
   const shippingColumns: GridColDef[] = [
-    ...(showIdColumn ? [{ field: 'id', headerName: 'ID', width: 50 }] : []),
+    ...(isAdmin ? [{ field: 'id', headerName: 'ID', width: 50 }] : []),
     { field: 'carrier', headerName: 'Carrier', width: 100 },
     { field: 'trailer_number', headerName: 'Trailer #' },
     { field: 'total_shipped', headerName: 'Total Shipped', width: 110 },
@@ -90,7 +90,7 @@ const Shipping = () => {
               createFormTitle='Create Shipping Order'
               created_column={true}
               source='shippings_orders'
-              actionButtons={ showIdColumn ? [
+              actionButtons={ isAdmin ? [
                 <Button key='admin-close' variant='contained' className='btn-bittersweet' onClick={() => setOpenModal(true)}>Admin Close</Button>
               ] : []}
             />
