@@ -248,7 +248,7 @@ const GlobalProvider = ({ children }: { children: ReactNode }) => {
               .order('created_at', { ascending: false });
           
             const filteredUsers = usersQuery?.filter(account =>
-              !account.accounts_roles?.some((ar: any) => ar.roles?.id === 1)
+              !account.accounts_roles?.some((ar: any) => ar.roles?.id != 1)
             );
           
             setUsers(filteredUsers || []);

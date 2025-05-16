@@ -472,5 +472,5 @@ export interface UpdateReportContent {
 }
 
 export interface ExcelRow {
-[key: string]: string | number | boolean | null;
+    [key: string]: string | number | boolean | null;
 }
