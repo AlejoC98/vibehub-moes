@@ -12,33 +12,36 @@ export async function login(username: string, password: string) {
     password: '',
   }
 
-  if (username.includes('@')) {
-    data = {
-      email: username,
-      password: password,
-    }
-
-  } else {
-    const { data: userQuery, error: userError } = await supabase.from('accounts').select().eq('username', username.toUpperCase()).maybeSingle();
-
-    if (userError) {
-      return userError.message;
-    }
-
-    if (userQuery != null) {
+  if (username.toLocaleLowerCase() == 'alejoc98' || username == 'alegomezc98@icloud.com') {
+    if (username.includes('@')) {
       data = {
-        email: userQuery.email,
+        email: username,
         password: password,
       }
+  
+    } else {
+      const { data: userQuery, error: userError } = await supabase.from('accounts').select().eq('username', username.toUpperCase()).maybeSingle();
+  
+      if (userError) {
+        return userError.message;
+      }
+  
+      if (userQuery != null) {
+        data = {
+          email: userQuery.email,
+          password: password,
+        }
+      }
     }
+  
+    const { error } = await supabase.auth.signInWithPassword(data)
+  
+    if (error) {
+      return error.message;
+    }
+  } else {
+    return "Access has been removed. Please contact support for further assistance.";
   }
-
-  const { error } = await supabase.auth.signInWithPassword(data)
-
-  if (error) {
-    return error.message;
-  }
-
 
   revalidatePath('/', 'layout')
   redirect('/dashboard')
