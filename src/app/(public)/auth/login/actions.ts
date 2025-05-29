@@ -12,8 +12,7 @@ export async function login(username: string, password: string) {
     password: '',
   }
 
-  if (username.toLocaleLowerCase() == 'alejoc98' || username == 'alegomezc98@icloud.com') {
-    if (username.includes('@')) {
+  if (username.includes('@')) {
       data = {
         email: username,
         password: password,
@@ -39,9 +38,12 @@ export async function login(username: string, password: string) {
     if (error) {
       return error.message;
     }
-  } else {
-    return "Access has been removed. Please contact support for further assistance.";
-  }
+
+  // if (username.toLocaleLowerCase() == 'alejoc98' || username == 'alegomezc98@icloud.com') {
+    
+  // } else {
+  //   return "Access has been removed. Please contact support for further assistance.";
+  // }
 
   revalidatePath('/', 'layout')
   redirect('/dashboard')
